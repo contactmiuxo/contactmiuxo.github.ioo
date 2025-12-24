@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ᴍɪᴜxᴏ | ᴏꜰꜰɪᴄɪᴀʟ</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2563eb">
+    <link rel="apple-touch-icon" href="icon-192.png">
+
+    <style>
+        :root {
+            --bg: #ffffff;
+            --card-bg: #f8fafc;
+            --text: #0f172a;
+            --accent: #2563eb;
+            --border: #e2e8f0;
+        }
+
+        [data-theme="dark"] {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text: #f8fafc;
+            --border: #334155;
+        }
+
+        body { 
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container { 
+            width: 100%; 
+            max-width: 400px; 
+            display: none; 
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 20px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        /* 🔐 Glassmorphism Login Overlay */
+        #login-overlay {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(135deg, #1e293b 0%, #2563eb 100%);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1) !important;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            color: white !important;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 12px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            text-align: center;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        button:active { transform: scale(0.97); }
+
+        .social-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        
+        .video-container { 
+            position: relative; padding-bottom: 177.77%; height: 0; 
+            border-radius: 15px; overflow: hidden; background: #000; margin-bottom: 10px; 
+        }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+
+        #install-banner { display: none; background: var(--accent); color: white; }
+    </style>
+</head>
+<body>
+
+<div id="login-overlay">
+    <div class="card glass-card" style="width: 100%; max-width: 340px;">
+        <h2 style="letter-spacing: 2px;">🔐 ᴍɪᴜxᴏ ᴀᴄᴄᴇꜱꜱ</h2>
+        <p>ᴘʟᴇᴀꜱᴇ ᴇɴᴛᴇʀ ʏᴏᴜʀ ᴄᴏᴅᴇ</p>
+        <input type="password" id="pass-input" placeholder="••••••••" autofocus>
+        <button onclick="checkPass()" id="unlock-btn" style="background: white; color: #2563eb;">Unlock Hub</button>
+        <p id="error-msg" style="color: #ff9494 !important; display: none; margin-top: 15px; font-weight: bold;">Invalid Access Code</p>
+        <div style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
+            <a href="mailto:support@miuxo.in?subject=Requesting%20MIUXO%20Code" style="color: rgba(255,255,255,0.7); font-size: 0.75rem; text-decoration: none;">ꜰᴏʀɢᴏᴛ ᴄᴏᴅᴇ? ʀᴇQᴜᴇꜱᴛ ᴀᴄᴄᴇꜱꜱ ✉️</a>
+        </div>
+    </div>
+</div>
+
+<div class="container" id="main-content">
+    <div id="install-banner" class="card">
+        <h3>✨ Miuxo App</h3>
+        <p>Add to home screen for faster access</p>
+        <button onclick="installApp()" style="background: white; color: var(--accent);">Install Now</button>
+    </div>
+
+    <div class="card" style="border-top: 6px solid var(--accent);">
+        <h2 style="letter-spacing: 2px;">MIUXO</h2>
+        <p style="font-weight: bold; color: var(--accent);">ᴏꜰꜰɪᴄɪᴀʟ ʙʀᴀɴᴅ ʜᴜʙ</p>
+        <a href="https://miuxo.in" target="_blank" style="text-decoration:none">
+            <button style="background: var(--accent); color: white;">🌐 VISIT WEBSITE</button>
+        </a>
+    </div>
+
+    <div class="card">
+        <h3>ꜰᴇᴀᴛᴜʀᴇᴅ ꜱʜᴏʀᴛ</h3>
+        <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/u28pkQXq67k"></iframe>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>JOIN THE COMMUNITY</h3>
+        <div class="social-grid">
+            <a href="https://www.youtube.com/@aimiuxo" target="_blank" style="text-decoration:none">
+                <button style="background: #FF0000; color: white;">YOUTUBE</button>
+            </a>
+            <a href="https://www.instagram.com/aimiuxo/" target="_blank" style="text-decoration:none">
+                <button style="background: #E4405F; color: white;">INSTAGRAM</button>
+            </a>
+        </div>
+    </div>
+
+    <button onclick="logout()" style="background: transparent; color: var(--text); border: 1px solid var(--border); font-size: 0.7rem; margin-top: 10px; opacity: 0.5;">Logout Session</button>
+</div>
+
+<script>
+    // 1. CONFIGURATION
+    const ACCESS_CODE = "MIUXO2025"; 
+    const SESSION_TIMEOUT = 24 * 60 * 60 * 1000; // 24 Hours in milliseconds
+
+    // 2. PASSWORD VISIBILITY TOGGLE
+    function togglePass() {
+        const input = document.getElementById('pass-input');
+        const icon = document.querySelector('span[onclick="togglePass()"]');
+        if (input.type === "password") {
+            input.type = "text";
+            icon.innerText = "🔒"; // Change icon when visible
+        } else {
+            input.type = "password";
+            icon.innerText = "👁️";
+        }
+    }
+
+    // 3. CHECK PASSWORD & SET TIMESTAMP
+    function checkPass() {
+        const input = document.getElementById('pass-input').value;
+        const btn = document.getElementById('unlock-btn');
+        const error = document.getElementById('error-msg');
+        
+        if (input === ACCESS_CODE) {
+            btn.innerText = "Access Granted...";
+            btn.style.background = "#22c55e"; 
+            btn.style.color = "white";
+            
+            // Store login status with the current time
+            const sessionData = {
+                verified: true,
+                loginTime: new Date().getTime()
+            };
+            localStorage.setItem('miuxo_auth', JSON.stringify(sessionData));
+            
+            setTimeout(unlockHub, 600);
+        } else {
+            error.style.display = 'block';
+            document.querySelector('.glass-card').style.animation = 'shake 0.4s';
+            setTimeout(() => { document.querySelector('.glass-card').style.animation = ''; }, 400);
+            document.getElementById('pass-input').value = '';
+        }
+    }
+
+    // 4. UNLOCK UI
+    function unlockHub() {
+        document.getElementById('login-overlay').style.display = 'none';
+        document.getElementById('main-content').style.display = 'block';
+    }
+
+    // 5. SESSION CHECK ON LOAD
+    window.onload = () => {
+        const savedSession = localStorage.getItem('miuxo_auth');
+        
+        if (savedSession) {
+            const data = JSON.parse(savedSession);
+            const currentTime = new Date().getTime();
+            
+            // If user is verified AND the session hasn't expired (24h)
+            if (data.verified && (currentTime - data.loginTime < SESSION_TIMEOUT)) {
+                unlockHub();
+            } else {
+                // Session expired or invalid
+                localStorage.removeItem('miuxo_auth');
+                console.log("Session expired. Please log in again.");
+            }
+        }
+    };
+
+    // 6. UTILITIES
+    document.getElementById('pass-input').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') checkPass();
+    });
+
+    function logout() {
+        localStorage.removeItem('miuxo_auth');
+        location.reload();
+    }
+</script>
+
+<style>
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-10px); }
+        75% { transform: translateX(10px); }
+    }
+</style>
+
+</body>
+</html>
