@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My First Web Page</title>
+    <style>
+        /* CSS: This makes the page look nice */
+        body {
+            font-family: sans-serif;
+            text-align: center;
+            padding-top: 50px;
+            background-color: #f0f2f5;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Hello, World!</h1>
+    <p>Click the button below to see JavaScript in action.</p>
+    
+    <button onclick="changeText()">Click Me!</button>
+
+    <script>
+        // JavaScript: This adds interactivity
+        function changeText() {
+            const heading = document.querySelector('h1');
+            heading.textContent = "You clicked the button!";
+            heading.style.color = "green";
+        }
+    </script>
+
+</body>
+</html>
