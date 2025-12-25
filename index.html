@@ -44,7 +44,6 @@
 
         #snow-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
 
-        /* 🎬 SPLASH SCREEN */
         #splash-screen {
             position: fixed; inset: 0; background: var(--bg-gradient);
             display: none; flex-direction: column; align-items: center; justify-content: center;
@@ -95,6 +94,8 @@
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
         }
 
+        #admin-panel { border: 1px solid gold !important; background: rgba(255, 215, 0, 0.05); display: none; }
+
         input, textarea {
             width: 100%; padding: 14px; margin: 10px 0; border-radius: 12px;
             border: 1px solid var(--border); background: rgba(255,255,255,0.05);
@@ -115,8 +116,6 @@
             cursor: pointer; transition: all 0.4s ease;
         }
 
-        .forgot-link { font-size: 0.75rem; color: var(--accent); cursor: pointer; text-decoration: underline; margin-top: 15px; display: block; }
-        
         .social-card {
             flex: 1 1 30%; min-width: 90px; max-width: 110px;
             background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border);
@@ -153,13 +152,6 @@
         <div id="login-box">
             <input type="password" id="pass-input" placeholder="••••••••" autofocus>
             <button onclick="checkPass()" class="action-btn">UNLOCK HUB</button>
-            <span class="forgot-link" onclick="showRecovery()">Forgot Code?</span>
-        </div>
-
-        <div id="recovery-box" style="display:none;">
-            <p style="font-size: 0.85rem; margin-bottom: 20px;">Contact the administrator for the 2025 Master Key.</p>
-            <button onclick="window.location.href='mailto:shammas78099@gmail.com'" class="action-btn" style="background:#475569;">EMAIL SUPPORT</button>
-            <span class="forgot-link" onclick="hideRecovery()">Return to Login</span>
         </div>
 
         <div style="margin:20px 0; display: flex; align-items: center; gap: 10px; opacity: 0.3;">
@@ -175,6 +167,17 @@
 </div>
 
 <div class="container" id="main-content">
+    
+    <div class="content-card" id="admin-panel">
+        <h3 style="color: gold; margin-top: 0;">👑 ADMIN DASHBOARD</h3>
+        <p style="font-size: 0.8rem;">Last Visitor Captured:</p>
+        <div id="last-visitor" style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 10px; font-family: monospace;">
+            Fetching log...
+        </div>
+        <button onclick="window.open('https://docs.google.com/spreadsheets/d/1hRxusWivIUaEnE1P88YEAgy6kAxz6kKfH2fiCdY4uOs/edit', '_blank')" 
+                class="action-btn" style="background: #1e293b; border: 1px solid gold; margin-top: 10px; font-size: 0.7rem;">VIEW FULL SHEET</button>
+    </div>
+
     <div class="content-card">
         <h2 id="welcome-msg" style="margin:0;">WELCOME</h2>
         <p style="font-size: 0.8rem; opacity: 0.5; margin-bottom: 15px;">Official Miuxo Brand Hub is Active</p>
@@ -220,7 +223,7 @@
 <script>
     const MASTER_CODE = "2025";
     // 🚀 REPLACE THE URL BELOW WITH YOUR APPS SCRIPT WEB APP URL
-    const LOG_SCRIPT_URL = "https://docs.google.com/spreadsheets/d/1hRxusWivIUaEnE1P88YEAgy6kAxz6kKfH2fiCdY4uOs/edit?usp=sharing";
+    const LOG_SCRIPT_URL = "PASTE_YOUR_WEB_APP_URL_HERE";
     
     function toggleTheme() {
         const body = document.body;
@@ -230,29 +233,27 @@
     }
 
     function checkPass() {
-        if (document.getElementById('pass-input').value === MASTER_CODE) triggerReveal("Admin");
-        else alert("Incorrect Master Code");
+        if (document.getElementById('pass-input').value === MASTER_CODE) {
+            triggerReveal("Admin", true);
+        } else alert("Incorrect Master Code");
     }
 
     function handleGoogleLogin(response) {
         const payload = JSON.parse(atob(response.credential.split('.')[1]));
         
-        // 📝 Log visitor to Google Sheet
-        if (LOG_SCRIPT_URL !== "PASTE_YOUR_WEB_APP_URL_HERE") {
+        if (LOG_SCRIPT_URL !== "https://docs.google.com/spreadsheets/d/1hRxusWivIUaEnE1P88YEAgy6kAxz6kKfH2fiCdY4uOs/edit?usp=sharing") {
             fetch(LOG_SCRIPT_URL, {
                 method: 'POST',
                 mode: 'no-cors',
-                body: JSON.stringify({
-                    name: payload.name,
-                    email: payload.email
-                })
+                body: JSON.stringify({ name: payload.name, email: payload.email })
             });
         }
-        
-        triggerReveal(payload.given_name);
+        // Save the last visitor name for the Admin Panel to display
+        localStorage.setItem('last_visitor_name', payload.name);
+        triggerReveal(payload.given_name, false);
     }
 
-    function triggerReveal(name) {
+    function triggerReveal(name, isAdmin) {
         document.getElementById('login-overlay').style.display = 'none';
         const splash = document.getElementById('splash-screen');
         splash.style.display = 'flex';
@@ -261,19 +262,38 @@
             splash.style.transition = 'opacity 0.8s ease';
             setTimeout(() => { 
                 splash.style.display = 'none'; 
-                localStorage.setItem('miuxo_session', JSON.stringify({ auth: true, user: name, time: Date.now() }));
-                showHub(name); 
+                localStorage.setItem('miuxo_session', JSON.stringify({ 
+                    auth: true, 
+                    user: name, 
+                    isAdmin: isAdmin,
+                    time: Date.now() 
+                }));
+                showHub(name, isAdmin); 
             }, 800);
         }, 2000);
     }
 
-    function showHub(name) {
+    function showHub(name, isAdmin) {
         document.getElementById('login-overlay').style.display = 'none';
         document.getElementById('main-content').style.display = 'block';
-        document.getElementById('welcome-msg').innerText = `WELCOME, ${name.toUpperCase()}`;
+        
+        if (isAdmin) {
+            document.getElementById('admin-panel').style.display = 'block';
+            document.getElementById('welcome-msg').innerHTML = `WELCOME, <span style="color:gold;">${name.toUpperCase()} (ADMIN)</span>`;
+            document.getElementById('last-visitor').innerText = localStorage.getItem('last_visitor_name') || "No recent Google logins.";
+        } else {
+            document.getElementById('welcome-msg').innerText = `WELCOME, ${name.toUpperCase()}`;
+        }
     }
 
     function logout() { localStorage.removeItem('miuxo_session'); location.reload(); }
+
+    window.onload = () => {
+        const session = JSON.parse(localStorage.getItem('miuxo_session'));
+        if (session && (Date.now() - session.time < 86400000)) {
+            showHub(session.user, session.isAdmin);
+        }
+    };
 
     function sendFeedback() {
         const t = document.getElementById('feedback-topic').value;
@@ -281,14 +301,6 @@
         if(!t || !d) return alert("Fill all fields");
         window.location.href = `mailto:shammas78099@gmail.com?subject=Hub Request: ${t}&body=${d}`;
     }
-
-    window.onload = () => {
-        const session = JSON.parse(localStorage.getItem('miuxo_session'));
-        if (session && (Date.now() - session.time < 86400000)) showHub(session.user);
-    };
-
-    function showRecovery() { document.getElementById('login-box').style.display='none'; document.getElementById('recovery-box').style.display='block'; }
-    function hideRecovery() { document.getElementById('login-box').style.display='block'; document.getElementById('recovery-box').style.display='none'; }
 </script>
 </body>
 </html>
