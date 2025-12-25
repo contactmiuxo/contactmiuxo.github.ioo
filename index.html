@@ -104,11 +104,26 @@
             color: var(--text); outline: none; box-sizing: border-box; font-size: 1rem;
             text-align: center;
         }
+        
+        /* 🚀 PREMIUM BUTTONS */
         .action-btn {
             width: 100%; padding: 14px; border-radius: 12px; border: none;
             background: var(--accent); color: white; font-weight: 700; cursor: pointer; transition: 0.3s;
         }
-        .action-btn:hover { opacity: 0.9; transform: translateY(-2px); }
+        .action-btn:hover { opacity: 0.9; transform: translateY(-2px); box-shadow: 0 0 15px rgba(37, 99, 235, 0.4); }
+
+        .logout-btn {
+            background: transparent; border: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--text); padding: 10px 25px; border-radius: 10px;
+            font-size: 0.75rem; letter-spacing: 1px; text-transform: uppercase;
+            cursor: pointer; transition: all 0.4s ease; animation: pulse-glow 3s infinite;
+        }
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 5px rgba(255, 255, 255, 0.1); }
+            50% { box-shadow: 0 0 15px rgba(37, 99, 235, 0.2); }
+            100% { box-shadow: 0 0 5px rgba(255, 255, 255, 0.1); }
+        }
+
         .forgot-link { font-size: 0.75rem; color: var(--accent); cursor: pointer; text-decoration: underline; margin-top: 15px; display: block; }
         .gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
         .gallery img { width: 100%; border-radius: 12px; border: 1px solid var(--border); }
@@ -161,8 +176,8 @@
 <div class="container" id="main-content">
     <div class="content-card">
         <h2 id="welcome-msg" style="margin:0;">WELCOME</h2>
-        <p style="font-size: 0.8rem; opacity: 0.5; margin-bottom: 15px;">Authenticated Session</p>
-        <button onclick="logout()" style="background:none; border:1px solid var(--border); color:var(--text); padding:8px 15px; border-radius:8px; cursor:pointer; font-size: 0.8rem;">LOGOUT</button>
+        <p style="font-size: 0.8rem; opacity: 0.5; margin-bottom: 15px;">Official Miuxo Brand Hub is Active</p>
+        <button onclick="logout()" class="logout-btn">LOGOUT SESSION</button>
     </div>
 
     <div class="content-card">
@@ -189,10 +204,17 @@
 <script>
     const MASTER_CODE = "MIUXO2025";
     
-    // 🗓️ HOLIDAY LOGIC
+    // --- 📱 PWA SERVICE WORKER REGISTRATION ---
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('sw.js').catch(err => console.log('SW registration failed:', err));
+        });
+    }
+
+    // --- 🗓️ HOLIDAY LOGIC ---
     const isHolidaySeason = new Date() < new Date("January 2, 2026");
 
-    // 🌓 THEME
+    // --- 🌓 THEME ---
     function toggleTheme() {
         const body = document.body;
         const newTheme = body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
@@ -201,7 +223,7 @@
     }
     document.body.setAttribute('data-theme', localStorage.getItem('miuxo_theme') || 'dark');
 
-    // ❄️ SNOWFALL
+    // --- ❄️ SNOWFALL ---
     if (isHolidaySeason) {
         const canvas = document.getElementById('snow-canvas');
         const ctx = canvas.getContext('2d');
@@ -214,7 +236,7 @@
         document.getElementById('ticker-text').innerText = "✨ WELCOME TO MIUXO HUB • OFFICIAL BRAND ASSETS • UPDATED FOR 2026 ✨";
     }
 
-    // 🎬 REVEAL ANIMATION ENGINE
+    // --- 🎬 REVEAL ANIMATION ENGINE ---
     function triggerReveal(name) {
         document.getElementById('login-overlay').style.display = 'none';
         const splash = document.getElementById('splash-screen');
@@ -230,11 +252,11 @@
         }, 2000);
     }
 
-    // 🔑 RECOVERY UI
+    // --- 🔑 RECOVERY UI ---
     function showRecovery() { document.getElementById('login-box').style.display = 'none'; document.getElementById('recovery-box').style.display = 'block'; document.getElementById('login-title').innerText = "🔑 RECOVERY"; }
     function hideRecovery() { document.getElementById('login-box').style.display = 'block'; document.getElementById('recovery-box').style.display = 'none'; document.getElementById('login-title').innerText = "🔐 MIUXO ACCESS"; }
 
-    // 🔐 AUTH
+    // --- 🔐 AUTH ---
     function checkPass() {
         const input = document.getElementById('pass-input').value;
         if (input === MASTER_CODE) triggerReveal("Member");
