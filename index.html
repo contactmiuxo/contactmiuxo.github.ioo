@@ -37,119 +37,88 @@
             color: var(--text);
             margin: 0; padding: 0;
             display: flex; flex-direction: column; align-items: center; min-height: 100vh;
-            transition: background 0.3s, color 0.3s;
+            transition: 0.3s;
             overflow-x: hidden;
         }
 
+        /* --- HOLIDAY ELEMENTS --- */
         #snow-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
-
-        #splash-screen {
-            position: fixed; inset: 0; background: var(--bg-gradient);
-            display: none; flex-direction: column; align-items: center; justify-content: center;
-            z-index: 10002;
+        
+        #countdown-row {
+            display: flex; gap: 8px; justify-content: center; margin: 15px 0;
         }
-        .animated-logo { width: 120px; animation: logo-reveal 1.5s ease-out forwards; filter: drop-shadow(0 0 15px var(--accent)); }
-        @keyframes logo-reveal {
-            0% { transform: scale(0.5); opacity: 0; filter: blur(10px); }
-            50% { transform: scale(1.1); opacity: 1; filter: blur(0px); }
-            100% { transform: scale(1); opacity: 1; }
+        .time-unit {
+            background: var(--card-bg); border: 1px solid var(--border);
+            padding: 8px; border-radius: 12px; min-width: 55px; backdrop-filter: var(--glass);
         }
+        .time-num { display: block; font-size: 1.1rem; font-weight: 800; color: #fbbf24; }
+        .time-lbl { font-size: 0.55rem; opacity: 0.6; text-transform: uppercase; }
 
+        /* --- UI COMPONENTS --- */
         .announcement {
             width: 100%; background: var(--banner-bg); color: white;
-            padding: 10px 0; overflow: hidden; white-space: nowrap;
-            position: relative; z-index: 100;
+            padding: 10px 0; overflow: hidden; white-space: nowrap; z-index: 100;
         }
         .ticker-content {
             display: inline-block; padding-left: 100%;
             animation: ticker-scroll 25s linear infinite;
-            font-size: 0.85rem; font-weight: bold; letter-spacing: 1px;
+            font-size: 0.85rem; font-weight: bold;
         }
         @keyframes ticker-scroll { 0% { transform: translate(0, 0); } 100% { transform: translate(-100%, 0); } }
 
-        #broadcast-box {
-            display: none; background: #fbbf24; color: #000;
-            padding: 12px; width: 90%; max-width: 460px; border-radius: 12px;
-            margin: 15px 0; font-weight: bold; font-size: 0.9rem;
-            box-shadow: 0 4px 15px rgba(251, 191, 36, 0.3); text-align: center;
+        #broadcast-msg {
+            display: none; background: #fbbf24; color: #1e293b;
+            padding: 12px; width: 90%; max-width: 450px; border-radius: 12px;
+            margin-bottom: 20px; font-weight: bold; font-size: 0.85rem; text-align: center;
         }
 
-        .theme-toggle {
-            position: fixed; top: 55px; right: 20px;
-            background: var(--card-bg); border: 1px solid var(--border);
-            color: var(--text); width: 44px; height: 44px; border-radius: 50%;
-            cursor: pointer; backdrop-filter: var(--glass); z-index: 10001;
-            display: flex; align-items: center; justify-content: center;
-        }
-
-        #login-overlay {
-            position: fixed; inset: 0; z-index: 9999;
-            display: flex; align-items: center; justify-content: center;
-            background: var(--bg-gradient);
-        }
-        .container { display: none; width: 100%; max-width: 500px; padding: 20px; box-sizing: border-box; position: relative; z-index: 2; }
-        
         .content-card {
             background: var(--card-bg); border: 1px solid var(--border);
             border-radius: 20px; padding: 25px; margin-bottom: 20px;
-            text-align: center; backdrop-filter: var(--glass);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            text-align: center; backdrop-filter: var(--glass); width: 100%; box-sizing: border-box;
         }
 
-        #admin-panel { border: 1px solid gold !important; background: rgba(255, 215, 0, 0.05); display: none; }
-        
-        .feedback-item {
-            background: rgba(255,255,255,0.05);
-            border-radius: 10px; padding: 10px; margin-top: 10px;
-            text-align: left; font-size: 0.7rem; border-left: 3px solid gold;
-        }
+        #admin-panel { border: 1px solid gold !important; display: none; background: rgba(251, 191, 36, 0.03); }
+        .fb-card { background: rgba(0,0,0,0.2); border-radius: 10px; padding: 10px; margin-top: 8px; text-align: left; font-size: 0.75rem; border-left: 3px solid gold; }
 
+        /* --- BUTTONS & INPUTS --- */
         input, textarea {
             width: 100%; padding: 14px; margin: 10px 0; border-radius: 12px;
             border: 1px solid var(--border); background: rgba(255,255,255,0.05);
-            color: var(--text); outline: none; box-sizing: border-box; font-size: 1rem;
-            text-align: center; font-family: inherit;
+            color: var(--text); outline: none; box-sizing: border-box; text-align: center;
         }
-        
         .action-btn {
             width: 100%; padding: 14px; border-radius: 12px; border: none;
-            background: var(--accent); color: white; font-weight: 700; cursor: pointer; transition: 0.3s;
+            background: var(--accent); color: white; font-weight: 700; cursor: pointer;
         }
+        .logout-btn { background: transparent; border: 1px solid var(--border); color: var(--text); padding: 8px 15px; border-radius: 8px; cursor: pointer; font-size: 0.7rem; }
 
-        .logout-btn { background: transparent; border: 1px solid rgba(255, 255, 255, 0.2); color: var(--text); padding: 8px 20px; border-radius: 10px; cursor: pointer; }
-
-        .social-card {
-            flex: 1 1 30%; min-width: 90px; max-width: 110px;
-            background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border);
-            border-radius: 15px; padding: 15px 5px; text-decoration: none; color: var(--text);
-            transition: 0.3s; display: flex; flex-direction: column; align-items: center; gap: 8px;
+        .social-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 10px; margin-top: 15px; }
+        .social-link {
+            background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+            border-radius: 12px; padding: 12px 5px; text-decoration: none; color: var(--text); font-size: 0.6rem;
+            display: flex; flex-direction: column; align-items: center; gap: 5px; transition: 0.3s;
         }
-        .social-card:hover { background: var(--accent); transform: translateY(-5px); }
+        .social-link:hover { background: var(--accent); transform: translateY(-3px); }
 
-        @media (max-width: 480px) { .social-card { flex: 1 1 45%; } }
+        #login-overlay { position: fixed; inset: 0; background: var(--bg-gradient); z-index: 999; display: flex; align-items: center; justify-content: center; }
+        .container { display: none; width: 100%; max-width: 480px; padding: 20px; box-sizing: border-box; z-index: 2; }
     </style>
 </head>
 <body data-theme="dark">
 
 <canvas id="snow-canvas"></canvas>
 
-<div id="splash-screen">
-    <img src="logo.png" class="animated-logo" alt="Miuxo Logo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1162/1162456.png'">
-    <h2 style="letter-spacing: 4px; margin-top: 20px; font-weight: 300;">MIUXO</h2>
+<div class="announcement">
+    <div class="ticker-content">🎄 MIUXO HOLIDAY HUB 2025 • LIVE SYSTEM ACTIVE • COMMUNITY REPOSITORY ✨</div>
 </div>
-
-<div class="announcement" id="banner">
-    <div class="ticker-content">🎄 MIUXO HOLIDAY HUB 2025 • OFFICIAL BRAND REPOSITORY • 18 TOOLS ACTIVE ✨</div>
-</div>
-
-<button class="theme-toggle" onclick="toggleTheme()">🌓</button>
 
 <div id="login-overlay">
-    <div class="content-card" style="width: 340px;">
-        <h2 id="login-title">🔐 MIUXO ACCESS</h2>
-        <input type="password" id="pass-input" placeholder="Master Code">
-        <button onclick="checkPass()" class="action-btn">UNLOCK HUB</button>
-        <div style="margin:20px 0; opacity: 0.3;">--- OR ---</div>
+    <div class="content-card" style="max-width: 340px;">
+        <h2>🔐 HUB ACCESS</h2>
+        <input type="password" id="pass-input" placeholder="Enter Master Code">
+        <button onclick="checkPass()" class="action-btn">UNLOCK</button>
+        <div style="margin:15px 0; opacity: 0.3;">OR</div>
         <div id="g_id_onload" data-client_id="785119101330-40kgkkoekfbsqu7vo4t6leqalltrs7th.apps.googleusercontent.com" data-callback="handleGoogleLogin"></div>
         <div class="g_id_signin" data-type="standard" data-theme="filled_blue"></div>
     </div>
@@ -157,18 +126,24 @@
 
 <div class="container" id="main-content">
     
-    <div id="broadcast-box">📢 <span id="broadcast-msg">Loading...</span></div>
+    <div id="countdown-row">
+        <div class="time-unit"><span class="time-num" id="d">00</span><span class="time-lbl">Days</span></div>
+        <div class="time-unit"><span class="time-num" id="h">00</span><span class="time-lbl">Hrs</span></div>
+        <div class="time-unit"><span class="time-num" id="m">00</span><span class="time-lbl">Mins</span></div>
+    </div>
+
+    <div id="broadcast-msg">📢 <span>Loading...</span></div>
 
     <div class="content-card" id="admin-panel">
-        <h3 style="color: gold; margin: 0;">👑 ADMIN DASHBOARD</h3>
-        <p id="user-count" style="font-size: 0.8rem; color: #fbbf24; margin: 10px 0;">Syncing...</p>
-        <div id="admin-feedback-view" style="text-align: left;"></div>
-        <button onclick="window.open('https://docs.google.com/spreadsheets/d/1hRxusWivIUaEnE1P88YEAgy6kAxz6kKfH2fiCdY4uOs/edit', '_blank')" class="action-btn" style="background: #1e293b; border: 1px solid gold; font-size: 0.7rem; margin-top: 15px;">DATABASE SHEET</button>
+        <h3 style="color: gold; margin: 0;">👑 ADMIN CONSOLE</h3>
+        <p id="user-count" style="font-size: 0.8rem; margin: 10px 0;">Registered: --</p>
+        <div id="admin-fb-list"></div>
+        <button onclick="window.open('https://docs.google.com/spreadsheets/d/1hRxusWivIUaEnE1P88YEAgy6kAxz6kKfH2fiCdY4uOs/edit', '_blank')" class="action-btn" style="background: #1e293b; border: 1px solid gold; font-size: 0.7rem; margin-top: 15px;">OPEN DATABASE</button>
     </div>
 
     <div class="content-card">
-        <h2 id="welcome-msg" style="margin:0;">WELCOME</h2>
-        <button onclick="logout()" class="logout-btn" style="margin-top:10px;">LOGOUT</button>
+        <h2 id="welcome-txt">WELCOME</h2>
+        <button onclick="logout()" class="logout-btn">TERMINATE SESSION</button>
     </div>
 
     <div class="content-card">
@@ -197,116 +172,103 @@
 
     <div class="content-card">
         <h3>📩 ASSET REQUEST</h3>
-        <input type="text" id="feedback-topic" placeholder="Asset Name">
-        <textarea id="feedback-details" placeholder="Describe your request..." style="height: 80px;"></textarea>
-        <button onclick="sendFeedback()" class="action-btn">SUBMIT TO MIUXO</button>
+        <input type="text" id="fb-topic" placeholder="Asset Name">
+        <textarea id="fb-details" placeholder="Brief description..." style="height: 70px;"></textarea>
+        <button onclick="submitRequest()" class="action-btn">SUBMIT REQUEST</button>
     </div>
+
+    <footer style="opacity: 0.3; font-size: 0.6rem; text-align: center; margin-bottom: 20px;">
+        &copy; 2025 MIUXO BRAND REPOSITORY
+    </footer>
 </div>
 
 <script>
     const MASTER_CODE = "2025";
-    // ⚠️ REPLACE THIS WITH YOUR APPS SCRIPT WEB APP URL (The one starting with script.google.com)
-    const LOG_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzhj7xBq3GV7kgVPthN2v5WKKxrG_31MAYaFXzKhxoOsuOrZzn7FUILtzzLIsE4Y3Q/exec";
-    
-    async function syncRemoteData() {
-        if (LOG_SCRIPT_URL.includes("PASTE")) return;
-        try {
-            const response = await fetch(LOG_SCRIPT_URL, {
-                method: 'POST',
-                body: JSON.stringify({ action: "sync" })
-            });
-            const data = await response.json();
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzhj7xBq3GV7kgVPthN2v5WKKxrG_31MAYaFXzKhxoOsuOrZzn7FUILtzzLIsE4Y3Q/exec";
 
-            // 1. Maintenance
-            if (data.maintenance === "ON") {
-                const session = JSON.parse(localStorage.getItem('miuxo_session'));
-                if (!session || !session.isAdmin) {
-                    document.body.innerHTML = `<div style="height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; background:#0f172a; color:white;"><h1>🚧</h1><h2>MAINTENANCE</h2></div>`;
-                    return;
-                }
-            }
-
-            // 2. Broadcast
-            if (data.broadcast && data.broadcast !== "OFF") {
-                document.getElementById('broadcast-box').style.display = "block";
-                document.getElementById('broadcast-msg').innerText = data.broadcast;
-            } else { document.getElementById('broadcast-box').style.display = "none"; }
-
-            // 3. Admin View
-            if (document.getElementById('admin-panel').style.display === "block") {
-                document.getElementById('user-count').innerText = data.userCount + " Registered Users";
-                let fbHTML = "<p style='font-size:0.7rem; margin-bottom:5px; opacity:0.6;'>Latest Asset Requests:</p>";
-                data.feedbacks.reverse().forEach(fb => {
-                    fbHTML += `<div class="feedback-item"><strong>${fb[1]}</strong>: ${fb[2]}</div>`;
-                });
-                document.getElementById('admin-feedback-view').innerHTML = fbHTML;
-            }
-        } catch (e) { console.error("Sync Error", e); }
+    // 1. Countdown Logic
+    function runTimer() {
+        const end = new Date("Dec 31, 2025 23:59:59").getTime();
+        const now = new Date().getTime();
+        const diff = end - now;
+        if (diff > 0) {
+            document.getElementById('d').innerText = Math.floor(diff / (86400000));
+            document.getElementById('h').innerText = Math.floor((diff % 86400000) / 3600000);
+            document.getElementById('m').innerText = Math.floor((diff % 3600000) / 60000);
+        }
     }
+    setInterval(runTimer, 1000);
 
-    async function sendFeedback() {
-        const t = document.getElementById('feedback-topic').value;
-        const d = document.getElementById('feedback-details').value;
-        if(!t || !d) return alert("Fill all fields");
-        
-        document.querySelector('#main-content button').innerText = "Sending...";
-        await fetch(LOG_SCRIPT_URL, {
-            method: 'POST',
-            body: JSON.stringify({ action: "submitFeedback", topic: t, details: d })
-        });
-        alert("Request Logged!");
-        document.getElementById('feedback-topic').value = "";
-        document.getElementById('feedback-details').value = "";
-        syncRemoteData();
-    }
-
+    // 2. Auth Logic
     function checkPass() {
-        if (document.getElementById('pass-input').value === MASTER_CODE) triggerReveal("Admin", true);
-        else alert("Wrong Code");
+        if (document.getElementById('pass-input').value === MASTER_CODE) login("Admin", true);
+        else alert("Invalid Code");
     }
 
     function handleGoogleLogin(response) {
-        const payload = JSON.parse(atob(response.credential.split('.')[1]));
-        fetch(LOG_SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ name: payload.name, email: payload.email }) });
-        triggerReveal(payload.given_name, false);
-    }
-
-    function triggerReveal(name, isAdmin) {
-        document.getElementById('login-overlay').style.display = 'none';
-        const splash = document.getElementById('splash-screen');
-        splash.style.display = 'flex';
-        setTimeout(() => {
-            splash.style.display = 'none'; 
-            localStorage.setItem('miuxo_session', JSON.stringify({ auth: true, user: name, isAdmin: isAdmin, time: Date.now() }));
-            showHub(name, isAdmin); 
-        }, 2000);
-    }
-
-    function showHub(name, isAdmin) {
-        document.getElementById('login-overlay').style.display = 'none';
-        document.getElementById('main-content').style.display = 'block';
-        if (isAdmin) {
-            document.getElementById('admin-panel').style.display = 'block';
-            document.getElementById('welcome-msg').innerHTML = `WELCOME, <span style="color:gold;">${name.toUpperCase()} (ADMIN)</span>`;
-            setInterval(syncRemoteData, 60000); // Auto-refresh every 60s
-        } else {
-            document.getElementById('welcome-msg').innerText = `WELCOME, ${name.toUpperCase()}`;
+        const user = JSON.parse(atob(response.credential.split('.')[1]));
+        if(APPS_SCRIPT_URL.includes("script")) {
+            fetch(APPS_SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: "log", name: user.name, email: user.email }) });
         }
-        syncRemoteData();
+        login(user.given_name, false);
     }
 
-    function toggleTheme() {
-        const body = document.body;
-        const theme = body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-        body.setAttribute('data-theme', theme);
-        localStorage.setItem('miuxo_theme', theme);
+    function login(name, isAdmin) {
+        localStorage.setItem('miuxo_session', JSON.stringify({ name, isAdmin, time: Date.now() }));
+        location.reload();
     }
 
     function logout() { localStorage.removeItem('miuxo_session'); location.reload(); }
 
+    // 3. Remote Data Sync
+    async function sync() {
+        if (!APPS_SCRIPT_URL.includes("script")) return;
+        try {
+            const res = await fetch(APPS_SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: "sync" }) });
+            const data = await res.json();
+            
+            // Broadcast
+            if(data.broadcast && data.broadcast !== "OFF") {
+                document.getElementById('broadcast-msg').style.display = "block";
+                document.getElementById('broadcast-msg').querySelector('span').innerText = data.broadcast;
+            }
+
+            // Admin Dashboard
+            const session = JSON.parse(localStorage.getItem('miuxo_session'));
+            if(session && session.isAdmin) {
+                document.getElementById('admin-panel').style.display = "block";
+                document.getElementById('user-count').innerText = `Registered Users: ${data.userCount}`;
+                let fbHtml = "";
+                data.feedbacks.reverse().slice(0, 3).forEach(f => {
+                    fbHtml += `<div class="fb-card"><strong>${f[1]}</strong>: ${f[2]}</div>`;
+                });
+                document.getElementById('admin-fb-list').innerHTML = fbHtml;
+            }
+        } catch(e) { console.log("Sync delay..."); }
+    }
+
+    async function submitRequest() {
+        const topic = document.getElementById('fb-topic').value;
+        const details = document.getElementById('fb-details').value;
+        if(!topic || !details) return alert("Fill all fields");
+        
+        await fetch(APPS_SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: "submitFeedback", topic, details }) });
+        alert("Success! Miuxo has received your request.");
+        document.getElementById('fb-topic').value = "";
+        document.getElementById('fb-details').value = "";
+        sync();
+    }
+
     window.onload = () => {
         const session = JSON.parse(localStorage.getItem('miuxo_session'));
-        if (session && (Date.now() - session.time < 86400000)) showHub(session.user, session.isAdmin);
+        if (session && (Date.now() - session.time < 86400000)) {
+            document.getElementById('login-overlay').style.display = 'none';
+            document.getElementById('main-content').style.display = 'block';
+            document.getElementById('welcome-txt').innerText = `WELCOME, ${session.name.toUpperCase()}`;
+            sync();
+            if(session.isAdmin) setInterval(sync, 60000);
+        }
+        runTimer();
     };
 </script>
 </body>
