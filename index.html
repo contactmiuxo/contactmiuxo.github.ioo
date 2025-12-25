@@ -42,6 +42,23 @@
             overflow-x: hidden;
         }
 
+        /* 🎬 SPLASH SCREEN STYLES */
+        #splash-screen {
+            position: fixed; inset: 0; background: var(--bg-gradient);
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 10002;
+        }
+        .animated-logo {
+            width: 120px;
+            animation: logo-reveal 1.5s ease-out forwards;
+            filter: drop-shadow(0 0 15px var(--accent));
+        }
+        @keyframes logo-reveal {
+            0% { transform: scale(0.5); opacity: 0; filter: blur(10px); }
+            50% { transform: scale(1.1); opacity: 1; filter: blur(0px); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
         /* ❄️ SNOW CANVAS */
         #snow-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
 
@@ -51,13 +68,11 @@
             padding: 10px 0; overflow: hidden; white-space: nowrap;
             position: relative; z-index: 100;
         }
-
         .ticker-content {
             display: inline-block; padding-left: 100%;
             animation: ticker-scroll 25s linear infinite;
             font-size: 0.85rem; font-weight: bold; letter-spacing: 1px;
         }
-
         @keyframes ticker-scroll { 0% { transform: translate(0, 0); } 100% { transform: translate(-100%, 0); } }
 
         /* 🌓 THEME TOGGLE */
@@ -75,9 +90,7 @@
             display: flex; align-items: center; justify-content: center;
             background: inherit;
         }
-
         .container { display: none; width: 100%; max-width: 400px; padding: 20px; box-sizing: border-box; position: relative; z-index: 2; }
-
         .content-card {
             background: var(--card-bg); border: 1px solid var(--border);
             border-radius: 20px; padding: 25px; margin-bottom: 20px;
@@ -91,21 +104,14 @@
             color: var(--text); outline: none; box-sizing: border-box; font-size: 1rem;
             text-align: center;
         }
-
         .action-btn {
             width: 100%; padding: 14px; border-radius: 12px; border: none;
             background: var(--accent); color: white; font-weight: 700; cursor: pointer; transition: 0.3s;
         }
         .action-btn:hover { opacity: 0.9; transform: translateY(-2px); }
-
-        .forgot-link {
-            font-size: 0.75rem; color: var(--accent); cursor: pointer; 
-            text-decoration: underline; margin-top: 15px; display: block;
-        }
-
+        .forgot-link { font-size: 0.75rem; color: var(--accent); cursor: pointer; text-decoration: underline; margin-top: 15px; display: block; }
         .gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
         .gallery img { width: 100%; border-radius: 12px; border: 1px solid var(--border); }
-        
         .visitor-badge { margin-top: 20px; opacity: 0.6; font-size: 0.7rem; }
     </style>
 </head>
@@ -113,9 +119,14 @@
 
 <canvas id="snow-canvas"></canvas>
 
+<div id="splash-screen">
+    <img src="icon-512.png" class="animated-logo" alt="Miuxo Logo">
+    <h2 style="letter-spacing: 4px; margin-top: 20px; font-weight: 300;">MIUXO</h2>
+</div>
+
 <div class="announcement" id="banner">
     <div class="ticker-content" id="ticker-text">
-        🎄 MIUXO HOLIDAY HUB 2025 • MASTER CODE: MIUXO2025 • OFFICIAL BRAND REPOSITORY ✨
+        🎄 MIUXO HOLIDAY HUB 2025 • OFFICIAL BRAND REPOSITORY ✨
     </div>
 </div>
 
@@ -134,7 +145,7 @@
 
         <div id="recovery-box" style="display:none;">
             <p style="font-size: 0.85rem; margin-bottom: 20px;">Contact the administrator for the 2025 Master Key.</p>
-            <button onclick="window.location.href='mailto:shammas78099@gmail.com'" class="action-btn" style="background:#475569;">EMAIL SUPPORT</button>
+            <button onclick="window.location.href='mailto:support@miuxo.com'" class="action-btn" style="background:#475569;">EMAIL SUPPORT</button>
             <span class="forgot-link" onclick="hideRecovery()">Return to Login</span>
         </div>
 
@@ -167,7 +178,7 @@
             <img src="icon-512.png" alt="Logo High Res">
             <img src="icon-192.png" alt="App Icon">
         </div>
-        <button onclick="downloadAll()" class="action-btn" style="background:transparent; border:2px solid var(--accent); color:var(--text); margin-top:15px;">📦 DOWNLOAD ALL (ZIP)</button>
+        <button onclick="downloadAll()" class="action-btn" style="background:transparent; border:2px solid var(--accent); color:var(--text); margin-top:15px;">📦 DOWNLOAD ALL ASSETS</button>
     </div>
 
     <div class="visitor-badge">
@@ -178,20 +189,19 @@
 <script>
     const MASTER_CODE = "MIUXO2025";
     
-    // 🗓️ HOLIDAY SETTINGS
+    // 🗓️ HOLIDAY LOGIC
     const isHolidaySeason = new Date() < new Date("January 2, 2026");
 
-    // 🌓 THEME ENGINE
+    // 🌓 THEME
     function toggleTheme() {
         const body = document.body;
         const newTheme = body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
         body.setAttribute('data-theme', newTheme);
         localStorage.setItem('miuxo_theme', newTheme);
-        document.getElementById('status-bar-color').setAttribute('content', newTheme === 'dark' ? '#0f172a' : '#f1f5f9');
     }
     document.body.setAttribute('data-theme', localStorage.getItem('miuxo_theme') || 'dark');
 
-    // ❄️ SNOWFALL EFFECT
+    // ❄️ SNOWFALL
     if (isHolidaySeason) {
         const canvas = document.getElementById('snow-canvas');
         const ctx = canvas.getContext('2d');
@@ -199,41 +209,43 @@
         function init() { w=canvas.width=window.innerWidth; h=canvas.height=window.innerHeight; flakes=Array.from({length:100},()=>({x:Math.random()*w,y:Math.random()*h,r:Math.random()*3+1,d:Math.random()*1})); }
         function draw() { ctx.clearRect(0,0,w,h); ctx.fillStyle=document.body.getAttribute('data-theme')==='dark'?'white':'rgba(0,0,0,0.2)'; ctx.beginPath(); flakes.forEach(f=>{ctx.moveTo(f.x,f.y);ctx.arc(f.x,f.y,f.r,0,Math.PI*2,true);f.y+=Math.cos(f.d)+1+f.r/2;f.x+=Math.sin(f.d)*2;if(f.y>h){f.y=-10;f.x=Math.random()*w;}});ctx.fill();requestAnimationFrame(draw);}
         window.addEventListener('resize', init); init(); draw();
-    } else { document.getElementById('snow-canvas').style.display='none'; }
-
-    // 🔑 RECOVERY UI TOGGLE
-    function showRecovery() {
-        document.getElementById('login-box').style.display = 'none';
-        document.getElementById('recovery-box').style.display = 'block';
-        document.getElementById('login-title').innerText = "🔑 RECOVERY";
-    }
-    function hideRecovery() {
-        document.getElementById('login-box').style.display = 'block';
-        document.getElementById('recovery-box').style.display = 'none';
-        document.getElementById('login-title').innerText = "🔐 MIUXO ACCESS";
+    } else { 
+        document.getElementById('snow-canvas').style.display='none';
+        document.getElementById('ticker-text').innerText = "✨ WELCOME TO MIUXO HUB • OFFICIAL BRAND ASSETS • UPDATED FOR 2026 ✨";
     }
 
-    // 🔐 AUTHENTICATION ENGINE
+    // 🎬 REVEAL ANIMATION ENGINE
+    function triggerReveal(name) {
+        document.getElementById('login-overlay').style.display = 'none';
+        const splash = document.getElementById('splash-screen');
+        splash.style.display = 'flex';
+        
+        setTimeout(() => {
+            splash.style.opacity = '0';
+            splash.style.transition = 'opacity 0.8s ease';
+            setTimeout(() => {
+                splash.style.display = 'none';
+                startSession(name);
+            }, 800);
+        }, 2000);
+    }
+
+    // 🔑 RECOVERY UI
+    function showRecovery() { document.getElementById('login-box').style.display = 'none'; document.getElementById('recovery-box').style.display = 'block'; document.getElementById('login-title').innerText = "🔑 RECOVERY"; }
+    function hideRecovery() { document.getElementById('login-box').style.display = 'block'; document.getElementById('recovery-box').style.display = 'none'; document.getElementById('login-title').innerText = "🔐 MIUXO ACCESS"; }
+
+    // 🔐 AUTH
     function checkPass() {
         const input = document.getElementById('pass-input').value;
-        if (input === MASTER_CODE) {
-            startSession("Member");
-        } else {
-            alert("Incorrect Master Code. Please try again.");
-            document.getElementById('pass-input').value = "";
-        }
+        if (input === MASTER_CODE) triggerReveal("Member");
+        else { alert("Incorrect Master Code"); document.getElementById('pass-input').value = ""; }
     }
-
-    function handleGoogleLogin(response) {
-        const payload = JSON.parse(atob(response.credential.split('.')[1]));
-        startSession(payload.given_name);
-    }
-
+    function handleGoogleLogin(response) { triggerReveal(JSON.parse(atob(response.credential.split('.')[1])).given_name); }
+    
     function startSession(name) {
         localStorage.setItem('miuxo_session', JSON.stringify({ auth: true, user: name, time: Date.now() }));
         showHub(name);
     }
-
     function showHub(name) {
         document.getElementById('login-overlay').style.display = 'none';
         document.getElementById('main-content').style.display = 'block';
@@ -248,7 +260,6 @@
         });
     }
 
-    // SESSION PERSISTENCE
     window.onload = () => {
         const session = JSON.parse(localStorage.getItem('miuxo_session'));
         if (session && (Date.now() - session.time < 86400000)) showHub(session.user);
