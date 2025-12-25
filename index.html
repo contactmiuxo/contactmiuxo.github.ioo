@@ -94,7 +94,12 @@
 
         .action-btn {
             width: 100%; padding: 14px; border-radius: 12px; border: none;
-            background: var(--accent); color: white; font-weight: 700; cursor: pointer;
+            background: var(--accent); color: white; font-weight: 700; cursor: pointer; transition: 0.2s;
+        }
+        .action-btn:active { transform: scale(0.98); }
+
+        .download-all-btn {
+            background: transparent; border: 2px solid var(--accent); color: var(--text); margin-top: 10px;
         }
 
         .gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
@@ -129,7 +134,7 @@
 <div class="container" id="main-content">
     <div class="content-card">
         <h2 id="welcome-msg">WELCOME</h2>
-        <button onclick="logout()" style="background:none; border:1px solid var(--border); color:var(--text); padding:5px 10px; border-radius:5px;">LOGOUT</button>
+        <button onclick="logout()" style="background:none; border:1px solid var(--border); color:var(--text); padding:5px 10px; border-radius:5px; cursor:pointer;">LOGOUT</button>
     </div>
 
     <div class="content-card">
@@ -145,6 +150,8 @@
             <img src="icon-512.png" alt="Asset 1">
             <img src="icon-192.png" alt="Asset 2">
         </div>
+        <button onclick="downloadAll()" class="action-btn download-all-btn">📦 DOWNLOAD ALL ASSETS</button>
+        <p style="font-size: 0.6rem; margin-top: 8px; opacity: 0.7;">Requires 'Allow Multiple Downloads' permission</p>
     </div>
 
     <div class="visitor-badge">
@@ -155,12 +162,12 @@
 <script>
     const MASTER_CODE = "MIUXO2025";
     
-    // --- 🗓️ HOLIDAY EXPIRY LOGIC ---
+    // --- 🗓️ HOLIDAY EXPIRY ---
     const today = new Date();
     const expiryDate = new Date("January 2, 2026");
     const isHolidaySeason = today < expiryDate;
 
-    // 🌗 THEME
+    // --- 🌓 THEME ---
     function toggleTheme() {
         const body = document.body;
         const newTheme = body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
@@ -170,12 +177,11 @@
     }
     document.body.setAttribute('data-theme', localStorage.getItem('miuxo_theme') || 'dark');
 
-    // ❄️ SNOWFALL (Only runs if before Expiry Date)
+    // --- ❄️ SNOWFALL ---
     const canvas = document.getElementById('snow-canvas');
     if (isHolidaySeason) {
         const ctx = canvas.getContext('2d');
         let width, height, snowflakes = [];
-
         function initSnow() {
             width = canvas.width = window.innerWidth;
             height = canvas.height = window.innerHeight;
@@ -184,7 +190,6 @@
                 r: Math.random() * 3 + 1, d: Math.random() * 1
             }));
         }
-
         function drawSnow() {
             ctx.clearRect(0, 0, width, height);
             ctx.fillStyle = document.body.getAttribute('data-theme') === 'dark' ? 'white' : 'rgba(0,0,0,0.2)';
@@ -206,7 +211,27 @@
         document.getElementById('ticker-text').innerText = "✨ WELCOME TO MIUXO HUB • OFFICIAL BRAND ASSETS • UPDATED FOR 2026 • CONTACT ADMIN FOR SUPPORT ✨";
     }
 
-    // 🔐 AUTH
+    // --- 📦 DOWNLOAD ALL FUNCTION ---
+    function downloadAll() {
+        const links = [
+            'icon-512.png',
+            'icon-192.png',
+            'manifest.json' // You can add more assets here
+        ];
+        
+        links.forEach((url, index) => {
+            setTimeout(() => {
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = url.split('/').pop();
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            }, index * 500); // 500ms delay between downloads to prevent browser blocking
+        });
+    }
+
+    // --- 🔐 AUTH ---
     function checkPass() { if (document.getElementById('pass-input').value === MASTER_CODE) startSession("Member"); }
     function handleGoogleLogin(response) { startSession(JSON.parse(atob(response.credential.split('.')[1])).given_name); }
     function startSession(name) {
