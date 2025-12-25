@@ -124,6 +124,14 @@
         .gallery img { width: 100%; border-radius: 12px; border: 1px solid var(--border); }
         .visitor-badge { margin-top: 20px; opacity: 0.6; font-size: 0.7rem; }
 
+        /* 🌐 SOCIAL GRID STYLES */
+        .social-card {
+            background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border);
+            border-radius: 15px; padding: 15px 5px; text-decoration: none; color: var(--text);
+            transition: all 0.3s ease; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+        }
+        .social-card:hover { background: var(--accent); transform: translateY(-5px); border-color: transparent; }
+
         /* 📜 CHANGELOG LIST */
         .version-list { text-align: left; font-size: 0.8rem; margin-top: 15px; }
         .version-item { border-left: 2px solid var(--accent); padding-left: 10px; margin-bottom: 10px; opacity: 0.8; }
@@ -132,6 +140,17 @@
 <body data-theme="dark">
 
 <canvas id="snow-canvas"></canvas>
+
+<div id="holiday-popup" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:30000; align-items:center; justify-content:center; padding:20px; backdrop-filter: blur(15px);">
+    <div class="content-card" style="max-width: 350px; border: 2px solid #ef4444;">
+        <div style="font-size: 3rem; margin-bottom: 10px;">🎁</div>
+        <h2 style="color: #ef4444; margin: 0;">MERRY CHRISTMAS</h2>
+        <p style="font-size: 0.9rem; opacity: 0.8; line-height: 1.6; margin: 15px 0;">
+            Thank you for being part of <strong>Miuxo</strong> in 2025. Enjoy exclusive access today!
+        </p>
+        <button onclick="closeHoliday()" class="action-btn" style="background: #ef4444;">OPEN HUB</button>
+    </div>
+</div>
 
 <div id="splash-screen">
     <img src="icon-512.png" class="animated-logo" alt="Miuxo Logo">
@@ -180,16 +199,19 @@
     </div>
 
     <div class="content-card">
+        <h3>🌐 CONNECT WITH MIUXO</h3>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 15px;">
+            <a href="#" class="social-card"><div style="font-size:1.5rem;">💬</div><span style="font-size:0.6rem;">DISCORD</span></a>
+            <a href="#" class="social-card"><div style="font-size:1.5rem;">📸</div><span style="font-size:0.6rem;">INSTAGRAM</span></a>
+            <a href="#" class="social-card"><div style="font-size:1.5rem;">🎬</div><span style="font-size:0.6rem;">YOUTUBE</span></a>
+        </div>
+    </div>
+
+    <div class="content-card">
         <h3 style="font-size: 0.9rem; margin-bottom: 10px;">📜 VERSION HISTORY</h3>
         <div class="version-list">
-            <div class="version-item">
-                <strong>v1.5.0 (Current)</strong><br>
-                Legal Footer, Feedback System & PWA Core.
-            </div>
-            <div class="version-item" style="opacity: 0.4;">
-                <strong>v1.2.0</strong><br>
-                Holiday Snowfall & Google Auth integration.
-            </div>
+            <div class="version-item"><strong>v1.8.0</strong><br>Social Grid & Holiday Popups.</div>
+            <div class="version-item" style="opacity: 0.4;"><strong>v1.5.0</strong><br>Legal Footer & PWA Core.</div>
         </div>
     </div>
 
@@ -204,8 +226,8 @@
 
     <div class="content-card">
         <h3>📩 ASSET REQUEST</h3>
-        <input type="text" id="feedback-topic" placeholder="Asset Name (e.g. Wallpapers)" style="text-align: left; padding-left: 15px;">
-        <textarea id="feedback-details" placeholder="Describe your request..." style="height: 80px; text-align: left; padding: 12px; resize: none;"></textarea>
+        <input type="text" id="feedback-topic" placeholder="Asset Name">
+        <textarea id="feedback-details" placeholder="Describe your request..." style="height: 80px;"></textarea>
         <button onclick="sendFeedback()" class="action-btn" style="margin-top: 10px;">SUBMIT TO MIUXO</button>
     </div>
 
@@ -233,7 +255,6 @@
 <script>
     const MASTER_CODE = "MIUXO2025";
     
-    // PWA SW
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js'); });
     }
@@ -248,7 +269,6 @@
     }
     document.body.setAttribute('data-theme', localStorage.getItem('miuxo_theme') || 'dark');
 
-    // Snowfall
     if (isHolidaySeason) {
         const canvas = document.getElementById('snow-canvas');
         const ctx = canvas.getContext('2d');
@@ -258,6 +278,20 @@
         window.addEventListener('resize', init); init(); draw();
     }
 
+    function checkHolidaySpecial() {
+        const now = new Date();
+        if (now.getMonth() === 11 && now.getDate() === 25) {
+            if (!sessionStorage.getItem('holiday_seen')) {
+                document.getElementById('holiday-popup').style.display = 'flex';
+            }
+        }
+    }
+
+    function closeHoliday() {
+        document.getElementById('holiday-popup').style.display = 'none';
+        sessionStorage.setItem('holiday_seen', 'true');
+    }
+
     function triggerReveal(name) {
         document.getElementById('login-overlay').style.display = 'none';
         const splash = document.getElementById('splash-screen');
@@ -265,7 +299,11 @@
         setTimeout(() => {
             splash.style.opacity = '0';
             splash.style.transition = 'opacity 0.8s ease';
-            setTimeout(() => { splash.style.display = 'none'; startSession(name); }, 800);
+            setTimeout(() => { 
+                splash.style.display = 'none'; 
+                startSession(name); 
+                checkHolidaySpecial();
+            }, 800);
         }, 2000);
     }
 
@@ -317,7 +355,10 @@
 
     window.onload = () => {
         const session = JSON.parse(localStorage.getItem('miuxo_session'));
-        if (session && (Date.now() - session.time < 86400000)) showHub(session.user);
+        if (session && (Date.now() - session.time < 86400000)) {
+            showHub(session.user);
+            checkHolidaySpecial();
+        }
     };
 
     function showRecovery() { document.getElementById('login-box').style.display='none'; document.getElementById('recovery-box').style.display='block'; }
