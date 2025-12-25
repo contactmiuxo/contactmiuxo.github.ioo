@@ -10,238 +10,126 @@
     <style>
         :root {
             --bg-gradient: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-            --card-bg: #1e2533; /* Matched to screenshot */
+            --card-bg: #1e2533; 
             --text: #f8fafc;
             --accent: #2563eb;
             --border: rgba(255, 255, 255, 0.1);
-            --glass: blur(15px);
-            --banner-bg: #2563eb;
         }
 
         body { 
-            font-family: 'Segoe UI', sans-serif;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background: #0f172a;
             color: var(--text);
             margin: 0; padding: 0;
-            display: flex; flex-direction: column; align-items: center; min-height: 100vh;
-            overflow-x: hidden;
+            display: flex; align-items: center; justify-content: center; min-height: 100vh;
         }
 
-        /* 🖱️ Custom Cursor */
-        #custom-cursor {
-            width: 20px; height: 20px; background: var(--accent);
-            border-radius: 50%; position: fixed; pointer-events: none;
-            z-index: 99999; mix-blend-mode: screen;
-            box-shadow: 0 0 20px var(--accent);
-            transition: transform 0.15s ease-out;
-            display: none;
-        }
-        @media (min-width: 768px) { body { cursor: none; } #custom-cursor { display: block; } }
-
-        /* 🖼️ Profile UI */
-        #user-profile {
-            position: fixed; top: 55px; left: 20px;
-            display: none; align-items: center; gap: 10px;
-            z-index: 10001;
-        }
-        #user-avatar { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--accent); }
-
-        .announcement {
-            width: 100%; background: var(--banner-bg); color: white;
-            padding: 10px 0; overflow: hidden; white-space: nowrap;
-            position: relative; z-index: 100;
-        }
-        .ticker-content {
-            display: inline-block; padding-left: 100%;
-            animation: ticker-scroll 25s linear infinite;
-            font-size: 0.85rem; font-weight: bold; letter-spacing: 1px;
-        }
-        @keyframes ticker-scroll { 0% { transform: translate(0, 0); } 100% { transform: translate(-100%, 0); } }
-
-        #login-overlay {
-            position: fixed; inset: 0; z-index: 9999;
-            display: flex; align-items: center; justify-content: center; background: inherit;
-        }
-        .container { display: none; width: 100%; max-width: 400px; padding: 20px; box-sizing: border-box; }
-        
+        /* 🔐 Login Card Styling */
         .content-card {
-            background: var(--card-bg); border: 1px solid var(--border);
-            border-radius: 24px; padding: 35px; margin-bottom: 20px;
-            text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 28px;
+            padding: 45px 35px;
+            text-align: center;
+            width: 360px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
         }
 
-        input, textarea {
-            width: 100%; padding: 14px; margin: 10px 0; border-radius: 12px;
-            border: 1px solid var(--border); background: rgba(255,255,255,0.05);
-            color: white; font-family: inherit; font-size: 0.95rem; text-align: center;
+        h2 { font-size: 1.7rem; margin: 0; letter-spacing: 1px; }
+        p { font-size: 0.9rem; opacity: 0.5; margin: 12px 0 25px 0; }
+
+        input {
+            width: 100%; padding: 16px; margin-bottom: 12px; border-radius: 14px;
+            border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03);
+            color: white; outline: none; box-sizing: border-box; font-size: 1rem; text-align: center;
         }
-        
+
         .action-btn {
-            width: 100%; padding: 15px; border-radius: 12px; border: none;
+            width: 100%; padding: 16px; border-radius: 14px; border: none;
             background: var(--accent); color: white; font-weight: 700; cursor: pointer;
-            text-transform: uppercase; letter-spacing: 1px;
+            font-size: 0.95rem; text-transform: uppercase; transition: 0.2s;
         }
+        .action-btn:hover { filter: brightness(1.1); }
 
+        /* ⚡ Divider */
         .divider {
-            margin: 25px 0; display: flex; align-items: center; gap: 10px; opacity: 0.3;
+            margin: 25px 0; display: flex; align-items: center; gap: 15px;
         }
-        .divider hr { flex: 1; border: 0; border-top: 1px solid white; }
+        .divider hr { flex: 1; border: 0; border-top: 1px solid rgba(255,255,255,0.1); }
+        .divider span { font-size: 0.75rem; opacity: 0.3; font-weight: bold; }
 
-        .admin-panel {
-            border: 1px dashed #ef4444 !important;
-            background: rgba(239, 68, 68, 0.05) !important;
-            display: none;
+        .forgot-link {
+            font-size: 0.85rem; color: #3b82f6; cursor: pointer;
+            display: block; margin-top: 25px; text-decoration: none;
         }
     </style>
 </head>
 <body>
 
-<div id="custom-cursor"></div>
-
-<div id="user-profile">
-    <img id="user-avatar" src="" alt="User">
-    <span id="user-name-label" style="font-size: 0.7rem; font-weight: bold;"></span>
-</div>
-
-<div class="announcement">
-    <div class="ticker-content" id="live-ticker">🎄 MIUXO HOLIDAY HUB 2025 • OFFICIAL BRAND REPOSITORY ✨</div>
-</div>
-
-<div id="login-overlay">
-    <div class="content-card" style="width: 350px;">
-        <h2 style="margin: 0; font-size: 1.6rem;">🔐 MIUXO ACCESS</h2>
-        <p style="font-size: 0.85rem; opacity: 0.6; margin: 10px 0 20px 0;">Enter the Master Code to unlock</p>
-        
-        <div id="login-box">
-            <input type="password" id="pass-input" placeholder="••••••••" autofocus>
-            <button onclick="checkPass()" class="action-btn">UNLOCK HUB</button>
-        </div>
-
-        <div class="divider">
-            <hr> <span>OR</span> <hr>
-        </div>
-
-        <div id="g_id_onload"
-             data-client_id="785119101330-8c05o9segra6q23qvfh8qb5c3qdaobh7.apps.googleusercontent.com"
-             data-context="signin"
-             data-ux_mode="popup"
-             data-callback="handleGoogleLogin"
-             data-auto_prompt="false">
-        </div>
-
-        <div class="g_id_signin"
-             data-type="standard"
-             data-shape="rectangular"
-             data-theme="filled_blue"
-             data-text="signin_with"
-             data-size="large"
-             data-logo_alignment="left"
-             style="display: flex; justify-content: center;">
-        </div>
-        
-        <span style="font-size: 0.8rem; color: #3b82f6; cursor: pointer; text-decoration: none; display: block; margin-top: 25px;" onclick="alert('Contact Admin for Recovery')">Forgot Code?</span>
-    </div>
-</div>
-
-<div class="container" id="main-content">
-    <div class="content-card">
-        <h2 id="welcome-msg" style="margin:0;">WELCOME</h2>
-        <button onclick="logout()" style="background:none; border:none; color:var(--accent); cursor:pointer; font-size:0.75rem; margin-top: 10px;">LOGOUT SESSION</button>
+<div class="content-card">
+    <h2>🔐 MIUXO ACCESS</h2>
+    <p>Enter the Master Code to unlock</p>
+    
+    <div id="login-box">
+        <input type="password" id="pass-input" placeholder="••••••••">
+        <button onclick="checkPass()" class="action-btn">UNLOCK HUB</button>
     </div>
 
-    <div class="content-card admin-panel" id="admin-tools">
-        <h3 style="color: #ef4444; font-size: 0.8rem; margin: 0 0 15px 0;">🛠️ ADMIN TERMINAL</h3>
-        <input type="text" id="new-ticker" placeholder="Update Ticker Text...">
-        <textarea id="new-news" placeholder="Update Member News..." style="height: 60px;"></textarea>
-        <button onclick="updateHubData()" class="action-btn" style="background: #ef4444; padding: 10px;">PUSH UPDATES</button>
+    <div class="divider">
+        <hr> <span>OR</span> <hr>
     </div>
 
-    <div class="content-card">
-        <h3 style="color: var(--accent);">📢 LATEST UPDATES</h3>
-        <p id="news-display" style="font-size: 0.85rem; text-align: left; white-space: pre-line; line-height: 1.6;">
-            • 2026 Roadmap published.
-            • Google Login enabled.
-        </p>
+    <div id="g_id_onload"
+         data-client_id="785119101330-8c05o9segra6q23qvfh8qb5c3qdaobh7.apps.googleusercontent.com"
+         data-context="signin"
+         data-ux_mode="popup"
+         data-callback="handleGoogleLogin"
+         data-auto_prompt="false">
     </div>
 
-    <div class="content-card">
-        <h3>✨ OFFICIAL ASSETS</h3>
-        <button class="action-btn" style="background: transparent; border: 2px solid var(--accent); color: var(--text);">📦 DOWNLOAD PACKAGE</button>
+    <div class="g_id_signin"
+         data-type="standard"
+         data-shape="rectangular"
+         data-theme="filled_blue"
+         data-text="signin_with"
+         data-size="large"
+         data-logo_alignment="left"
+         data-width="290">
     </div>
+    
+    <a href="#" class="forgot-link" onclick="alert('Contact administrator')">Forgot Code?</a>
 </div>
 
 <script>
     const MASTER_CODE = "MIUXO2025";
-    const ADMIN_EMAIL = "shammas78099@gmail.com"; 
 
-    function loadLiveContent() {
-        const savedTicker = localStorage.getItem('miuxo_ticker');
-        const savedNews = localStorage.getItem('miuxo_news');
-        if(savedTicker) document.getElementById('live-ticker').innerText = savedTicker;
-        if(savedNews) document.getElementById('news-display').innerText = savedNews;
-    }
-
+    // Google Login Callback logic
     function handleGoogleLogin(response) {
-        try {
-            const payload = JSON.parse(atob(response.credential.split('.')[1]));
-            const isAdmin = payload.email === ADMIN_EMAIL;
-            
-            // UI Profile Update
-            document.getElementById('user-profile').style.display = 'flex';
-            document.getElementById('user-avatar').src = payload.picture;
-            document.getElementById('user-name-label').innerText = payload.given_name.toUpperCase();
-            
-            if(isAdmin) document.getElementById('admin-tools').style.display = 'block';
-            
-            triggerReveal(payload.given_name);
-        } catch (e) {
-            console.error("Auth Error", e);
-        }
+        // Decode the Google Credential (JWT)
+        const base64Url = response.credential.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+
+        const user = JSON.parse(jsonPayload);
+        
+        console.log("Welcome:", user.name);
+        alert("Authorized: " + user.name);
+        
+        // Redirect or Reveal your content here
+        // window.location.href = "hub.html";
     }
 
     function checkPass() {
-        if (document.getElementById('pass-input').value === MASTER_CODE) {
-            document.getElementById('admin-tools').style.display = 'block'; 
-            triggerReveal("Member");
+        const val = document.getElementById('pass-input').value;
+        if (val === MASTER_CODE) {
+            alert("Access Granted");
         } else {
             alert("Invalid Master Code");
         }
     }
-
-    function updateHubData() {
-        const t = document.getElementById('new-ticker').value;
-        const n = document.getElementById('new-news').value;
-        if(t) {
-            localStorage.setItem('miuxo_ticker', t);
-            document.getElementById('live-ticker').innerText = t;
-        }
-        if(n) {
-            localStorage.setItem('miuxo_news', n);
-            document.getElementById('news-display').innerText = n;
-        }
-        alert("Hub Synchronized!");
-    }
-
-    function triggerReveal(name) {
-        document.getElementById('login-overlay').style.display = 'none';
-        document.getElementById('main-content').style.display = 'block';
-        document.getElementById('welcome-msg').innerText = `WELCOME, ${name.toUpperCase()}`;
-        localStorage.setItem('miuxo_session', JSON.stringify({auth: true, user: name, time: Date.now()}));
-    }
-
-    function logout() { localStorage.clear(); location.reload(); }
-
-    document.addEventListener('mousemove', (e) => {
-        const c = document.getElementById('custom-cursor');
-        c.style.left = e.clientX + 'px';
-        c.style.top = e.clientY + 'px';
-    });
-
-    window.onload = () => {
-        loadLiveContent();
-        const session = JSON.parse(localStorage.getItem('miuxo_session'));
-        if (session) triggerReveal(session.user);
-    };
 </script>
+
 </body>
 </html>
