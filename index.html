@@ -31,22 +31,19 @@
         .miuxo-banner { width: 100%; padding: 12px 0; text-align: center; font-weight: 800; font-size: 0.85rem; letter-spacing: 1px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 1001; background: linear-gradient(90deg, #b48608, #fbe134, #b48608); color: #000; }
         .content-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 20px; margin-bottom: 20px; text-align: center; backdrop-filter: var(--glass); width: 100%; max-width: 500px; box-sizing: border-box; }
         
-        /* Input & Buttons */
         #pass-input { width: 100%; padding: 14px; margin-bottom: 10px; border-radius: 12px; border: none; box-sizing: border-box; background: rgba(255,255,255,0.1); color: white; }
         .action-btn { background: var(--accent); color: white; font-weight: 700; cursor: pointer; border-radius: 12px; padding: 14px; width: 100%; border: none; transition: 0.3s; }
-        .action-btn:hover { background: #1d4ed8; }
+        
+        /* Video Container Styling */
+        .video-container { width: 100%; border-radius: 15px; overflow: hidden; border: 1px solid var(--border); margin-top: 10px; background: #000; }
+        video { width: 100%; display: block; }
 
-        /* Tool Grid */
         #search-bar { width: 100%; background: rgba(255, 255, 255, 0.1); border: 1px solid var(--border); color: white; padding: 12px; border-radius: 12px; margin-top: 10px; outline: none; }
         .tool-count { display: block; font-size: 0.7rem; color: #94a3b8; margin: 10px 0; }
         .social-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 10px; }
         .social-card { background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border); border-radius: 15px; padding: 15px 5px; text-decoration: none; color: white; transition: 0.3s; display: flex; flex-direction: column; align-items: center; }
         .social-card:hover { background: rgba(255, 255, 255, 0.1); transform: translateY(-3px); }
-        .social-card div { font-size: 1.5rem; margin-bottom: 5px; }
 
-        /* Reveal Pop-up */
-        .reveal-header { display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 5px; }
-        .gift-box-icon { width: 45px; height: 45px; }
         .access-frame { width: 100%; max-width: 380px; aspect-ratio: 1 / 1; margin: 20px auto; border: 4px solid #fbbf24; border-radius: 25px; overflow: hidden; background: #0a0a0a; box-shadow: 0 0 30px rgba(251, 191, 36, 0.5); }
         .access-frame img { width: 100%; height: 100%; object-fit: cover; }
         .gift-btn-3d { width: 220px; height: 60px; background: linear-gradient(135deg, #ef4444, #991b1b); color: white; border: none; border-radius: 15px; font-weight: 800; cursor: pointer; transition: 0.4s; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
@@ -68,21 +65,16 @@
         <h2 style="margin-bottom: 20px;">🔐 HUB ACCESS</h2>
         <input type="password" id="pass-input" placeholder="Master Code">
         <button onclick="checkPass()" class="action-btn">UNLOCK HUB</button>
-        
         <div style="margin:20px 0; opacity: 0.3;">OR</div>
-        
-        <div id="g_id_onload" 
-             data-client_id="785119101330-40kgkkoekfbsqu7vo4t6leqalltrs7th.apps.googleusercontent.com" 
-             data-callback="handleGoogleLogin">
-        </div>
+        <div id="g_id_onload" data-client_id="785119101330-40kgkkoekfbsqu7vo4t6leqalltrs7th.apps.googleusercontent.com" data-callback="handleGoogleLogin"></div>
         <div class="g_id_signin" data-type="standard" data-theme="filled_blue"></div>
     </div>
 </div>
 
 <div id="gift-reveal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.98); z-index:10002; align-items:center; justify-content:center; flex-direction:column; padding: 20px;">
     <div class="content-card" style="border:none; background: transparent; backdrop-filter: none;">
-        <div class="reveal-header">
-            <img src="https://cdn-icons-png.flaticon.com/512/4213/4213958.png" class="gift-box-icon" alt="gift">
+        <div style="display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 5px;">
+            <img src="https://cdn-icons-png.flaticon.com/512/4213/4213958.png" style="width: 45px;" alt="gift">
             <h1 style="color:#fbbf24; font-size: 1.8rem; margin: 0;">ACCESS GRANTED</h1>
         </div>
         <p style="color: #ccc; margin-bottom: 15px; font-size: 0.9rem;">MIUXO Elite 2025 Asset Pack has been synchronized.</p>
@@ -99,26 +91,21 @@
         <h3>🌐 MIUXO ECOSYSTEM</h3>
         <input type="text" id="search-bar" placeholder="🔍 Search tools..." onkeyup="filterTools()">
         <span class="tool-count" id="count-label">Available Tools: 18</span>
-        
         <div class="social-grid" id="tool-grid">
             <a href="https://discord.com/invite/2rcKEjsVwV" target="_blank" class="social-card"><div>💬</div><span style="font-size:0.6rem;">DISCORD</span></a>
-            <a href="https://www.instagram.com/aimiuxo/reels/" target="_blank" class="social-card"><div>📸</div><span style="font-size:0.6rem;">INSTA</span></a>
-            <a href="https://www.youtube.com/@aimiuxo" target="_blank" class="social-card"><div>🎬</div><span style="font-size:0.6rem;">YOUTUBE</span></a>
             <a href="https://miuxo.in/" target="_blank" class="social-card" style="border: 1px solid #2563eb;"><div>🌐</div><span style="font-size:0.6rem;">MIUXO.IN</span></a>
-            <a href="https://www.socialboosting.com/" target="_blank" class="social-card" style="border: 1px solid #ff4d4d;"><div>📈</div><span style="font-size:0.6rem;">BOOSTING</span></a>
-            <a href="https://boostgrams.com/" target="_blank" class="social-card" style="border: 1px solid #C13584;"><div>🔥</div><span style="font-size:0.6rem;">GRAMS</span></a>
-            <a href="https://snapinsta.to/" target="_blank" class="social-card" style="border: 1px solid #e1306c;"><div>📥</div><span style="font-size:0.6rem;">SNAPINSTA</span></a>
-            <a href="https://magiceraser.org/" target="_blank" class="social-card" style="border: 1px solid #ffde59;"><div>🪄</div><span style="font-size:0.6rem;">ERASER</span></a>
-            <a href="https://github.com/" target="_blank" class="social-card" style="border: 1px solid #fff;"><div>🐙</div><span style="font-size:0.6rem;">GITHUB</span></a>
             <a href="https://replit.com/" target="_blank" class="social-card" style="border: 1px solid #f26207;"><div>🌀</div><span style="font-size:0.6rem;">REPLIT</span></a>
-            <a href="https://chatgpt.com/codex" target="_blank" class="social-card" style="border: 1px solid #10a37f;"><div>🤖</div><span style="font-size:0.6rem;">CODEX AI</span></a>
-            <a href="https://console.cloud.google.com/" target="_blank" class="social-card" style="border: 1px solid #4285F4;"><div>🔑</div><span style="font-size:0.6rem;">G-AUTH</span></a>
-            <a href="https://www.infinityfree.com/" target="_blank" class="social-card" style="border: 1px solid #005696;"><div>☁️</div><span style="font-size:0.6rem;">HOSTING</span></a>
-            <a href="https://www.godaddy.com/" target="_blank" class="social-card" style="border: 1px solid #00a63f;"><div>🚀</div><span style="font-size:0.6rem;">GODADDY</span></a>
-            <a href="https://www.shopify.com/" target="_blank" class="social-card" style="border: 1px solid #95bf47;"><div>🛍️</div><span style="font-size:0.6rem;">STORE</span></a>
-            <a href="https://superprofile.bio/" target="_blank" class="social-card" style="border: 1px solid #7B3FE4;"><div>💎</div><span style="font-size:0.6rem;">BIO LINK</span></a>
-            <a href="https://tools.picsart.com/" target="_blank" class="social-card" style="border: 1px solid #ff0066;"><div>🎨</div><span style="font-size:0.6rem;">PICSART</span></a>
-            <a href="https://www.veed.io/" target="_blank" class="social-card" style="border: 1px solid #343434;"><div>📽️</div><span style="font-size:0.6rem;">VEED.IO</span></a>
+            </div>
+    </div>
+
+    <div class="content-card">
+        <h3 style="color: var(--accent);">📺 WATCH TUTORIAL</h3>
+        <p style="font-size: 0.8rem; color: #94a3b8; margin-top: -10px;">Simplify your life with MIUXO tools.</p>
+        <div class="video-container">
+            <video controls poster="https://miuxo.in/assets/img/poster.jpg">
+                <source src="Simplify Your Life Today.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
         </div>
     </div>
 
@@ -136,17 +123,12 @@
 <script>
     const MASTER_CODE = "2025";
 
-    // Auth Logic
     function checkPass() { 
         if (document.getElementById('pass-input').value === MASTER_CODE) login("Master Admin"); 
         else alert("Invalid Code"); 
     }
 
-    function handleGoogleLogin(response) {
-        // In a real app, you would verify the JWT token on your server
-        console.log("Encoded JWT ID token: " + response.credential);
-        login("Google User");
-    }
+    function handleGoogleLogin(response) { login("Google User"); }
 
     function login(name) { 
         localStorage.setItem('miuxo_session', JSON.stringify({ name, time: Date.now() })); 
@@ -155,19 +137,16 @@
 
     function logout() { localStorage.removeItem('miuxo_session'); location.reload(); }
 
-    // Search Logic
     function filterTools() {
         const input = document.getElementById('search-bar').value.toUpperCase();
-        const grid = document.getElementById('tool-grid');
-        const cards = grid.getElementsByClassName('social-card');
-        let visibleCount = 0;
+        const cards = document.getElementsByClassName('social-card');
+        let count = 0;
         for (let i = 0; i < cards.length; i++) {
-            const span = cards[i].getElementsByTagName('span')[0];
-            if (span.innerText.toUpperCase().indexOf(input) > -1) {
-                cards[i].style.display = ""; visibleCount++;
-            } else { cards[i].style.display = "none"; }
+            const txt = cards[i].innerText;
+            if (txt.toUpperCase().indexOf(input) > -1) { cards[i].style.display = ""; count++; }
+            else { cards[i].style.display = "none"; }
         }
-        document.getElementById('count-label').innerText = `Available Tools: ${visibleCount}`;
+        document.getElementById('count-label').innerText = `Available Tools: ${count}`;
     }
 
     function openGift() { 
@@ -184,7 +163,7 @@
         }
     };
 
-    // Snow logic
+    // Snow animation logic...
     const canvas = document.getElementById('snow-canvas');
     const ctx = canvas.getContext('2d');
     let flakes = [];
