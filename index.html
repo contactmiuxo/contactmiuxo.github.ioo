@@ -5,179 +5,347 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ᴍɪᴜxᴏ | ᴏꜰꜰɪᴄɪᴀʟ</title>
     
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" id="status-bar-color" content="#2563eb">
+    
     <script src="https://accounts.google.com/gsi/client" async defer></script>
 
     <style>
         :root {
             --bg-gradient: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-            --card-bg: #1e2533; 
+            --card-bg: rgba(255, 255, 255, 0.05);
             --text: #f8fafc;
             --accent: #2563eb;
             --border: rgba(255, 255, 255, 0.1);
+            --glass: blur(15px);
+            --banner-bg: #2563eb;
+        }
+
+        [data-theme="light"] {
+            --bg-gradient: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            --card-bg: rgba(255, 255, 255, 0.7);
+            --text: #1e293b;
+            --accent: #2563eb;
+            --border: rgba(0, 0, 0, 0.1);
+            --glass: blur(10px);
+            --banner-bg: #1e293b;
         }
 
         body { 
             font-family: 'Segoe UI', sans-serif;
-            background: #0f172a;
+            background: var(--bg-gradient);
+            background-attachment: fixed;
             color: var(--text);
             margin: 0; padding: 0;
             display: flex; flex-direction: column; align-items: center; min-height: 100vh;
+            transition: background 0.3s, color 0.3s;
+            overflow-x: hidden;
         }
 
-        /* 🖼️ Profile UI */
-        #user-profile {
-            position: fixed; top: 55px; left: 20px;
-            display: none; align-items: center; gap: 10px;
-            z-index: 10001; background: rgba(0,0,0,0.3); padding: 5px 12px; border-radius: 30px;
+        /* 🖱️ CUSTOM CURSOR */
+        #custom-cursor {
+            width: 20px; height: 20px; background: var(--accent);
+            border-radius: 50%; position: fixed; pointer-events: none;
+            z-index: 99999; mix-blend-mode: screen;
+            box-shadow: 0 0 20px var(--accent);
+            transition: transform 0.15s ease-out;
+            display: none; /* Hidden on touch devices via JS */
         }
-        #user-avatar { width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--accent); }
+        @media (min-width: 768px) { body { cursor: none; } #custom-cursor { display: block; } }
+
+        /* 🎬 SPLASH SCREEN */
+        #splash-screen {
+            position: fixed; inset: 0; background: var(--bg-gradient);
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 10002;
+        }
+        .animated-logo {
+            width: 120px;
+            animation: logo-reveal 1.5s ease-out forwards;
+            filter: drop-shadow(0 0 15px var(--accent));
+        }
+        @keyframes logo-reveal {
+            0% { transform: scale(0.5); opacity: 0; filter: blur(10px); }
+            50% { transform: scale(1.1); opacity: 1; filter: blur(0px); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        #snow-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
 
         .announcement {
-            width: 100%; background: var(--accent); color: white;
+            width: 100%; background: var(--banner-bg); color: white;
             padding: 10px 0; overflow: hidden; white-space: nowrap;
+            position: relative; z-index: 100;
         }
         .ticker-content {
             display: inline-block; padding-left: 100%;
             animation: ticker-scroll 25s linear infinite;
-            font-size: 0.85rem; font-weight: bold;
+            font-size: 0.85rem; font-weight: bold; letter-spacing: 1px;
         }
         @keyframes ticker-scroll { 0% { transform: translate(0, 0); } 100% { transform: translate(-100%, 0); } }
 
-        /* 🔐 Login Overlay */
+        .theme-toggle {
+            position: fixed; top: 55px; right: 20px;
+            background: var(--card-bg); border: 1px solid var(--border);
+            color: var(--text); width: 44px; height: 44px; border-radius: 50%;
+            cursor: pointer; backdrop-filter: var(--glass); z-index: 10001;
+            display: flex; align-items: center; justify-content: center;
+        }
+
         #login-overlay {
             position: fixed; inset: 0; z-index: 9999;
-            display: flex; align-items: center; justify-content: center; background: #0f172a;
+            display: flex; align-items: center; justify-content: center;
+            background: inherit;
         }
+        .container { display: none; width: 100%; max-width: 400px; padding: 20px; box-sizing: border-box; position: relative; z-index: 2; }
         .content-card {
             background: var(--card-bg); border: 1px solid var(--border);
-            border-radius: 28px; padding: 40px; margin-bottom: 20px;
-            text-align: center; width: 350px;
+            border-radius: 20px; padding: 25px; margin-bottom: 20px;
+            text-align: center; backdrop-filter: var(--glass);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
         }
+        .content-card:hover { transform: translateY(-5px); }
 
         input, textarea {
             width: 100%; padding: 14px; margin: 10px 0; border-radius: 12px;
             border: 1px solid var(--border); background: rgba(255,255,255,0.05);
-            color: white; font-family: inherit; text-align: center;
+            color: var(--text); outline: none; box-sizing: border-box; font-size: 1rem;
+            text-align: center; font-family: inherit;
         }
         
         .action-btn {
-            width: 100%; padding: 15px; border-radius: 12px; border: none;
-            background: var(--accent); color: white; font-weight: 700; cursor: pointer;
+            width: 100%; padding: 14px; border-radius: 12px; border: none;
+            background: var(--accent); color: white; font-weight: 700; cursor: pointer; transition: 0.3s;
+        }
+        .action-btn:hover { opacity: 0.9; box-shadow: 0 0 15px rgba(37, 99, 235, 0.4); }
+
+        .logout-btn {
+            background: transparent; border: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--text); padding: 10px 25px; border-radius: 10px;
+            font-size: 0.75rem; letter-spacing: 1px; text-transform: uppercase;
+            cursor: pointer; transition: all 0.4s ease;
         }
 
-        .divider { margin: 25px 0; display: flex; align-items: center; gap: 10px; opacity: 0.3; }
-        .divider hr { flex: 1; border: 0; border-top: 1px solid white; }
+        /* 🗺️ ROADMAP STYLES */
+        .roadmap-item { text-align: left; margin-bottom: 15px; }
+        .progress-bar { 
+            width: 100%; height: 6px; background: rgba(255,255,255,0.1); 
+            border-radius: 10px; margin-top: 5px; overflow: hidden; 
+        }
+        .progress-fill { height: 100%; background: var(--accent); border-radius: 10px; }
 
-        .admin-panel { border: 1px dashed #ef4444 !important; background: rgba(239, 68, 68, 0.05) !important; display: none; }
-        .container { display: none; width: 100%; max-width: 400px; padding: 20px; }
+        .social-card {
+            background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border);
+            border-radius: 15px; padding: 15px 5px; text-decoration: none; color: var(--text);
+            transition: all 0.3s ease; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+        }
+        .social-card:hover { background: var(--accent); border-color: transparent; }
+
+        .gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+        .gallery img { width: 100%; border-radius: 12px; border: 1px solid var(--border); }
+        .visitor-badge { margin-top: 20px; opacity: 0.6; font-size: 0.7rem; }
     </style>
 </head>
-<body>
+<body data-theme="dark">
 
-<div id="user-profile">
-    <img id="user-avatar" src="" alt="User">
-    <span id="user-name-label" style="font-size: 0.7rem; font-weight: bold;"></span>
+<div id="custom-cursor"></div>
+<canvas id="snow-canvas"></canvas>
+
+<div id="holiday-popup" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:30000; align-items:center; justify-content:center; padding:20px; backdrop-filter: blur(15px);">
+    <div class="content-card" style="max-width: 350px; border: 2px solid #ef4444;">
+        <div style="font-size: 3rem; margin-bottom: 10px;">🎁</div>
+        <h2 style="color: #ef4444; margin: 0;">MERRY CHRISTMAS</h2>
+        <p style="font-size: 0.9rem; opacity: 0.8; line-height: 1.6; margin: 15px 0;">
+            Thank you for being part of <strong>Miuxo</strong> in 2025. Enjoy exclusive access today!
+        </p>
+        <button onclick="closeHoliday()" class="action-btn" style="background: #ef4444;">OPEN HUB</button>
+    </div>
 </div>
 
-<div class="announcement">
-    <div class="ticker-content" id="live-ticker">🎄 MIUXO HOLIDAY HUB 2025 • OFFICIAL BRAND REPOSITORY ✨</div>
+<div id="splash-screen">
+    <img src="icon-512.png" class="animated-logo" alt="Miuxo Logo">
+    <h2 style="letter-spacing: 4px; margin-top: 20px; font-weight: 300;">MIUXO</h2>
 </div>
+
+<div class="announcement" id="banner">
+    <div class="ticker-content" id="ticker-text">
+        🎄 MIUXO HOLIDAY HUB 2025 • OFFICIAL BRAND REPOSITORY ✨
+    </div>
+</div>
+
+<button class="theme-toggle" onclick="toggleTheme()">🌓</button>
 
 <div id="login-overlay">
-    <div class="content-card">
-        <h2>🔐 MIUXO ACCESS</h2>
-        <p style="font-size: 0.8rem; opacity: 0.5;">Master Code or Google Login</p>
-        
-        <input type="password" id="pass-input" placeholder="••••••••">
-        <button onclick="checkPass()" class="action-btn">UNLOCK HUB</button>
-
-        <div class="divider"><hr><span>OR</span><hr></div>
-
-        <div id="g_id_onload"
-             data-client_id="785119101330-8c05o9segra6q23qvfh8qb5c3qdaobh7.apps.googleusercontent.com"
-             data-callback="handleGoogleLogin">
+    <div class="content-card" style="width: 340px;">
+        <h2 id="login-title" style="margin-bottom: 5px;">🔐 MIUXO ACCESS</h2>
+        <p style="font-size: 0.8rem; opacity: 0.6; margin-bottom: 20px;">Enter the Master Code to unlock</p>
+        <div id="login-box">
+            <input type="password" id="pass-input" placeholder="••••••••" autofocus>
+            <button onclick="checkPass()" class="action-btn">UNLOCK HUB</button>
+            <span style="font-size: 0.75rem; color: var(--accent); cursor: pointer; text-decoration: underline; margin-top: 15px; display: block;" onclick="showRecovery()">Forgot Code?</span>
         </div>
-        <div class="g_id_signin" data-type="standard" data-theme="filled_blue" data-size="large" data-width="270"></div>
+        <div id="recovery-box" style="display:none;">
+            <p style="font-size: 0.85rem; margin-bottom: 20px;">Contact the administrator for the 2025 Master Key.</p>
+            <button onclick="window.location.href='mailto:shammas78099@gmail.com'" class="action-btn" style="background:#475569;">EMAIL SUPPORT</button>
+            <span style="font-size: 0.75rem; color: var(--accent); cursor: pointer; text-decoration: underline; margin-top: 15px; display: block;" onclick="hideRecovery()">Return to Login</span>
+        </div>
     </div>
 </div>
 
 <div class="container" id="main-content">
     <div class="content-card">
-        <h2 id="welcome-msg">WELCOME</h2>
-        <button onclick="logout()" style="background:none; border:none; color:var(--accent); cursor:pointer; font-size:0.75rem;">LOGOUT</button>
+        <h2 id="welcome-msg" style="margin:0;">WELCOME</h2>
+        <p style="font-size: 0.8rem; opacity: 0.5; margin-bottom: 15px;">Official Miuxo Brand Hub is Active</p>
+        <button onclick="logout()" class="logout-btn">LOGOUT SESSION</button>
     </div>
 
-    <div class="content-card admin-panel" id="admin-tools">
-        <h3 style="color: #ef4444; font-size: 0.8rem;">🛠️ ADMIN TERMINAL</h3>
-        <input type="text" id="new-ticker" placeholder="New Ticker Text">
-        <textarea id="new-news" placeholder="New News Content"></textarea>
-        <button onclick="updateHubData()" class="action-btn" style="background: #ef4444;">PUSH UPDATES</button>
+    <div class="content-card" style="border: 1px solid var(--accent);">
+        <h3 style="color: var(--accent); font-size: 0.9rem;">📢 LATEST UPDATES</h3>
+        <p style="font-size: 0.8rem; text-align: left; margin: 10px 0;">
+            • 2026 Roadmap published.<br>
+            • New "Glow" cursor interface added.<br>
+            • Holiday assets now available for download.
+        </p>
     </div>
 
     <div class="content-card">
-        <h3 style="color: var(--accent);">📢 LATEST UPDATES</h3>
-        <p id="news-display" style="font-size: 0.85rem; text-align: left; white-space: pre-line;">
-            • 2026 Roadmap published.
-            • Google Login enabled.
-        </p>
+        <h3>🚀 2026 ROADMAP</h3>
+        <div class="roadmap-item">
+            <div style="display: flex; justify-content: space-between; font-size: 0.7rem; font-weight: bold;">
+                <span>MIUXO MOBILE APP</span>
+                <span style="color: var(--accent);">75%</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" style="width: 75%;"></div></div>
+        </div>
+        <div class="roadmap-item">
+            <div style="display: flex; justify-content: space-between; font-size: 0.7rem; font-weight: bold;">
+                <span>V2 ASSET LIBRARY</span>
+                <span style="color: var(--accent);">40%</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" style="width: 40%;"></div></div>
+        </div>
     </div>
+
+    <div class="content-card">
+        <h3>🎨 BRAND IDENTITY</h3>
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div onclick="copyColor('#2563eb', this)" style="display: flex; align-items: center; background: rgba(255,255,255,0.03); border-radius: 12px; padding: 10px; cursor: pointer; border: 1px solid var(--border);">
+                <div style="width: 40px; height: 40px; background: #2563eb; border-radius: 8px; margin-right: 15px;"></div>
+                <div style="text-align: left;">
+                    <div class="color-label" style="font-size: 0.7rem; font-weight: bold;">PRIMARY BLUE</div>
+                    <div style="font-size: 0.6rem; opacity: 0.5;">#2563eb</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-card">
+        <h3>🌐 CONNECT</h3>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 15px;">
+            <a href="#" class="social-card"><div style="font-size:1.5rem;">💬</div><span style="font-size:0.6rem;">DISCORD</span></a>
+            <a href="#" class="social-card"><div style="font-size:1.5rem;">📸</div><span style="font-size:0.6rem;">INSTAGRAM</span></a>
+            <a href="#" class="social-card"><div style="font-size:1.5rem;">🎬</div><span style="font-size:0.6rem;">YOUTUBE</span></a>
+        </div>
+    </div>
+
+    <div class="content-card">
+        <h3>✨ ASSETS</h3>
+        <div class="gallery"><img src="icon-512.png" alt="Logo"><img src="icon-192.png" alt="Icon"></div>
+        <button onclick="downloadAll()" class="action-btn" style="background:transparent; border:2px solid var(--accent); color:var(--text); margin-top:15px;">📦 DOWNLOAD</button>
+    </div>
+
+    <div class="visitor-badge">
+        HUB VISITS: <img src="https://hitwebcounter.com/counter/counter.php?page=miuxo_hub_2025&style=0006&nbdigits=5&type=page&initCount=0" border="0" style="vertical-align: middle; filter: grayscale(1) invert(1);">
+    </div>
+
+    <footer style="margin-top: 30px; padding: 20px; text-align: center; border-top: 1px solid var(--border);">
+        <p style="font-size: 0.6rem; opacity: 0.3;">&copy; 2025 MIUXO. DESIGNED FOR THE COMMUNITY.</p>
+    </footer>
 </div>
 
 <script>
     const MASTER_CODE = "MIUXO2025";
-    const ADMIN_EMAIL = "shammas78099@gmail.com"; 
+    const cursor = document.getElementById('custom-cursor');
 
-    function handleGoogleLogin(response) {
-        const payload = JSON.parse(atob(response.credential.split('.')[1]));
-        
-        // Show Profile Info
-        document.getElementById('user-profile').style.display = 'flex';
-        document.getElementById('user-avatar').src = payload.picture;
-        document.getElementById('user-name-label').innerText = payload.given_name.toUpperCase();
-        
-        // Check for Admin status
-        if(payload.email === ADMIN_EMAIL) {
-            document.getElementById('admin-tools').style.display = 'block';
-        }
-        
-        triggerReveal(payload.given_name);
+    // 🖱️ Cursor Logic
+    document.addEventListener('mousemove', (e) => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+    });
+
+    document.querySelectorAll('button, a, .social-card, .content-card, input').forEach(el => {
+        el.addEventListener('mouseenter', () => cursor.style.transform = 'scale(2.5)');
+        el.addEventListener('mouseleave', () => cursor.style.transform = 'scale(1)');
+    });
+
+    function copyColor(hex, element) {
+        navigator.clipboard.writeText(hex);
+        const label = element.querySelector('.color-label');
+        const originalText = label.innerText;
+        label.innerText = "COPIED!";
+        label.style.color = "#10b981";
+        setTimeout(() => { label.innerText = originalText; label.style.color = "inherit"; }, 1500);
+    }
+
+    function toggleTheme() {
+        const body = document.body;
+        const newTheme = body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        body.setAttribute('data-theme', newTheme);
+        localStorage.setItem('miuxo_theme', newTheme);
+    }
+
+    const isHolidaySeason = new Date() < new Date("January 2, 2026");
+    if (isHolidaySeason) {
+        const canvas = document.getElementById('snow-canvas');
+        const ctx = canvas.getContext('2d');
+        let w, h, flakes = [];
+        function init() { w=canvas.width=window.innerWidth; h=canvas.height=window.innerHeight; flakes=Array.from({length:100},()=>({x:Math.random()*w,y:Math.random()*h,r:Math.random()*3+1,d:Math.random()*1})); }
+        function draw() { ctx.clearRect(0,0,w,h); ctx.fillStyle=document.body.getAttribute('data-theme')==='dark'?'white':'rgba(0,0,0,0.2)'; ctx.beginPath(); flakes.forEach(f=>{ctx.moveTo(f.x,f.y);ctx.arc(f.x,f.y,f.r,0,Math.PI*2,true);f.y+=Math.cos(f.d)+1+f.r/2;f.x+=Math.sin(f.d)*2;if(f.y>h){f.y=-10;f.x=Math.random()*w;}});ctx.fill();requestAnimationFrame(draw);}
+        window.addEventListener('resize', init); init(); draw();
     }
 
     function checkPass() {
-        if (document.getElementById('pass-input').value === MASTER_CODE) {
-            document.getElementById('admin-tools').style.display = 'block'; 
-            triggerReveal("Member");
-        } else {
-            alert("Wrong Code");
-        }
+        if (document.getElementById('pass-input').value === MASTER_CODE) triggerReveal("Member");
+        else { alert("Incorrect Master Code"); }
     }
 
     function triggerReveal(name) {
         document.getElementById('login-overlay').style.display = 'none';
+        const splash = document.getElementById('splash-screen');
+        splash.style.display = 'flex';
+        setTimeout(() => {
+            splash.style.opacity = '0';
+            splash.style.transition = 'opacity 0.8s ease';
+            setTimeout(() => { 
+                splash.style.display = 'none'; 
+                localStorage.setItem('miuxo_session', JSON.stringify({ auth: true, user: name, time: Date.now() }));
+                showHub(name);
+            }, 800);
+        }, 2000);
+    }
+
+    function showHub(name) {
+        document.getElementById('login-overlay').style.display = 'none';
         document.getElementById('main-content').style.display = 'block';
         document.getElementById('welcome-msg').innerText = `WELCOME, ${name.toUpperCase()}`;
-        localStorage.setItem('miuxo_session', JSON.stringify({auth: true, user: name, time: Date.now()}));
     }
 
-    function updateHubData() {
-        const t = document.getElementById('new-ticker').value;
-        const n = document.getElementById('new-news').value;
-        if(t) { localStorage.setItem('miuxo_ticker', t); document.getElementById('live-ticker').innerText = t; }
-        if(n) { localStorage.setItem('miuxo_news', n); document.getElementById('news-display').innerText = n; }
-        alert("Updated!");
-    }
+    function logout() { localStorage.removeItem('miuxo_session'); location.reload(); }
 
-    function logout() { localStorage.clear(); location.reload(); }
+    function downloadAll() {
+        ['icon-512.png', 'icon-192.png'].forEach((url, i) => {
+            setTimeout(() => { const a=document.createElement('a'); a.href=url; a.download=url; a.click(); }, i*500);
+        });
+    }
 
     window.onload = () => {
-        const t = localStorage.getItem('miuxo_ticker');
-        const n = localStorage.getItem('miuxo_news');
-        if(t) document.getElementById('live-ticker').innerText = t;
-        if(n) document.getElementById('news-display').innerText = n;
-        
         const session = JSON.parse(localStorage.getItem('miuxo_session'));
-        if (session) triggerReveal(session.user);
+        if (session && (Date.now() - session.time < 86400000)) showHub(session.user);
     };
+
+    function showRecovery() { document.getElementById('login-box').style.display='none'; document.getElementById('recovery-box').style.display='block'; }
+    function hideRecovery() { document.getElementById('login-box').style.display='block'; document.getElementById('recovery-box').style.display='none'; }
 </script>
 </body>
 </html>
