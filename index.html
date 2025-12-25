@@ -14,7 +14,6 @@
     </script>
     
     <link rel="icon" type="image/png" href="logo.png">
-    <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#2563eb">
     <script src="https://accounts.google.com/gsi/client" async defer></script>
 
@@ -26,7 +25,7 @@
             --accent: #2563eb;
             --border: rgba(255, 255, 255, 0.1);
             --glass: blur(15px);
-            --banner-bg: #2563eb;
+            --vip-gold: #fbbf24;
         }
 
         body { 
@@ -36,107 +35,36 @@
             color: var(--text);
             margin: 0; padding: 0;
             display: flex; flex-direction: column; align-items: center; min-height: 100vh;
-            overflow-x: hidden;
         }
 
-        /* --- SYNC LOADER --- */
-        #sync-loader {
-            position: fixed; bottom: 20px; left: 20px;
-            background: rgba(0,0,0,0.6); backdrop-filter: var(--glass);
-            padding: 8px 15px; border-radius: 30px; border: 1px solid var(--border);
-            display: none; align-items: center; gap: 10px; font-size: 0.7rem; z-index: 1000; color: gold;
-        }
+        /* Elements */
+        #sync-loader { position: fixed; bottom: 20px; left: 20px; background: rgba(0,0,0,0.6); backdrop-filter: var(--glass); padding: 8px 15px; border-radius: 30px; border: 1px solid var(--border); display: none; align-items: center; gap: 10px; font-size: 0.7rem; z-index: 1000; color: gold; }
         .spinner { width: 12px; height: 12px; border: 2px solid rgba(255,255,255,0.1); border-top-color: gold; border-radius: 50%; animation: spin 0.8s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* --- HOLIDAY COUNTDOWN --- */
-        #countdown-row { display: flex; gap: 8px; justify-content: center; margin: 15px 0; }
-        .time-unit { background: var(--card-bg); border: 1px solid var(--border); padding: 8px; border-radius: 12px; min-width: 55px; backdrop-filter: var(--glass); }
-        .time-num { display: block; font-size: 1.1rem; font-weight: 800; color: #fbbf24; text-shadow: 0 0 10px rgba(251, 191, 36, 0.5); }
-        .time-lbl { font-size: 0.55rem; opacity: 0.6; text-transform: uppercase; }
+        .miuxo-banner { width: 100%; padding: 12px 0; text-align: center; font-weight: 800; font-size: 0.85rem; letter-spacing: 1px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 1001; }
+        .theme-newyear { background: linear-gradient(90deg, #b48608, #fbe134, #b48608); color: #000; }
 
-        /* --- UI COMPONENTS --- */
-        .announcement { width: 100%; background: var(--banner-bg); color: white; padding: 10px 0; overflow: hidden; white-space: nowrap; }
-        .ticker-content { display: inline-block; padding-left: 100%; animation: ticker-scroll 25s linear infinite; font-size: 0.85rem; font-weight: bold; }
-        @keyframes ticker-scroll { 0% { transform: translate(0, 0); } 100% { transform: translate(-100%, 0); } }
-
-        .content-card {
-            background: var(--card-bg); border: 1px solid var(--border);
-            border-radius: 20px; padding: 20px; margin-bottom: 20px;
-            text-align: center; backdrop-filter: var(--glass); width: 100%; box-sizing: border-box;
-        }
-
-        #search-bar {
-            width: 100%; padding: 14px; margin-bottom: 10px; border-radius: 12px;
-            border: 1px solid var(--border); background: rgba(255,255,255,0.03);
-            color: white; font-size: 0.9rem; outline: none; transition: 0.3s;
-        }
-        #search-bar:focus { border-color: var(--accent); background: rgba(255,255,255,0.07); }
-        .tool-count { font-size: 0.65rem; opacity: 0.5; text-transform: uppercase; margin-bottom: 15px; display: block; letter-spacing: 1px; }
-
+        .content-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 20px; margin-bottom: 20px; text-align: center; backdrop-filter: var(--glass); width: 100%; max-width: 500px; box-sizing: border-box; }
         .social-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(85px, 1fr)); gap: 10px; }
-        .social-card { 
-            background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border);
-            border-radius: 15px; padding: 15px 5px; text-decoration: none; color: var(--text);
-            transition: 0.3s; display: flex; flex-direction: column; align-items: center; gap: 8px;
-        }
-        .social-card:hover { background: var(--accent); transform: translateY(-5px); border-color: white !important; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+        .social-card { background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border); border-radius: 15px; padding: 15px 5px; text-decoration: none; color: var(--text); transition: 0.3s; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+        .social-card:hover { background: var(--accent); transform: translateY(-5px); border-color: white !important; }
 
-        #admin-panel { border: 1px solid gold !important; display: none; background: rgba(251, 191, 36, 0.03); }
-        .fb-card { background: rgba(0,0,0,0.3); border-radius: 10px; padding: 10px; margin-top: 8px; text-align: left; font-size: 0.75rem; border-left: 3px solid gold; }
-
-        input, textarea { width: 100%; padding: 14px; margin: 10px 0; border-radius: 12px; border: 1px solid var(--border); background: rgba(255,255,255,0.05); color: var(--text); outline: none; box-sizing: border-box; text-align: center; }
-        .action-btn { width: 100%; padding: 14px; border-radius: 12px; border: none; background: var(--accent); color: white; font-weight: 700; cursor: pointer; transition: 0.3s; }
-        .action-btn:hover { background: #1d4ed8; transform: scale(1.02); }
-
+        input, textarea { width: 100%; padding: 14px; margin: 10px 0; border-radius: 12px; border: 1px solid var(--border); background: rgba(255,255,255,0.05); color: var(--text); outline: none; box-sizing: border-box; }
+        .action-btn { width: 100%; padding: 14px; border-radius: 12px; border: none; background: var(--accent); color: white; font-weight: 700; cursor: pointer; }
+        
         #login-overlay { position: fixed; inset: 0; background: var(--bg-gradient); z-index: 999; display: flex; align-items: center; justify-content: center; }
-        .container { display: none; width: 100%; max-width: 500px; padding: 20px; box-sizing: border-box; z-index: 2; }
+        .container { display: none; width: 100%; max-width: 500px; padding: 20px; box-sizing: border-box; }
+
+        #countdown-row { display: flex; gap: 8px; justify-content: center; margin: 15px 0; }
+        .time-unit { background: var(--card-bg); border: 1px solid var(--border); padding: 8px; border-radius: 12px; min-width: 55px; }
+        .time-num { display: block; font-size: 1.1rem; font-weight: 800; color: #fbbf24; }
+        .time-lbl { font-size: 0.55rem; opacity: 0.6; text-transform: uppercase; }
     </style>
 </head>
 <body>
 
 <div id="sync-loader"><div class="spinner"></div> MIUXO DATA SYNC...</div>
-
-<style>
-    .miuxo-banner {
-        width: 100%;
-        padding: 12px 0;
-        text-align: center;
-        font-weight: 800;
-        font-size: 0.9rem;
-        letter-spacing: 1px;
-        text-transform: uppercase;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        z-index: 1001;
-        position: relative;
-    }
-
-    /* PRESET 1: NEW YEAR (Golden Glow) */
-    .theme-newyear {
-        background: linear-gradient(90deg, #b48608, #fbe134, #b48608);
-        color: #000;
-        text-shadow: 0 1px 2px rgba(255,255,255,0.5);
-    }
-
-    /* PRESET 2: GIVEAWAY (Pulse Red) */
-    .theme-giveaway {
-        background: #ff4d4d;
-        color: white;
-        animation: pulse-red 2s infinite;
-    }
-
-    /* PRESET 3: MAINTENANCE (Alert Orange) */
-    .theme-alert {
-        background: #f59e0b;
-        color: white;
-    }
-
-    @keyframes pulse-red {
-        0% { background-color: #ff4d4d; }
-        50% { background-color: #b91c1c; }
-        100% { background-color: #ff4d4d; }
-    }
-</style>
 
 <div class="miuxo-banner theme-newyear">
     ✨ HAPPY NEW YEAR 2026! THE FUTURE IS MIUXO ✨
@@ -161,15 +89,23 @@
         <div class="time-unit"><span class="time-num" id="m">00</span><span class="time-lbl">Mins</span></div>
     </div>
 
-    <div class="content-card" id="admin-panel">
+    <div class="content-card" id="vip-section" style="display: none; border: 2px solid var(--vip-gold);">
+        <h3 style="color: var(--vip-gold); margin: 0;">💎 VIP ELITE ACCESS</h3>
+        <div class="social-grid" style="margin-top:15px;">
+            <a href="#" class="social-card" style="border: 1px solid var(--vip-gold);"><div>⚡</div><span style="font-size:0.6rem;">GPT-4</span></a>
+            <a href="#" class="social-card" style="border: 1px solid var(--vip-gold);"><div>💰</div><span style="font-size:0.6rem;">ADMIN</span></a>
+        </div>
+    </div>
+
+    <div class="content-card" id="admin-panel" style="display:none; border-color: gold;">
         <h3 style="color: gold; margin: 0;">👑 ADMIN CONSOLE</h3>
-        <p id="user-count" style="font-size: 0.8rem; margin: 10px 0; color: #fbbf24;">Loading logs...</p>
+        <p id="user-count" style="font-size: 0.8rem; margin: 10px 0; color: #fbbf24;">Syncing Database...</p>
         <div id="admin-fb-list"></div>
     </div>
 
     <div class="content-card">
         <h2 id="welcome-txt" style="margin: 0;">WELCOME</h2>
-        <button onclick="logout()" style="background:transparent; color:white; border:1px solid rgba(255,255,255,0.2); padding:5px 12px; border-radius:8px; cursor:pointer; font-size:0.6rem; margin-top: 10px;">END SESSION</button>
+        <button onclick="logout()" style="background:transparent; color:white; border:1px solid rgba(255,255,255,0.2); padding:5px 12px; border-radius:8px; cursor:pointer; font-size:0.6rem; margin-top: 10px;">LOGOUT</button>
     </div>
 
     <div class="content-card">
@@ -205,26 +141,30 @@
         <textarea id="fb-details" placeholder="Brief description..." style="height: 70px;"></textarea>
         <button onclick="submitRequest()" class="action-btn">SUBMIT REQUEST</button>
     </div>
+
+    <div class="content-card" style="background: rgba(0,0,0,0.2); border: 1px dashed rgba(255,255,255,0.1); text-align: left;">
+        <h4 style="color: var(--accent); font-size: 0.8rem; margin-bottom: 5px;">⚖️ MIUXO OFFICIAL</h4>
+        <p style="font-size: 0.65rem; opacity: 0.7; line-height: 1.4;">Streamlining digital growth for the 2025 creator ecosystem. v4.5.0 MASTER</p>
+        <div style="display: flex; align-items: center; gap: 8px; margin-top: 10px;">
+            <div style="width: 8px; height: 8px; background: #10b981; border-radius: 50%;"></div>
+            <span style="font-size: 0.6rem; color: #10b981; font-weight: bold;">ALL SYSTEMS OPERATIONAL</span>
+        </div>
+    </div>
 </div>
 
 <script>
     const MASTER_CODE = "2025";
-    const APPS_SCRIPT_URL = "https://docs.google.com/spreadsheets/d/1hRxusWivIUaEnE1P88YEAgy6kAxz6kKfH2fiCdY4uOs/edit?usp=sharing";
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwlqo-vMno8-nR0oqrqcRb_kcsw5iQ9vJjt_7aXZy73fPHZg1NKw3ReMxScADLz1TA/exec";
 
     function filterTools() {
         let input = document.getElementById('search-bar').value.toLowerCase();
-        let cards = document.getElementsByClassName('social-card');
-        let visibleCount = 0;
-        for (let i = 0; i < cards.length; i++) {
-            let title = cards[i].innerText.toLowerCase();
-            if(title.includes(input)) {
-                cards[i].style.display = "flex";
-                visibleCount++;
-            } else {
-                cards[i].style.display = "none";
-            }
-        }
-        document.getElementById('count-label').innerText = `Matching Tools: ${visibleCount}`;
+        let cards = document.querySelectorAll('.social-card');
+        let count = 0;
+        cards.forEach(card => {
+            if(card.innerText.toLowerCase().includes(input)) { card.style.display = "flex"; count++; }
+            else { card.style.display = "none"; }
+        });
+        document.getElementById('count-label').innerText = `Matching Tools: ${count}`;
     }
 
     function runTimer() {
@@ -242,15 +182,18 @@
     
     function handleGoogleLogin(response) {
         const user = JSON.parse(atob(response.credential.split('.')[1]));
-        if(APPS_SCRIPT_URL.includes("script")) fetch(APPS_SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: "log", name: user.name, email: user.email }) });
+        fetch(APPS_SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: "log", name: user.name, email: user.email }) });
         login(user.given_name, false);
     }
 
-    function login(name, isAdmin) { localStorage.setItem('miuxo_session', JSON.stringify({ name, isAdmin, time: Date.now() })); location.reload(); }
+    function login(name, isAdmin) { 
+        localStorage.setItem('miuxo_session', JSON.stringify({ name, isAdmin, time: Date.now() })); 
+        location.reload(); 
+    }
+    
     function logout() { localStorage.removeItem('miuxo_session'); location.reload(); }
 
     async function sync() {
-        if (!APPS_SCRIPT_URL.includes("script")) return;
         document.getElementById('sync-loader').style.display = "flex";
         try {
             const res = await fetch(APPS_SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: "sync" }) });
@@ -258,21 +201,21 @@
             const session = JSON.parse(localStorage.getItem('miuxo_session'));
             if(session && session.isAdmin) {
                 document.getElementById('admin-panel').style.display = "block";
-                document.getElementById('user-count').innerText = `Registered Users: ${data.userCount}`;
+                document.getElementById('user-count').innerText = `Total Registered Users: ${data.userCount}`;
                 let fbHtml = "";
-                data.feedbacks.reverse().slice(0, 3).forEach(f => { fbHtml += `<div class="fb-card"><strong>${f[1]}</strong>: ${f[2]}</div>`; });
+                data.feedbacks.reverse().slice(0, 3).forEach(f => { fbHtml += `<div style="background:rgba(0,0,0,0.3); padding:8px; margin-top:5px; border-radius:8px; text-align:left; font-size:0.7rem; border-left:3px solid gold;"><strong>${f[1]}</strong>: ${f[2]}</div>`; });
                 document.getElementById('admin-fb-list').innerHTML = fbHtml;
             }
-        } finally { setTimeout(() => { document.getElementById('sync-loader').style.display = "none"; }, 800); }
+        } catch(e) { console.warn("Database Syncing..."); }
+        finally { setTimeout(() => { document.getElementById('sync-loader').style.display = "none"; }, 800); }
     }
 
     async function submitRequest() {
         const t = document.getElementById('fb-topic').value, d = document.getElementById('fb-details').value;
         if(!t || !d) return alert("Fill all fields");
-        await fetch(APPS_SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: "submitFeedback", topic: t, details: d }) });
+        await fetch(APPS_SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: "submitFeedback", topic: t, details: d }) });
         alert("Success! Request logged.");
         document.getElementById('fb-topic').value = ""; document.getElementById('fb-details').value = "";
-        sync();
     }
 
     window.onload = () => {
@@ -281,7 +224,7 @@
             document.getElementById('login-overlay').style.display = 'none';
             document.getElementById('main-content').style.display = 'block';
             document.getElementById('welcome-txt').innerText = `WELCOME, ${s.name.toUpperCase()}`;
-            sync();
+            if(s.isAdmin) { document.getElementById('vip-section').style.display = "block"; sync(); }
         }
         runTimer();
     };
