@@ -128,6 +128,10 @@
         .gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
         .gallery img { width: 100%; border-radius: 12px; border: 1px solid var(--border); }
         .visitor-badge { margin-top: 20px; opacity: 0.6; font-size: 0.7rem; }
+
+        /* 📜 CHANGELOG STYLES */
+        .version-item { text-align: left; margin-bottom: 15px; border-left: 2px solid var(--border); padding-left: 15px; }
+        .version-latest { border-left-color: var(--accent); }
     </style>
 </head>
 <body data-theme="dark">
@@ -196,6 +200,26 @@
         <button onclick="downloadAll()" class="action-btn" style="background:transparent; border:2px solid var(--accent); color:var(--text); margin-top:15px;">📦 DOWNLOAD ALL ASSETS</button>
     </div>
 
+    <div class="content-card">
+        <h3>📜 VERSION HISTORY</h3>
+        <div style="max-height: 180px; overflow-y: auto; padding-right: 10px;">
+            <div class="version-item version-latest">
+                <div style="display:flex; justify-content:space-between; font-size:0.8rem;">
+                    <strong style="color:var(--accent)">v1.2.0 (LIVE)</strong>
+                    <span style="opacity:0.5">Dec 2025</span>
+                </div>
+                <p style="font-size:0.75rem; margin:5px 0; opacity:0.8;">Integrated Splash Animation & Version Tracking.</p>
+            </div>
+            <div class="version-item" style="opacity:0.5">
+                <div style="display:flex; justify-content:space-between; font-size:0.8rem;">
+                    <strong>v1.1.0</strong>
+                    <span>Nov 2025</span>
+                </div>
+                <p style="font-size:0.75rem; margin:5px 0;">Added Master Code security & PWA engine.</p>
+            </div>
+        </div>
+    </div>
+
     <div class="visitor-badge">
         HUB VISITS: <img src="https://hitwebcounter.com/counter/counter.php?page=miuxo_hub_2025&style=0006&nbdigits=5&type=page&initCount=0" title="Counter" Alt="counter" border="0" style="vertical-align: middle; filter: grayscale(1) invert(1);">
     </div>
@@ -204,7 +228,7 @@
 <script>
     const MASTER_CODE = "MIUXO2025";
     
-    // --- 📱 PWA SERVICE WORKER REGISTRATION ---
+    // --- 📱 PWA SERVICE WORKER ---
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('sw.js').catch(err => console.log('SW registration failed:', err));
@@ -233,7 +257,6 @@
         window.addEventListener('resize', init); init(); draw();
     } else { 
         document.getElementById('snow-canvas').style.display='none';
-        document.getElementById('ticker-text').innerText = "✨ WELCOME TO MIUXO HUB • OFFICIAL BRAND ASSETS • UPDATED FOR 2026 ✨";
     }
 
     // --- 🎬 REVEAL ANIMATION ENGINE ---
@@ -252,11 +275,7 @@
         }, 2000);
     }
 
-    // --- 🔑 RECOVERY UI ---
-    function showRecovery() { document.getElementById('login-box').style.display = 'none'; document.getElementById('recovery-box').style.display = 'block'; document.getElementById('login-title').innerText = "🔑 RECOVERY"; }
-    function hideRecovery() { document.getElementById('login-box').style.display = 'block'; document.getElementById('recovery-box').style.display = 'none'; document.getElementById('login-title').innerText = "🔐 MIUXO ACCESS"; }
-
-    // --- 🔐 AUTH ---
+    // --- 🔑 AUTH ENGINE ---
     function checkPass() {
         const input = document.getElementById('pass-input').value;
         if (input === MASTER_CODE) triggerReveal("Member");
@@ -282,10 +301,14 @@
         });
     }
 
+    // --- SESSION PERSISTENCE ---
     window.onload = () => {
         const session = JSON.parse(localStorage.getItem('miuxo_session'));
         if (session && (Date.now() - session.time < 86400000)) showHub(session.user);
     };
+
+    function showRecovery() { document.getElementById('login-box').style.display = 'none'; document.getElementById('recovery-box').style.display = 'block'; document.getElementById('login-title').innerText = "🔑 RECOVERY"; }
+    function hideRecovery() { document.getElementById('login-box').style.display = 'block'; document.getElementById('recovery-box').style.display = 'none'; document.getElementById('login-title').innerText = "🔐 MIUXO ACCESS"; }
 </script>
 </body>
 </html>
