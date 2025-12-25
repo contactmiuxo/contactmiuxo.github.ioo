@@ -7,7 +7,6 @@
     
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" id="status-bar-color" content="#2563eb">
-    
     <script src="https://accounts.google.com/gsi/client" async defer></script>
 
     <style>
@@ -49,11 +48,7 @@
             display: none; flex-direction: column; align-items: center; justify-content: center;
             z-index: 10002;
         }
-        .animated-logo {
-            width: 120px;
-            animation: logo-reveal 1.5s ease-out forwards;
-            filter: drop-shadow(0 0 15px var(--accent));
-        }
+        .animated-logo { width: 120px; animation: logo-reveal 1.5s ease-out forwards; filter: drop-shadow(0 0 15px var(--accent)); }
         @keyframes logo-reveal {
             0% { transform: scale(0.5); opacity: 0; filter: blur(10px); }
             50% { transform: scale(1.1); opacity: 1; filter: blur(0px); }
@@ -71,6 +66,14 @@
             font-size: 0.85rem; font-weight: bold; letter-spacing: 1px;
         }
         @keyframes ticker-scroll { 0% { transform: translate(0, 0); } 100% { transform: translate(-100%, 0); } }
+
+        /* Broadcast Popup */
+        #broadcast-box {
+            display: none; background: #fbbf24; color: #000;
+            padding: 12px; width: 90%; max-width: 460px; border-radius: 12px;
+            margin: 15px 0; font-weight: bold; font-size: 0.9rem;
+            box-shadow: 0 4px 15px rgba(251, 191, 36, 0.3); text-align: center;
+        }
 
         .theme-toggle {
             position: fixed; top: 55px; right: 20px;
@@ -107,22 +110,19 @@
             width: 100%; padding: 14px; border-radius: 12px; border: none;
             background: var(--accent); color: white; font-weight: 700; cursor: pointer; transition: 0.3s;
         }
-        .action-btn:hover { opacity: 0.9; transform: translateY(-2px); box-shadow: 0 0 15px rgba(37, 99, 235, 0.4); }
 
         .logout-btn {
             background: transparent; border: 1px solid rgba(255, 255, 255, 0.2);
-            color: var(--text); padding: 10px 25px; border-radius: 10px;
-            font-size: 0.75rem; letter-spacing: 1px; text-transform: uppercase;
-            cursor: pointer; transition: all 0.4s ease;
+            color: var(--text); padding: 8px 20px; border-radius: 10px; font-size: 0.7rem; cursor: pointer;
         }
 
         .social-card {
             flex: 1 1 30%; min-width: 90px; max-width: 110px;
             background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border);
             border-radius: 15px; padding: 15px 5px; text-decoration: none; color: var(--text);
-            transition: all 0.3s ease; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+            transition: 0.3s; display: flex; flex-direction: column; align-items: center; gap: 8px;
         }
-        .social-card:hover { background: var(--accent); transform: translateY(-5px); border-color: transparent; }
+        .social-card:hover { background: var(--accent); transform: translateY(-5px); }
 
         @media (max-width: 480px) { .social-card { flex: 1 1 45%; } }
     </style>
@@ -146,109 +146,92 @@
 
 <div id="login-overlay">
     <div class="content-card" style="width: 340px;">
-        <h2 id="login-title" style="margin-bottom: 5px;">🔐 MIUXO ACCESS</h2>
-        <p style="font-size: 0.8rem; opacity: 0.6; margin-bottom: 20px;">Master Code or Google Sign-In</p>
-        
-        <div id="login-box">
-            <input type="password" id="pass-input" placeholder="••••••••" autofocus>
-            <button onclick="checkPass()" class="action-btn">UNLOCK HUB</button>
-        </div>
-
-        <div style="margin:20px 0; display: flex; align-items: center; gap: 10px; opacity: 0.3;">
-            <hr style="flex:1; border:0; border-top:1px solid var(--text);"> OR <hr style="flex:1; border:0; border-top:1px solid var(--text);">
-        </div>
-
-        <div id="g_id_onload" 
-             data-client_id="785119101330-40kgkkoekfbsqu7vo4t6leqalltrs7th.apps.googleusercontent.com" 
-             data-callback="handleGoogleLogin">
-        </div>
-        <div class="g_id_signin" data-type="standard" data-theme="filled_blue" data-width="280"></div>
+        <h2 id="login-title">🔐 MIUXO ACCESS</h2>
+        <input type="password" id="pass-input" placeholder="Master Code">
+        <button onclick="checkPass()" class="action-btn">UNLOCK HUB</button>
+        <div style="margin:20px 0; opacity: 0.3;">--- OR ---</div>
+        <div id="g_id_onload" data-client_id="785119101330-40kgkkoekfbsqu7vo4t6leqalltrs7th.apps.googleusercontent.com" data-callback="handleGoogleLogin"></div>
+        <div class="g_id_signin" data-type="standard" data-theme="filled_blue"></div>
     </div>
 </div>
 
 <div class="container" id="main-content">
     
+    <div id="broadcast-box">📢 <span id="broadcast-msg">Loading announcement...</span></div>
+
     <div class="content-card" id="admin-panel">
-        <h3 style="color: gold; margin-top: 0;">👑 ADMIN DASHBOARD</h3>
-        <p style="font-size: 0.8rem;">Last Visitor Captured:</p>
-        <div id="last-visitor" style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 10px; font-family: monospace;">
-            Fetching log...
-        </div>
-        <button onclick="window.open('https://docs.google.com/spreadsheets/d/1hRxusWivIUaEnE1P88YEAgy6kAxz6kKfH2fiCdY4uOs/edit', '_blank')" 
-                class="action-btn" style="background: #1e293b; border: 1px solid gold; margin-top: 10px; font-size: 0.7rem;">VIEW FULL SHEET</button>
+        <h3 style="color: gold; margin: 0;">👑 ADMIN DASHBOARD</h3>
+        <p id="user-count" style="font-size: 0.75rem; color: #fbbf24; margin: 10px 0;">Syncing users...</p>
+        <p style="font-size: 0.7rem; opacity: 0.6;">Last Google Sign-in: <span id="last-visitor">...</span></p>
+        <button onclick="window.open('https://docs.google.com/spreadsheets/d/1hRxusWivIUaEnE1P88YEAgy6kAxz6kKfH2fiCdY4uOs/edit', '_blank')" class="action-btn" style="background: #1e293b; border: 1px solid gold; font-size: 0.7rem;">DATABASE SHEET</button>
     </div>
 
     <div class="content-card">
         <h2 id="welcome-msg" style="margin:0;">WELCOME</h2>
-        <p style="font-size: 0.8rem; opacity: 0.5; margin-bottom: 15px;">Official Miuxo Brand Hub is Active</p>
-        <button onclick="logout()" class="logout-btn">LOGOUT SESSION</button>
+        <button onclick="logout()" class="logout-btn" style="margin-top:10px;">LOGOUT</button>
     </div>
 
     <div class="content-card">
         <h3>🌐 MIUXO ECOSYSTEM</h3>
         <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 15px;">
             <a href="https://discord.com/invite/2rcKEjsVwV" target="_blank" class="social-card"><div>💬</div><span style="font-size:0.6rem;">DISCORD</span></a>
-            <a href="https://www.instagram.com/aimiuxo/reels/" target="_blank" class="social-card"><div>📸</div><span style="font-size:0.6rem;">INSTA</span></a>
-            <a href="https://www.youtube.com/@aimiuxo" target="_blank" class="social-card"><div>🎬</div><span style="font-size:0.6rem;">YOUTUBE</span></a>
-            <a href="https://miuxo.in/" target="_blank" class="social-card" style="border: 1px solid #2563eb;"><div>🌐</div><span style="font-size:0.6rem;">MIUXO.IN</span></a>
-            <a href="https://www.socialboosting.com/" target="_blank" class="social-card" style="border: 1px solid #ff4d4d;"><div>📈</div><span style="font-size:0.6rem;">BOOSTING</span></a>
-            <a href="https://boostgrams.com/" target="_blank" class="social-card" style="border: 1px solid #C13584;"><div>🔥</div><span style="font-size:0.6rem;">GRAMS</span></a>
-            <a href="https://snapinsta.to/" target="_blank" class="social-card" style="border: 1px solid #e1306c;"><div>📥</div><span style="font-size:0.6rem;">SNAPINSTA</span></a>
-            <a href="https://magiceraser.org/" target="_blank" class="social-card" style="border: 1px solid #ffde59;"><div>🪄</div><span style="font-size:0.6rem;">ERASER</span></a>
-            <a href="https://github.com/" target="_blank" class="social-card" style="border: 1px solid #fff;"><div>🐙</div><span style="font-size:0.6rem;">GITHUB</span></a>
-            <a href="https://replit.com/" target="_blank" class="social-card" style="border: 1px solid #f26207;"><div>🌀</div><span style="font-size:0.6rem;">REPLIT</span></a>
-            <a href="https://chatgpt.com/codex" target="_blank" class="social-card" style="border: 1px solid #10a37f;"><div>🤖</div><span style="font-size:0.6rem;">CODEX AI</span></a>
-            <a href="https://console.cloud.google.com/" target="_blank" class="social-card" style="border: 1px solid #4285F4;"><div>🔑</div><span style="font-size:0.6rem;">G-AUTH</span></a>
-            <a href="https://www.infinityfree.com/" target="_blank" class="social-card" style="border: 1px solid #005696;"><div>☁️</div><span style="font-size:0.6rem;">HOSTING</span></a>
-            <a href="https://www.godaddy.com/" target="_blank" class="social-card" style="border: 1px solid #00a63f;"><div>🚀</div><span style="font-size:0.6rem;">GODADDY</span></a>
-            <a href="https://www.shopify.com/" target="_blank" class="social-card" style="border: 1px solid #95bf47;"><div>🛍️</div><span style="font-size:0.6rem;">STORE</span></a>
-            <a href="https://superprofile.bio/" target="_blank" class="social-card" style="border: 1px solid #7B3FE4;"><div>💎</div><span style="font-size:0.6rem;">BIO LINK</span></a>
-            <a href="https://tools.picsart.com/" target="_blank" class="social-card" style="border: 1px solid #ff0066;"><div>🎨</div><span style="font-size:0.6rem;">PICSART</span></a>
-            <a href="https://www.veed.io/" target="_blank" class="social-card" style="border: 1px solid #343434;"><div>📽️</div><span style="font-size:0.6rem;">VEED.IO</span></a>
-        </div>
+            <a href="https://miuxo.in/" target="_blank" class="social-card" style="border-color: #2563eb;"><div>🌐</div><span style="font-size:0.6rem;">MIUXO.IN</span></a>
+            </div>
     </div>
 
     <div class="content-card">
         <h3>📩 ASSET REQUEST</h3>
         <input type="text" id="feedback-topic" placeholder="Asset Name">
         <textarea id="feedback-details" placeholder="Describe your request..." style="height: 80px;"></textarea>
-        <button onclick="sendFeedback()" class="action-btn" style="margin-top: 10px;">SUBMIT TO MIUXO</button>
+        <button onclick="sendFeedback()" class="action-btn">SUBMIT TO MIUXO</button>
     </div>
-
-    <footer style="margin-top: 30px; padding: 20px; text-align: center; border-top: 1px solid var(--border);">
-        <p style="font-size: 0.6rem; opacity: 0.3;">&copy; 2025 MIUXO. DESIGNED FOR THE COMMUNITY.</p>
-    </footer>
 </div>
 
 <script>
     const MASTER_CODE = "2025";
-    // 🚀 REPLACE THE URL BELOW WITH YOUR APPS SCRIPT WEB APP URL
-    const LOG_SCRIPT_URL = "https://docs.google.com/spreadsheets/d/1hRxusWivIUaEnE1P88YEAgy6kAxz6kKfH2fiCdY4uOs/edit?usp=sharing";
+    // ⚠️ CRITICAL: Replace with your Apps Script Web App URL!
+    const LOG_SCRIPT_URL = "https://docs.google.com/spreadsheets/d/16X7xNwI5Q_rlS5jKuLH0_QJO6dLj5KYIpQqZXxCSl-4/edit?usp=sharing";
     
-    function toggleTheme() {
-        const body = document.body;
-        const newTheme = body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-        body.setAttribute('data-theme', newTheme);
-        localStorage.setItem('miuxo_theme', newTheme);
+    // FETCH REMOTE DATA (Broadcast, Maintenance, Count)
+    async function syncRemoteData() {
+        if (LOG_SCRIPT_URL.includes("PASTE")) return;
+        try {
+            const response = await fetch(LOG_SCRIPT_URL, {
+                method: 'POST',
+                body: JSON.stringify({ action: "sync" })
+            });
+            const data = await response.json();
+
+            // 1. Check Maintenance
+            if (data.maintenance === "ON") {
+                const session = JSON.parse(localStorage.getItem('miuxo_session'));
+                if (!session || !session.isAdmin) {
+                    document.body.innerHTML = `<div style="height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; background:#0f172a; color:white; text-align:center;"><h1>🚧</h1><h2>MAINTENANCE MODE</h2></div>`;
+                    return;
+                }
+            }
+
+            // 2. Display Broadcast
+            if (data.broadcast && data.broadcast !== "OFF") {
+                document.getElementById('broadcast-box').style.display = "block";
+                document.getElementById('broadcast-msg').innerText = data.broadcast;
+            }
+
+            // 3. Update Admin Info
+            if (document.getElementById('admin-panel').style.display === "block") {
+                document.getElementById('user-count').innerText = data.userCount + " Registered Users";
+            }
+        } catch (e) { console.error("Sync Error", e); }
     }
 
     function checkPass() {
-        if (document.getElementById('pass-input').value === MASTER_CODE) {
-            triggerReveal("Admin", true);
-        } else alert("Incorrect Master Code");
+        if (document.getElementById('pass-input').value === MASTER_CODE) triggerReveal("Admin", true);
+        else alert("Wrong Code");
     }
 
     function handleGoogleLogin(response) {
         const payload = JSON.parse(atob(response.credential.split('.')[1]));
-        
-        if (LOG_SCRIPT_URL !== "https://docs.google.com/spreadsheets/d/1hRxusWivIUaEnE1P88YEAgy6kAxz6kKfH2fiCdY4uOs/edit?usp=sharing") {
-            fetch(LOG_SCRIPT_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                body: JSON.stringify({ name: payload.name, email: payload.email })
-            });
-        }
-        // Save the last visitor name for the Admin Panel to display
+        fetch(LOG_SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ name: payload.name, email: payload.email }) });
         localStorage.setItem('last_visitor_name', payload.name);
         triggerReveal(payload.given_name, false);
     }
@@ -258,49 +241,38 @@
         const splash = document.getElementById('splash-screen');
         splash.style.display = 'flex';
         setTimeout(() => {
-            splash.style.opacity = '0';
-            splash.style.transition = 'opacity 0.8s ease';
-            setTimeout(() => { 
-                splash.style.display = 'none'; 
-                localStorage.setItem('miuxo_session', JSON.stringify({ 
-                    auth: true, 
-                    user: name, 
-                    isAdmin: isAdmin,
-                    time: Date.now() 
-                }));
-                showHub(name, isAdmin); 
-            }, 800);
+            splash.style.display = 'none'; 
+            localStorage.setItem('miuxo_session', JSON.stringify({ auth: true, user: name, isAdmin: isAdmin, time: Date.now() }));
+            showHub(name, isAdmin); 
         }, 2000);
     }
 
     function showHub(name, isAdmin) {
         document.getElementById('login-overlay').style.display = 'none';
         document.getElementById('main-content').style.display = 'block';
-        
         if (isAdmin) {
             document.getElementById('admin-panel').style.display = 'block';
             document.getElementById('welcome-msg').innerHTML = `WELCOME, <span style="color:gold;">${name.toUpperCase()} (ADMIN)</span>`;
-            document.getElementById('last-visitor').innerText = localStorage.getItem('last_visitor_name') || "No recent Google logins.";
+            document.getElementById('last-visitor').innerText = localStorage.getItem('last_visitor_name') || "None";
         } else {
             document.getElementById('welcome-msg').innerText = `WELCOME, ${name.toUpperCase()}`;
         }
+        syncRemoteData();
+    }
+
+    function toggleTheme() {
+        const body = document.body;
+        const theme = body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        body.setAttribute('data-theme', theme);
+        localStorage.setItem('miuxo_theme', theme);
     }
 
     function logout() { localStorage.removeItem('miuxo_session'); location.reload(); }
 
     window.onload = () => {
         const session = JSON.parse(localStorage.getItem('miuxo_session'));
-        if (session && (Date.now() - session.time < 86400000)) {
-            showHub(session.user, session.isAdmin);
-        }
+        if (session && (Date.now() - session.time < 86400000)) showHub(session.user, session.isAdmin);
     };
-
-    function sendFeedback() {
-        const t = document.getElementById('feedback-topic').value;
-        const d = document.getElementById('feedback-details').value;
-        if(!t || !d) return alert("Fill all fields");
-        window.location.href = `mailto:shammas78099@gmail.com?subject=Hub Request: ${t}&body=${d}`;
-    }
 </script>
 </body>
 </html>
