@@ -1,7 +1,7 @@
 {
   "name": "Miuxo Official Brand Hub",
   "short_name": "Miuxo Hub",
-  "description": "Exclusive Brand Hub for Miuxo Shopify and AI insights.",
+  "description": "Exclusive access to Miuxo brand insights and community.",
   "start_url": "/index.html",
   "display": "standalone",
   "background_color": "#0f172a",
