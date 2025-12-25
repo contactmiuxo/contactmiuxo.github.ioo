@@ -42,13 +42,11 @@
             overflow-x: hidden;
         }
 
-        /* ❄️ SNOW CANVAS */
         #snow-canvas {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none; z-index: 1;
         }
 
-        /* 📢 TICKER */
         .announcement {
             width: 100%; background: var(--banner-bg); color: white;
             padding: 10px 0; overflow: hidden; white-space: nowrap;
@@ -66,7 +64,6 @@
             100% { transform: translate(-100%, 0); }
         }
 
-        /* 🌓 THEME TOGGLE */
         .theme-toggle {
             position: fixed; top: 55px; right: 20px;
             background: var(--card-bg); border: 1px solid var(--border);
@@ -111,7 +108,7 @@
 <canvas id="snow-canvas"></canvas>
 
 <div class="announcement" id="banner">
-    <div class="ticker-content">
+    <div class="ticker-content" id="ticker-text">
         🎄 HAPPY HOLIDAYS FROM MIUXO • ENJOY THE SEASONAL THEME • NEW WINTER ASSETS AVAILABLE • STAY TUNED FOR NEW YEAR RELEASES ✨
     </div>
 </div>
@@ -137,7 +134,7 @@
 
     <div class="content-card">
         <h3>🎥 FEATURED MEDIA</h3>
-        <div style="position:relative; padding-bottom:56.25%; height:0; border-radius:12px; overflow:hidden;">
+        <div style="position:relative; padding-bottom: 56.25%; height: 0; border-radius: 12px; overflow: hidden; background: #000;">
             <iframe src="https://www.youtube.com/embed/u28pkQXq67k" style="position:absolute; top:0; left:0; width:100%; height:100%; border:0;" allowfullscreen></iframe>
         </div>
     </div>
@@ -157,6 +154,11 @@
 
 <script>
     const MASTER_CODE = "MIUXO2025";
+    
+    // --- 🗓️ HOLIDAY EXPIRY LOGIC ---
+    const today = new Date();
+    const expiryDate = new Date("January 2, 2026");
+    const isHolidaySeason = today < expiryDate;
 
     // 🌗 THEME
     function toggleTheme() {
@@ -168,36 +170,41 @@
     }
     document.body.setAttribute('data-theme', localStorage.getItem('miuxo_theme') || 'dark');
 
-    // ❄️ SNOWFALL LOGIC
+    // ❄️ SNOWFALL (Only runs if before Expiry Date)
     const canvas = document.getElementById('snow-canvas');
-    const ctx = canvas.getContext('2d');
-    let width, height, snowflakes = [];
+    if (isHolidaySeason) {
+        const ctx = canvas.getContext('2d');
+        let width, height, snowflakes = [];
 
-    function initSnow() {
-        width = canvas.width = window.innerWidth;
-        height = canvas.height = window.innerHeight;
-        snowflakes = Array.from({ length: 100 }, () => ({
-            x: Math.random() * width, y: Math.random() * height,
-            r: Math.random() * 3 + 1, d: Math.random() * 1
-        }));
-    }
+        function initSnow() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            snowflakes = Array.from({ length: 100 }, () => ({
+                x: Math.random() * width, y: Math.random() * height,
+                r: Math.random() * 3 + 1, d: Math.random() * 1
+            }));
+        }
 
-    function drawSnow() {
-        ctx.clearRect(0, 0, width, height);
-        ctx.fillStyle = document.body.getAttribute('data-theme') === 'dark' ? 'white' : 'rgba(0,0,0,0.2)';
-        ctx.beginPath();
-        snowflakes.forEach(f => {
-            ctx.moveTo(f.x, f.y);
-            ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2, true);
-            f.y += Math.cos(f.d) + 1 + f.r / 2;
-            f.x += Math.sin(f.d) * 2;
-            if (f.y > height) { f.y = -10; f.x = Math.random() * width; }
-        });
-        ctx.fill();
-        requestAnimationFrame(drawSnow);
+        function drawSnow() {
+            ctx.clearRect(0, 0, width, height);
+            ctx.fillStyle = document.body.getAttribute('data-theme') === 'dark' ? 'white' : 'rgba(0,0,0,0.2)';
+            ctx.beginPath();
+            snowflakes.forEach(f => {
+                ctx.moveTo(f.x, f.y);
+                ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2, true);
+                f.y += Math.cos(f.d) + 1 + f.r / 2;
+                f.x += Math.sin(f.d) * 2;
+                if (f.y > height) { f.y = -10; f.x = Math.random() * width; }
+            });
+            ctx.fill();
+            requestAnimationFrame(drawSnow);
+        }
+        window.addEventListener('resize', initSnow);
+        initSnow(); drawSnow();
+    } else {
+        canvas.style.display = 'none';
+        document.getElementById('ticker-text').innerText = "✨ WELCOME TO MIUXO HUB • OFFICIAL BRAND ASSETS • UPDATED FOR 2026 • CONTACT ADMIN FOR SUPPORT ✨";
     }
-    window.addEventListener('resize', initSnow);
-    initSnow(); drawSnow();
 
     // 🔐 AUTH
     function checkPass() { if (document.getElementById('pass-input').value === MASTER_CODE) startSession("Member"); }
