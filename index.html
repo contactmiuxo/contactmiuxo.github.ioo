@@ -219,6 +219,8 @@
 
 <script>
     const MASTER_CODE = "2025";
+    // 🚀 REPLACE THE URL BELOW WITH YOUR APPS SCRIPT WEB APP URL
+    const LOG_SCRIPT_URL = "https://docs.google.com/spreadsheets/d/1hRxusWivIUaEnE1P88YEAgy6kAxz6kKfH2fiCdY4uOs/edit?usp=sharing";
     
     function toggleTheme() {
         const body = document.body;
@@ -234,6 +236,19 @@
 
     function handleGoogleLogin(response) {
         const payload = JSON.parse(atob(response.credential.split('.')[1]));
+        
+        // 📝 Log visitor to Google Sheet
+        if (LOG_SCRIPT_URL !== "PASTE_YOUR_WEB_APP_URL_HERE") {
+            fetch(LOG_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                body: JSON.stringify({
+                    name: payload.name,
+                    email: payload.email
+                })
+            });
+        }
+        
         triggerReveal(payload.given_name);
     }
 
