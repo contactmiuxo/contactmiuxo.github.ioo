@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ᴍɪᴜxᴏ | ᴜɴɪꜰɪᴇᴅ ʜᴜʙ ᴠ8.3</title>
+    <title>ᴍɪᴜxᴏ | ᴜɴɪꜰɪᴇᴅ ʜᴜʙ ᴠ8.7</title>
     <style>
         :root {
             --bg: #020617;
@@ -15,11 +15,22 @@
             --card-bg: rgba(15, 23, 42, 0.8);
             --border: rgba(255, 255, 255, 0.1);
             --text: #f8fafc;
+            --accent: #2563eb;
+        }
+
+        /* Cyberpunk Theme Overrides */
+        [data-theme="cyber"] {
+            --bg: #050505;
+            --card-bg: rgba(10, 10, 10, 0.9);
+            --accent: #bc13fe;
+            --border: rgba(188, 19, 254, 0.3);
+            --standard-blue: #bc13fe;
         }
 
         body, html { 
             margin: 0; padding: 0; background: var(--bg); color: var(--text); 
             font-family: 'Segoe UI', system-ui, sans-serif; overflow-x: hidden; min-height: 100vh;
+            transition: background 0.5s ease;
         }
 
         #bg-canvas { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 1; }
@@ -50,40 +61,50 @@
 
         #main-hub { display: none; width: 100%; flex-direction: column; align-items: center; padding: 20px 0; z-index: 2; position: relative; }
         
-        .social-grid { 
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); 
-            gap: 12px; width: 100%; margin-top: 10px;
+        /* Theme Toggle UI */
+        .theme-switch {
+            background: rgba(255,255,255,0.1); border: 1px solid var(--border);
+            color: white; padding: 5px 12px; border-radius: 20px; cursor: pointer;
+            font-size: 0.7rem; font-weight: bold; margin-bottom: 10px; transition: 0.3s;
+        }
+        .theme-switch:hover { background: var(--accent); }
+
+        .search-container { width: 100%; margin-bottom: 20px; }
+        .hub-search {
+            width: 100%; padding: 12px 20px; border-radius: 12px; border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.05); color: white; font-size: 0.9rem;
+            outline: none; transition: 0.3s; box-sizing: border-box;
         }
 
+        .section-label { font-size: 0.7rem; font-weight: 800; color: rgba(255,255,255,0.4); margin: 15px 0 10px 5px; text-transform: uppercase; letter-spacing: 1.5px; }
+
+        .social-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 12px; width: 100%; }
+
         .social-card { 
-            background: rgba(255, 255, 255, 0.05); border-radius: 15px; padding: 15px 5px; 
+            background: var(--card-bg); border-radius: 15px; padding: 15px 5px; 
             text-decoration: none; color: white; display: flex; flex-direction: column; 
             align-items: center; transition: 0.3s ease; text-align: center; border: 1px solid var(--border);
         }
 
-        .social-card:hover { transform: translateY(-5px); background: rgba(255, 255, 255, 0.1); border-color: #fff !important; }
-
-        .status-dot {
-            width: 6px; height: 6px; border-radius: 50%; display: inline-block; margin-right: 4px;
-            background: var(--online-green); box-shadow: 0 0 5px var(--online-green);
+        .social-card:hover { 
+            transform: translateY(-5px); 
+            border-color: var(--accent) !important;
+            box-shadow: 0 0 15px var(--accent);
         }
+
+        .status-dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; margin-right: 4px; background: var(--online-green); box-shadow: 0 0 5px var(--online-green); }
         .pulse { animation: pulse-status 2s infinite; }
         @keyframes pulse-status { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
 
-        #panic-btn {
-            display: none; position: fixed; bottom: 20px; right: 20px;
-            background: var(--panic-red); color: white; border: none;
-            padding: 15px 25px; border-radius: 50px; font-weight: bold;
-            cursor: pointer; z-index: 1000;
-        }
+        #panic-btn { display: none; position: fixed; bottom: 20px; right: 20px; background: var(--panic-red); color: white; border: none; padding: 15px 25px; border-radius: 50px; font-weight: bold; cursor: pointer; z-index: 1000; }
     </style>
 </head>
-<body>
+<body data-theme="frost">
 
 <canvas id="bg-canvas"></canvas>
 <audio id="login-sound" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3" preload="auto"></audio>
 
-<div class="miuxo-banner">✨ MIUXO UNIFIED HUB | v8.3 SECURE ACCESS ✨</div>
+<div class="miuxo-banner">✨ MIUXO UNIFIED HUB | v8.7 THEME UPDATE ✨</div>
 
 <div id="auth-gate">
     <div class="auth-box">
@@ -97,10 +118,28 @@
 
 <div id="main-hub">
     <div id="hub-frame" style="background:var(--card-bg); border:1px solid var(--border); border-radius: 20px; padding: 25px; width: 95%; max-width: 1100px; backdrop-filter: var(--glass);">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-            <h3 id="session-tag" style="margin:0;">SYSTEM ACTIVE</h3>
-            <span id="live-clock" style="font-family: monospace; opacity: 0.7;">00:00:00</span>
+        
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
+            <div>
+                <h3 id="greeting-text" style="margin:0; font-size: 1.4rem;">SYSTEM READY</h3>
+                <button class="theme-switch" onclick="toggleTheme()">🌓 TOGGLE THEME</button>
+            </div>
+            <div style="text-align: right;">
+                <span id="live-clock" style="font-family: monospace; font-size: 1.1rem;">00:00:00</span>
+                <div id="session-tag" style="font-weight: 800; font-size: 0.6rem; margin-top: 5px;">AWAITING...</div>
+            </div>
         </div>
+
+        <div class="search-container">
+            <input type="text" id="tool-search" class="hub-search" placeholder="Search resources..." onkeyup="filterTools()">
+        </div>
+
+        <div id="most-visited-section" style="display:none;">
+            <div class="section-label">⚡ Frequently Used</div>
+            <div class="social-grid" id="frequent-grid" style="margin-bottom:30px;"></div>
+        </div>
+
+        <div class="section-label">📂 All Resources</div>
         <div class="social-grid" id="tool-grid"></div>
     </div>
 </div>
@@ -108,158 +147,92 @@
 <script>
     const VIP_CODE = "2025";
     const STD_CODE = "1111";
+    let activeList = [];
     
     const canvas = document.getElementById('bg-canvas');
     const ctx = canvas.getContext('2d');
     let flakes = [], drops = [], bgMode = "snow";
 
-    const VIP_TOOLS = [
-        { name: "NEAPAY", url: "https://neapay.com/", icon: "🏦", border: "#1a365d" },
-        { name: "WAN VIDEO", url: "https://wan.video/", icon: "🔮", border: "#ffffff" },
-        { name: "INVIDEO", url: "https://invideo.io/", icon: "🎥", border: "#4f46e5" },
-        { name: "EASYCOMMENT", url: "https://easycomment.ai/", icon: "💬", border: "#3b82f6" },
-        { name: "STUDY DROP", url: "https://studydropshipping.com/", icon: "🎓", border: "#1e40af" },
-        { name: "TRADELLE", url: "https://tradelle.io/", icon: "📈", border: "#facc15" },
-        { name: "INEEDFX", url: "https://ineedfx.com/", icon: "💥", border: "#ff0055" },
-        { name: "TEXTURES", url: "https://texturelabs.com/", icon: "🧱", border: "#eab308" },
-        { name: "FOOTAGE", url: "https://footagecrate.com/", icon: "🎬", border: "#ef4444" },
-        { name: "MIXKIT", url: "https://mixkit.co/", icon: "🎵", border: "#00fa9a" },
-        { name: "V-EFFECTS", url: "https://videodffects.com/", icon: "🎞️", border: "#8b5cf6" },
-        { name: "PENTEST", url: "https://pentestgpt.ai/", icon: "🛡️", border: "#00ff00" },
-        { name: "PLAY.HT", url: "https://play.ht/", icon: "🔊", border: "#4a90e2" },
-        { name: "MIXO", url: "https://mixo.in/", icon: "🚀", border: "#ff5a5f" },
-        { name: "LOOKA", url: "https://looka.com/", icon: "🎨", border: "#00d2ff" },
-        { name: "BEAUTIFUL", url: "https://www.beautiful.ai/", icon: "💎", border: "#7249d0" },
-        { name: "STORYHERO", url: "https://storyhero.gg/", icon: "🦸", border: "#FFD700" },
-        { name: "JITTER", url: "https://jitter.video/", icon: "✨", border: "#222222" },
-        { name: "PIPIADS", url: "https://www.pipiads.com/", icon: "💰", border: "#ff4d4f" },
-        { name: "PORTFOLIO", url: "https://atomguygg.github.io/atomguy", icon: "🚀", border: "#00f2ff" },
-        { name: "ATOMGUY", url: "https://atomguygg.github.io/", icon: "⚛️", border: "#00f2ff" },
-        { name: "DARKOSINT", url: "https://darkosint.in/", icon: "🔍", border: "#991b1b" },
-        { name: "ANIMEDUB", url: "https://animedub.co/", icon: "📺", border: "#f97316" },
-        { name: "INFLACT", url: "https://inflact.com/", icon: "⚡", border: "#7c3aed" },
-        { name: "DOWNLOAD", url: "https://adescargar.online/", icon: "📥", border: "#0ea5e9" },
-        { name: "ANKER", url: "https://ankergames.net/", icon: "🎮", border: "#71717a" },
-        { name: "FUNKYY", url: "https://www.instagram.com/funkyy_mit", icon: "😎", border: "#FF8C00" },
-        { name: "ECO REXO", url: "https://www.instagram.com/eco.rexo", icon: "🌿", border: "#4CAF50" },
-        { name: "SHAD", url: "https://www.instagram.com/shad.storie", icon: "📖", border: "#5851DB" },
-        { name: "SANDBOX", url: "https://codesandbox.io/", icon: "📦", border: "#040404" },
-        { name: "AI STUDIO", url: "https://aistudio.google.com/", icon: "🧪", border: "#4285F4" },
-        { name: "GEMINI", url: "https://gemini.google.com/", icon: "✨", border: "#8E75FF" },
-        { name: "G-CLOUD", url: "https://cloud.google.com/", icon: "☁️", border: "#FBBC04" },
-        { name: "ASHVIN", url: "https://www.instagram.com/ashvin.shibu", icon: "👤", border: "#E1306C" }
-    ];
+    // ... [Include VIP_TOOLS and NORMAL_TOOLS arrays from previous version] ...
+    const VIP_TOOLS = [ { name: "NEAPAY", url: "https://neapay.com/", icon: "🏦", border: "#1a365d" }, { name: "WAN VIDEO", url: "https://wan.video/", icon: "🔮", border: "#ffffff" }, { name: "INVIDEO", url: "https://invideo.io/", icon: "🎥", border: "#4f46e5" }, { name: "EASYCOMMENT", url: "https://easycomment.ai/", icon: "💬", border: "#3b82f6" }, { name: "STUDY DROP", url: "https://studydropshipping.com/", icon: "🎓", border: "#1e40af" }, { name: "TRADELLE", url: "https://tradelle.io/", icon: "📈", border: "#facc15" }, { name: "INEEDFX", url: "https://ineedfx.com/", icon: "💥", border: "#ff0055" }, { name: "TEXTURES", url: "https://texturelabs.com/", icon: "🧱", border: "#eab308" }, { name: "FOOTAGE", url: "https://footagecrate.com/", icon: "🎬", border: "#ef4444" }, { name: "MIXKIT", url: "https://mixkit.co/", icon: "🎵", border: "#00fa9a" }, { name: "V-EFFECTS", url: "https://videodffects.com/", icon: "🎞️", border: "#8b5cf6" }, { name: "PENTEST", url: "https://pentestgpt.ai/", icon: "🛡️", border: "#00ff00" }, { name: "PLAY.HT", url: "https://play.ht/", icon: "🔊", border: "#4a90e2" }, { name: "MIXO", url: "https://mixo.in/", icon: "🚀", border: "#ff5a5f" }, { name: "LOOKA", url: "https://looka.com/", icon: "🎨", border: "#00d2ff" }, { name: "BEAUTIFUL", url: "https://www.beautiful.ai/", icon: "💎", border: "#7249d0" }, { name: "STORYHERO", url: "https://storyhero.gg/", icon: "🦸", border: "#FFD700" }, { name: "JITTER", url: "https://jitter.video/", icon: "✨", border: "#222222" }, { name: "PIPIADS", url: "https://www.pipiads.com/", icon: "💰", border: "#ff4d4f" }, { name: "PORTFOLIO", url: "https://atomguygg.github.io/atomguy", icon: "🚀", border: "#00f2ff" }, { name: "ATOMGUY", url: "https://atomguygg.github.io/", icon: "⚛️", border: "#00f2ff" }, { name: "DARKOSINT", url: "https://darkosint.in/", icon: "🔍", border: "#991b1b" }, { name: "ANIMEDUB", url: "https://animedub.co/", icon: "📺", border: "#f97316" }, { name: "INFLACT", url: "https://inflact.com/", icon: "⚡", border: "#7c3aed" }, { name: "DOWNLOAD", url: "https://adescargar.online/", icon: "📥", border: "#0ea5e9" }, { name: "ANKER", url: "https://ankergames.net/", icon: "🎮", border: "#71717a" }, { name: "FUNKYY", url: "https://www.instagram.com/funkyy_mit", icon: "😎", border: "#FF8C00" }, { name: "ECO REXO", url: "https://www.instagram.com/eco.rexo", icon: "🌿", border: "#4CAF50" }, { name: "SHAD", url: "https://www.instagram.com/shad.storie", icon: "📖", border: "#5851DB" }, { name: "SANDBOX", url: "https://codesandbox.io/", icon: "📦", border: "#040404" }, { name: "AI STUDIO", url: "https://aistudio.google.com/", icon: "🧪", border: "#4285F4" }, { name: "GEMINI", url: "https://gemini.google.com/", icon: "✨", border: "#8E75FF" }, { name: "G-CLOUD", url: "https://cloud.google.com/", icon: "☁️", border: "#FBBC04" }, { name: "ASHVIN", url: "https://www.instagram.com/ashvin.shibu", icon: "👤", border: "#E1306C" } ];
+    const NORMAL_TOOLS = [ { name: "DISCORD", url: "https://discord.com/invite/2rcKEjsVwV", icon: "💬", border: "#5865F2" }, { name: "INSTA", url: "https://www.instagram.com/aimiuxo/reels/", icon: "📸", border: "#E1306C" }, { name: "YOUTUBE", url: "https://www.youtube.com/@aimiuxo", icon: "🎬", border: "#FF0000" }, { name: "MIUXO.IN", url: "https://miuxo.in/", icon: "🌐", border: "#2563eb" }, { name: "BOOSTING", url: "https://www.socialboosting.com/", icon: "📈", border: "#ff4d4d" }, { name: "GRAMS", url: "https://boostgrams.com/", icon: "🔥", border: "#C13584" }, { name: "SNAPINSTA", url: "https://snapinsta.to/", icon: "📥", border: "#e1306c" }, { name: "ERASER", url: "https://magiceraser.org/", icon: "🪄", border: "#ffde59" }, { name: "GITHUB", url: "https://github.com/", icon: "🐙", border: "#fff" }, { name: "REPLIT", url: "https://replit.com/", icon: "🌀", border: "#f26207" }, { name: "CODEX AI", url: "https://chatgpt.com/codex", icon: "🤖", border: "#10a37f" }, { name: "G-AUTH", url: "https://console.cloud.google.com/", icon: "🔑", border: "#4285F4" }, { name: "HOSTING", url: "https://www.infinityfree.com/", icon: "☁️", border: "#005696" }, { name: "GODADDY", url: "https://www.godaddy.com/", icon: "🚀", border: "#00a63f" }, { name: "STORE", url: "https://www.shopify.com/", icon: "🛍️", border: "#95bf47" }, { name: "BIO LINK", url: "https://superprofile.bio/", icon: "💎", border: "#7B3FE4" }, { name: "PICSART", url: "https://tools.picsart.com/", icon: "🎨", border: "#ff0066" }, { name: "VEED.IO", url: "https://www.veed.io/", icon: "📽️", border: "#343434" } ];
 
-    const NORMAL_TOOLS = [
-        { name: "DISCORD", url: "https://discord.com/invite/2rcKEjsVwV", icon: "💬", border: "#5865F2" },
-        { name: "INSTA", url: "https://www.instagram.com/aimiuxo/reels/", icon: "📸", border: "#E1306C" },
-        { name: "YOUTUBE", url: "https://www.youtube.com/@aimiuxo", icon: "🎬", border: "#FF0000" },
-        { name: "MIUXO.IN", url: "https://miuxo.in/", icon: "🌐", border: "#2563eb" },
-        { name: "BOOSTING", url: "https://www.socialboosting.com/", icon: "📈", border: "#ff4d4d" },
-        { name: "GRAMS", url: "https://boostgrams.com/", icon: "🔥", border: "#C13584" },
-        { name: "SNAPINSTA", url: "https://snapinsta.to/", icon: "📥", border: "#e1306c" },
-        { name: "ERASER", url: "https://magiceraser.org/", icon: "🪄", border: "#ffde59" },
-        { name: "GITHUB", url: "https://github.com/", icon: "🐙", border: "#fff" },
-        { name: "REPLIT", url: "https://replit.com/", icon: "🌀", border: "#f26207" },
-        { name: "CODEX AI", url: "https://chatgpt.com/codex", icon: "🤖", border: "#10a37f" },
-        { name: "G-AUTH", url: "https://console.cloud.google.com/", icon: "🔑", border: "#4285F4" },
-        { name: "HOSTING", url: "https://www.infinityfree.com/", icon: "☁️", border: "#005696" },
-        { name: "GODADDY", url: "https://www.godaddy.com/", icon: "🚀", border: "#00a63f" },
-        { name: "STORE", url: "https://www.shopify.com/", icon: "🛍️", border: "#95bf47" },
-        { name: "BIO LINK", url: "https://superprofile.bio/", icon: "💎", border: "#7B3FE4" },
-        { name: "PICSART", url: "https://tools.picsart.com/", icon: "🎨", border: "#ff0066" },
-        { name: "VEED.IO", url: "https://www.veed.io/", icon: "📽️", border: "#343434" }
-    ];
-
-    function checkHint() {
-        const val = document.getElementById('access-key').value;
-        const gate = document.getElementById('gate-title');
-        const btn = document.getElementById('login-btn');
-        if(val === VIP_CODE) { 
-            gate.style.color = "var(--vip-gold)"; gate.innerText = "⭐ VIP GOLD DETECTED";
-            btn.style.background = "var(--vip-gold)"; btn.style.color = "#000";
-        } else if (val === STD_CODE) {
-            gate.style.color = "var(--standard-blue)"; gate.innerText = "🔓 NORMAL SESSION";
-            btn.style.background = "var(--standard-blue)"; btn.style.color = "#fff";
-        } else {
-            gate.style.color = "white"; gate.innerText = "🔐 HUB ACCESS";
-            btn.style.background = "var(--standard-blue)";
-        }
+    function toggleTheme() {
+        const body = document.body;
+        const newTheme = body.getAttribute('data-theme') === 'frost' ? 'cyber' : 'frost';
+        body.setAttribute('data-theme', newTheme);
+        localStorage.setItem('hub_theme', newTheme);
     }
 
     function unlockSession() {
         const key = document.getElementById('access-key').value;
         const tag = document.getElementById('session-tag');
-        const frame = document.getElementById('hub-frame');
-
-        if(key === VIP_CODE) {
-            tag.innerText = "👑 VIP GOLD SESSION";
-            tag.style.color = "var(--vip-gold)";
-            frame.style.borderColor = "var(--vip-gold)";
-            render(VIP_TOOLS);
-            initMatrix();
-            show();
-        } else if (key === STD_CODE) {
-            tag.innerText = "👤 NORMAL SESSION";
-            tag.style.color = "var(--standard-blue)";
-            frame.style.borderColor = "var(--standard-blue)";
-            render(NORMAL_TOOLS);
-            initSnow();
-            show();
-        } else { alert("ACCESS DENIED"); }
+        if(key === VIP_CODE) { activeList = VIP_TOOLS; tag.innerText = "VIP GOLD ACTIVE"; initMatrix(); show(); } 
+        else if (key === STD_CODE) { activeList = NORMAL_TOOLS; tag.innerText = "NORMAL ACTIVE"; initSnow(); show(); } 
+        else { alert("DENIED"); return; }
+        render(activeList);
+        renderFrequent();
     }
 
-    function render(list) {
-        document.getElementById('tool-grid').innerHTML = list.map(t => `
-            <a href="${t.url}" target="_blank" class="social-card" style="border: 1px solid ${t.border}">
+    // [Template and Render Functions same as v8.6]
+    function trackClick(name) {
+        let stats = JSON.parse(localStorage.getItem('tool_clicks') || '{}');
+        stats[name] = (stats[name] || 0) + 1;
+        localStorage.setItem('tool_clicks', JSON.stringify(stats));
+        renderFrequent();
+    }
+
+    function renderFrequent() {
+        let stats = JSON.parse(localStorage.getItem('tool_clicks') || '{}');
+        let sorted = Object.entries(stats).sort((a,b) => b[1] - a[1]).slice(0, 4);
+        if(sorted.length > 0) {
+            document.getElementById('most-visited-section').style.display = 'block';
+            const freqTools = sorted.map(([name]) => activeList.find(t => t.name === name)).filter(t => t);
+            document.getElementById('frequent-grid').innerHTML = freqTools.map(t => cardTemplate(t)).join('');
+        }
+    }
+
+    function filterTools() {
+        const query = document.getElementById('tool-search').value.toLowerCase();
+        render(activeList.filter(t => t.name.toLowerCase().includes(query)));
+    }
+
+    function cardTemplate(t) {
+        return `<a href="${t.url}" target="_blank" onclick="trackClick('${t.name}')" class="social-card" style="border-color:${t.border}">
                 <div style="font-size:1.5rem; margin-bottom:5px;">${t.icon}</div>
-                <div style="display:flex; align-items:center;">
-                    <span class="status-dot pulse"></span>
-                    <span style="font-size:0.6rem; font-weight:800;">${t.name}</span>
-                </div>
-            </a>`).join('');
+                <div style="display:flex; align-items:center;"><span class="status-dot pulse"></span><span style="font-size:0.6rem; font-weight:800;">${t.name}</span></div></a>`;
     }
+
+    function render(list) { document.getElementById('tool-grid').innerHTML = list.map(t => cardTemplate(t)).join(''); }
 
     function show() {
-        document.getElementById('login-sound').play();
+        const hour = new Date().getHours();
+        document.getElementById('greeting-text').innerText = hour < 12 ? "Good Morning" : (hour < 18 ? "Good Afternoon" : "Good Evening");
         document.getElementById('auth-gate').style.transform = "translateY(-100%)";
         document.getElementById('main-hub').style.display = 'flex';
         document.getElementById('panic-btn').style.display = 'block';
     }
 
-    function initSnow() {
-        bgMode = "snow";
-        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-        flakes = Array.from({length: 100}, () => ({x:Math.random()*canvas.width, y:Math.random()*canvas.height, s:Math.random()*2+1, d:Math.random()+0.3}));
+    function checkHint() {
+        const val = document.getElementById('access-key').value;
+        const gate = document.getElementById('gate-title');
+        gate.style.color = val === VIP_CODE ? "var(--vip-gold)" : (val === STD_CODE ? "var(--standard-blue)" : "white");
     }
 
-    function initMatrix() {
-        bgMode = "matrix";
-        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-        drops = Array(Math.floor(canvas.width / 20)).fill(1);
-    }
-
+    function initSnow() { bgMode = "snow"; canvas.width = window.innerWidth; canvas.height = window.innerHeight; flakes = Array.from({length: 100}, () => ({x:Math.random()*canvas.width, y:Math.random()*canvas.height, s:Math.random()*2+1, d:Math.random()+0.3})); }
+    function initMatrix() { bgMode = "matrix"; canvas.width = window.innerWidth; canvas.height = window.innerHeight; drops = Array(Math.floor(canvas.width / 20)).fill(1); }
     function draw() {
-        if(bgMode === "snow") {
-            ctx.clearRect(0,0,canvas.width,canvas.height); ctx.fillStyle = "white";
-            flakes.forEach(f => {
-                ctx.beginPath(); ctx.arc(f.x, f.y, f.s, 0, Math.PI*2); ctx.fill();
-                f.y += f.d; if(f.y > canvas.height) f.y = -10;
-            });
-        } else {
-            ctx.fillStyle = "rgba(2, 6, 23, 0.1)"; ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = "#00ff41"; ctx.font = "15px monospace";
-            drops.forEach((y, i) => {
-                ctx.fillText(String.fromCharCode(Math.random() * 128), i * 20, y * 20);
-                if (y * 20 > canvas.height && Math.random() > 0.975) drops[i] = 0;
-                drops[i]++;
-            });
-        }
+        if(bgMode === "snow") { ctx.clearRect(0,0,canvas.width,canvas.height); ctx.fillStyle = "white"; flakes.forEach(f => { ctx.beginPath(); ctx.arc(f.x, f.y, f.s, 0, Math.PI*2); ctx.fill(); f.y += f.d; if(f.y > canvas.height) f.y = -10; }); } 
+        else { ctx.fillStyle = "rgba(0,0,0,0.1)"; ctx.fillRect(0,0,canvas.width,canvas.height); ctx.fillStyle = "#00ff41"; ctx.font = "15px monospace"; drops.forEach((y,i) => { ctx.fillText(String.fromCharCode(Math.random()*128), i*20, y*20); if(y*20 > canvas.height && Math.random() > 0.975) drops[i]=0; drops[i]++; }); }
         requestAnimationFrame(draw);
     }
 
     function selfDestruct() { location.reload(); }
-    window.onload = () => { initSnow(); draw(); };
+    window.onload = () => { 
+        const savedTheme = localStorage.getItem('hub_theme') || 'frost';
+        document.body.setAttribute('data-theme', savedTheme);
+        initSnow(); draw(); 
+    };
     setInterval(() => { document.getElementById('live-clock').innerText = new Date().toLocaleTimeString(); }, 1000);
 </script>
 </body>
