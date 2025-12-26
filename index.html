@@ -11,6 +11,7 @@
             --vip-gold: #fbbf24;
             --panic-red: #ef4444;
             --online-green: #22c55e;
+            --matrix-green: #00ff41;
             --glass: blur(25px);
             --card-bg: rgba(15, 23, 42, 0.8);
             --border: rgba(255, 255, 255, 0.1);
@@ -22,7 +23,7 @@
             font-family: 'Segoe UI', system-ui, sans-serif; overflow-x: hidden; min-height: 100vh;
         }
 
-        #snow-canvas { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 1; }
+        #bg-canvas { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 1; }
 
         .miuxo-banner { 
             width: 100%; padding: 12px 0; text-align: center; font-weight: 800; font-size: 0.85rem; 
@@ -44,7 +45,6 @@
         }
 
         #gate-title { cursor: pointer; user-select: none; transition: 0.3s; }
-        #gate-title:active { transform: scale(0.95); opacity: 0.5; }
 
         .key-input {
             width: 100%; padding: 15px; border-radius: 12px; border: 1.5px solid var(--border);
@@ -55,12 +55,6 @@
         /* --- MAIN HUB --- */
         #main-hub { display: none; width: 100%; flex-direction: column; align-items: center; padding: 20px 0; z-index: 2; position: relative; }
         
-        .search-area { display: flex; gap: 10px; width: 100%; margin-bottom: 20px; }
-        #search-bar { 
-            flex-grow: 1; background: rgba(0,0,0,0.3); border: 1px solid var(--border); 
-            color: white; padding: 12px; border-radius: 12px; outline: none;
-        }
-
         .social-grid { 
             display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); 
             gap: 12px; width: 100%; margin-top: 10px;
@@ -70,13 +64,26 @@
             background: rgba(255, 255, 255, 0.05); border-radius: 15px; padding: 15px 5px; 
             text-decoration: none; color: white; display: flex; flex-direction: column; 
             align-items: center; transition: 0.3s ease; text-align: center; border: 1px solid var(--border);
-            position: relative; overflow: hidden;
+            position: relative;
         }
 
         .social-card:hover { transform: translateY(-5px); background: rgba(255, 255, 255, 0.1); }
-        .social-card div { font-size: 1.4rem; margin-bottom: 5px; }
+        
+        .featured-card {
+            border: 2px solid var(--vip-gold) !important;
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.3);
+            animation: featured-glow 2s infinite alternate;
+        }
+        @keyframes featured-glow {
+            from { box-shadow: 0 0 10px rgba(251, 191, 36, 0.2); }
+            to { box-shadow: 0 0 25px rgba(251, 191, 36, 0.5); }
+        }
+        .featured-badge {
+            position: absolute; top: 0; right: 0; background: var(--vip-gold);
+            color: black; font-size: 0.4rem; padding: 2px 5px; font-weight: 900;
+            border-bottom-left-radius: 8px; text-transform: uppercase;
+        }
 
-        /* STATUS INDICATORS */
         .status-dot {
             width: 6px; height: 6px; border-radius: 50%; display: inline-block; margin-right: 4px;
             background: var(--online-green); box-shadow: 0 0 5px var(--online-green);
@@ -96,21 +103,18 @@
         .std-theme { border-color: var(--standard-blue) !important; }
         
         .visitor-stat { font-size: 0.7rem; opacity: 0.6; display: none; margin-top: 5px; color: var(--vip-gold); }
-
-        .admin-hold { animation: pulse 0.6s infinite; }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
     </style>
 </head>
 <body>
 
-<canvas id="snow-canvas"></canvas>
+<canvas id="bg-canvas"></canvas>
 <audio id="login-sound" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3" preload="auto"></audio>
 
 <div class="miuxo-banner">✨ HAPPY NEW YEAR 2026! THE FUTURE IS MIUXO ✨</div>
 
 <div id="auth-gate">
     <div class="auth-box">
-        <h2 id="gate-title" onmousedown="startAdminTimer()" onmouseup="clearAdminTimer()" ontouchstart="startAdminTimer()" ontouchend="clearAdminTimer()">🔐 HUB ACCESS</h2>
+        <h2 id="gate-title" onmousedown="startAdminTimer()" onmouseup="clearAdminTimer()">🔐 HUB ACCESS</h2>
         <input type="password" id="access-key" class="key-input" placeholder="Enter Access Code" oninput="checkHint()">
         <button class="btn-auth" id="login-btn" onclick="unlockSession()" style="width:100%; padding:15px; border-radius:12px; border:none; background:var(--standard-blue); color:white; font-weight:900; cursor:pointer;">INITIALIZE HUB</button>
     </div>
@@ -128,8 +132,8 @@
             <span id="live-clock" style="font-family: monospace; opacity: 0.7;">00:00:00</span>
         </div>
 
-        <div class="search-area">
-            <input type="text" id="search-bar" placeholder="🔍 Search tools..." onkeyup="filterTools()">
+        <div style="display:flex; gap:10px; width:100%; margin-bottom:20px;">
+            <input type="text" id="search-bar" placeholder="🔍 Search tools..." onkeyup="filterTools()" style="flex-grow:1; background:rgba(0,0,0,0.3); border:1px solid var(--border); color:white; padding:12px; border-radius:12px; outline:none;">
         </div>
 
         <div class="social-grid" id="tool-grid"></div>
@@ -145,7 +149,10 @@
     const STD_CODE = "1111";
     const ADMIN_BYPASS = "0000"; 
     
-    let adminTimer;
+    let adminTimer, featuredIndex = -1, bgMode = "snow";
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+    let flakes = [], drops = [];
 
     const TOOLS = [
         { name: "NEAPAY", url: "https://neapay.com/", icon: "🏦", border: "#1a365d" },
@@ -162,42 +169,16 @@
         { name: "DARK OSINT", url: "https://darkosint.in/", icon: "🔍", border: "#991b1b" }
     ];
 
-    // --- ADMIN & VISITOR LOGIC ---
-    function startAdminTimer() {
-        document.getElementById('gate-title').classList.add('admin-hold');
-        adminTimer = setTimeout(() => {
-            let key = prompt("ADMIN BYPASS KEY:");
-            if (key === ADMIN_BYPASS) {
-                let cmd = prompt("ADMIN CONTROLS:\n'LOCK' - Close Hub\n'UNLOCK' - Open Hub\n'RESET' - Clear Visitor Stats").toUpperCase();
-                if (cmd === 'LOCK') { localStorage.setItem('hub_locked', 'true'); alert("Locked."); }
-                else if (cmd === 'UNLOCK') { localStorage.setItem('hub_locked', 'false'); alert("Unlocked."); }
-                else if (cmd === 'RESET') { localStorage.setItem('visitor_count', '0'); alert("Stats Reset."); }
-            }
-            clearAdminTimer();
-        }, 3000);
-    }
-
-    function clearAdminTimer() {
-        clearTimeout(adminTimer);
-        document.getElementById('gate-title').classList.remove('admin-hold');
-    }
-
-    function updateVisitorCount() {
-        let count = parseInt(localStorage.getItem('visitor_count') || "0");
-        count++;
-        localStorage.setItem('visitor_count', count.toString());
-        document.getElementById('v-count').innerText = count;
-    }
-
+    // --- RENDER & LOGIC ---
     function checkHint() {
         const val = document.getElementById('access-key').value;
         const gate = document.getElementById('gate-title');
         const btn = document.getElementById('login-btn');
         if(val === VIP_CODE) { 
-            gate.style.color = "#fbbf24"; gate.innerText = "⭐ VIP ACCESS READY";
+            gate.style.color = "var(--vip-gold)"; gate.innerText = "⭐ VIP ACCESS READY";
             btn.style.background = "var(--vip-gold)"; btn.style.color = "black";
         } else if (val === STD_CODE) {
-            gate.style.color = "#3b82f6"; gate.innerText = "🔓 NORMAL SESSION";
+            gate.style.color = "var(--standard-blue)"; gate.innerText = "🔓 NORMAL SESSION";
             btn.style.background = "var(--standard-blue)"; btn.style.color = "white";
         } else { 
             gate.style.color = "white"; gate.innerText = "🔐 HUB ACCESS";
@@ -206,103 +187,93 @@
     }
 
     function unlockSession() {
-        if (localStorage.getItem('hub_locked') === 'true') {
-            alert("⚠️ SYSTEM LOCKED\nMaintenance in progress."); return;
-        }
-
         const key = document.getElementById('access-key').value;
         const hubFrame = document.getElementById('hub-frame');
         const sessionTag = document.getElementById('session-tag');
-        const visitorStat = document.getElementById('visitor-display');
 
         if(key === VIP_CODE || key === STD_CODE) {
-            updateVisitorCount();
             document.getElementById('login-sound').play();
+            featuredIndex = Math.floor(Math.random() * TOOLS.length);
             renderTools(TOOLS);
-            checkSystemStatus(); // Simulated ping check
             
             if(key === VIP_CODE) {
                 sessionTag.innerText = "👑 VIP GOLD SESSION";
                 sessionTag.style.color = "var(--vip-gold)";
                 hubFrame.classList.add('vip-theme');
                 document.getElementById('panic-btn').style.display = 'block';
-                visitorStat.style.display = 'block'; 
+                document.getElementById('visitor-display').style.display = 'block';
+                initMatrix(); // Trigger Matrix Effect
             } else {
                 sessionTag.innerText = "👤 NORMAL SESSION";
                 sessionTag.style.color = "#3b82f6";
                 hubFrame.classList.add('std-theme');
-                document.getElementById('panic-btn').style.display = 'none';
-                visitorStat.style.display = 'none';
+                initSnow();
             }
-            setTimeout(proceed, 300);
+            document.getElementById('auth-gate').style.transform = "translateY(-100%)";
+            document.getElementById('main-hub').style.display = 'flex';
         } else { alert("INVALID ACCESS CODE"); }
     }
 
-    // SIMULATED PING SYSTEM
-    function checkSystemStatus() {
-        const cards = document.querySelectorAll('.status-dot');
-        cards.forEach(dot => {
-            // Randomly simulate a "down" tool (5% chance) or keep all up
-            const isDown = Math.random() < 0.05; 
-            if(isDown) {
-                dot.classList.add('status-down');
-                dot.parentElement.title = "Connection Unstable";
-            }
-        });
-    }
-
     function renderTools(list) {
-        document.getElementById('tool-grid').innerHTML = list.map(t => `
-            <a href="${t.url}" target="_blank" class="social-card" style="border: 1px solid ${t.border}">
-                <div>${t.icon}</div>
+        document.getElementById('tool-grid').innerHTML = list.map((t, index) => {
+            const isFeatured = (list.length === TOOLS.length && index === featuredIndex);
+            return `
+            <a href="${t.url}" target="_blank" class="social-card ${isFeatured ? 'featured-card' : ''}" style="border: 1px solid ${t.border}">
+                ${isFeatured ? '<span class="featured-badge">Featured</span>' : ''}
+                <div style="font-size:1.4rem; margin-bottom:5px;">${t.icon}</div>
                 <div style="display:flex; align-items:center;">
                     <span class="status-dot pulse"></span>
                     <span style="font-size:0.6rem; font-weight:800; letter-spacing:0.5px;">${t.name}</span>
                 </div>
-            </a>`).join('');
-    }
-
-    function filterTools() {
-        const val = document.getElementById('search-bar').value.toUpperCase();
-        const filtered = TOOLS.filter(t => t.name.includes(val));
-        renderTools(filtered);
-        checkSystemStatus();
-    }
-
-    function proceed() {
-        document.getElementById('auth-gate').style.transform = "translateY(-100%)";
-        document.getElementById('main-hub').style.display = 'flex';
+            </a>`;
+        }).join('');
     }
 
     function selfDestruct() {
         document.getElementById('main-hub').style.display = 'none';
-        document.getElementById('panic-btn').style.display = 'none';
-        document.getElementById('access-key').value = "";
         document.getElementById('auth-gate').style.transform = "translateY(0)";
         document.getElementById('hub-frame').className = ""; 
+        document.getElementById('access-key').value = "";
+        initSnow(); // Reset to snow
         checkHint();
     }
 
-    // --- SNOW LOGIC ---
-    const canvas = document.getElementById('snow-canvas');
-    const ctx = canvas.getContext('2d');
-    let flakes = [];
+    // --- BACKGROUND EFFECTS ---
     function initSnow() {
+        bgMode = "snow";
         canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-        flakes = [];
-        for(let i=0; i<100; i++) flakes.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, s:Math.random()*2+1, d:Math.random()+0.3});
-    }
-    function drawSnow() {
-        ctx.clearRect(0,0,canvas.width,canvas.height); 
-        ctx.fillStyle = "white";
-        flakes.forEach(f => {
-            ctx.beginPath(); ctx.arc(f.x, f.y, f.s, 0, Math.PI*2); ctx.fill();
-            f.y += f.d; if(f.y > canvas.height) f.y = -10;
-        });
-        requestAnimationFrame(drawSnow);
+        flakes = Array.from({length: 100}, () => ({x:Math.random()*canvas.width, y:Math.random()*canvas.height, s:Math.random()*2+1, d:Math.random()+0.3}));
     }
 
-    window.onload = () => { initSnow(); drawSnow(); };
+    function initMatrix() {
+        bgMode = "matrix";
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        const columns = Math.floor(canvas.width / 20);
+        drops = Array(columns).fill(1);
+    }
+
+    function draw() {
+        if(bgMode === "snow") {
+            ctx.clearRect(0,0,canvas.width,canvas.height); ctx.fillStyle = "white";
+            flakes.forEach(f => {
+                ctx.beginPath(); ctx.arc(f.x, f.y, f.s, 0, Math.PI*2); ctx.fill();
+                f.y += f.d; if(f.y > canvas.height) f.y = -10;
+            });
+        } else {
+            ctx.fillStyle = "rgba(2, 6, 23, 0.1)"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "#00ff41"; ctx.font = "15px monospace";
+            drops.forEach((y, i) => {
+                const text = String.fromCharCode(Math.random() * 128);
+                ctx.fillText(text, i * 20, y * 20);
+                if (y * 20 > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                drops[i]++;
+            });
+        }
+        requestAnimationFrame(draw);
+    }
+
+    window.onload = () => { initSnow(); draw(); };
+    window.onresize = () => { bgMode === "snow" ? initSnow() : initMatrix(); };
     setInterval(() => { document.getElementById('live-clock').innerText = new Date().toLocaleTimeString(); }, 1000);
 </script>
 </body>
