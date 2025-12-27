@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ᴍɪᴜxᴏ | ᴜɴɪꜰɪᴇᴅ ʜᴜʙ ᴠ12.0</title>
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
         :root {
             --bg: #020617; --standard-blue: #2563eb; --glass: blur(25px);
@@ -19,6 +18,7 @@
         }
         body, html { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; transition: 0.4s; min-height: 100vh; overflow-x: hidden; }
         
+        /* UI Components */
         .miuxo-banner { width: 100%; padding: 12px 0; text-align: center; font-weight: 800; font-size: 0.8rem; background: var(--standard-blue); color: #fff; position: relative; z-index: 100; transition: 0.3s; }
         .miuxo-banner.vip { background: linear-gradient(90deg, #b48608, #fbe134, #b48608); color: #000; }
         .miuxo-banner.member { background: var(--member-green); box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); }
@@ -27,44 +27,47 @@
 
         .theme-toggle { position: fixed; bottom: 25px; right: 25px; width: 50px; height: 50px; background: var(--standard-blue); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 1000; border: none; font-size: 1.2rem; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
 
+        /* Auth Gate */
         #auth-gate { position: fixed; inset: 0; z-index: 9999; background: var(--bg); display: flex; align-items: center; justify-content: center; }
         .auth-box { background: var(--card-bg); padding: 40px; border-radius: 30px; border: 1px solid var(--border); width: 90%; max-width: 400px; text-align: center; backdrop-filter: var(--glass); }
-        .key-input { width: 100%; padding: 15px; border-radius: 12px; border: 1.5px solid var(--border); background: var(--search-bg); color: var(--text); text-align: center; margin: 15px 0; outline: none; box-sizing: border-box; font-weight: bold; }
+        .key-input { width: 100%; padding: 15px; border-radius: 12px; border: 1.5px solid var(--border); background: var(--search-bg); color: var(--text); text-align: center; margin: 10px 0; outline: none; box-sizing: border-box; font-weight: bold; }
 
+        /* Main Layout */
         #main-hub { display: none; width: 100%; flex-direction: column; align-items: center; padding: 20px 0; }
         .hub-container { background: var(--card-bg); border: 1px solid var(--border); border-radius: 28px; padding: 30px; width: 95%; max-width: 1100px; backdrop-filter: var(--glass); }
 
         .control-panel { border: 2px dashed var(--admin-purple); padding: 20px; border-radius: 20px; background: rgba(168, 85, 247, 0.05); margin-bottom: 25px; display: none; }
         .utility-box { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; }
-        .util-card { background: var(--search-bg); border: 1px solid var(--border); border-radius: 20px; padding: 18px; }
+        .util-card { background: var(--search-bg); border: 1px solid var(--border); border-radius: 20px; padding: 18px; margin-bottom: 10px; }
         .util-input { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid var(--border); background: rgba(0,0,0,0.2); color: var(--text); margin-top: 5px; box-sizing: border-box; }
         .util-btn { width: 100%; padding: 10px; margin-top: 10px; border-radius: 10px; border: none; background: var(--standard-blue); color: white; cursor: pointer; font-weight: 800; font-size: 0.75rem; }
 
         .section-label { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin: 25px 0 12px; color: var(--standard-blue); display: flex; align-items: center; gap: 8px; }
         .search-input { width: 100%; padding: 16px; border-radius: 16px; background: var(--search-bg); border: 1px solid var(--border); color: var(--text); margin-bottom: 20px; box-sizing: border-box; font-size: 1rem; }
+        
+        /* Grids */
         .social-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(115px, 1fr)); gap: 12px; }
         .social-card { background: var(--card-bg); border-radius: 20px; padding: 20px 5px; text-decoration: none; color: var(--text); display: flex; flex-direction: column; align-items: center; transition: 0.3s; border: 1px solid var(--border); position: relative; cursor: pointer; }
         .social-card:hover { transform: translateY(-5px); border-color: var(--accent); }
 
         .del-tool { position: absolute; top: 5px; left: 5px; background: var(--owner-red); color: white; border: none; border-radius: 50%; width: 18px; height: 18px; font-size: 10px; cursor: pointer; display: none; z-index: 5; }
-
         .badge { font-size: 0.5rem; padding: 2px 6px; border-radius: 4px; position: absolute; top: -8px; right: 10px; font-weight: 900; }
         .badge-vip { background: var(--vip-gold); color: #000; }
         .badge-member { background: var(--member-green); color: #fff; }
         .badge-admin { background: var(--admin-purple); color: #fff; }
 
+        /* Custom Styles */
         #upiModal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:10002; align-items:center; justify-content:center; backdrop-filter: blur(10px); }
-        .upi-content { background: #0f172a; padding: 30px; border-radius: 28px; width: 320px; text-align: center; border: 1px solid var(--border); }
         .profile-chip { display: flex; align-items: center; gap: 12px; background: var(--search-bg); padding: 6px 16px; border-radius: 50px; border: 1px solid var(--border); }
-        .profile-pic { width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--border); }
-        
-        .logout-btn { background: none; border: none; color: var(--owner-red); cursor: pointer; font-size: 0.9rem; padding: 0; display: flex; align-items: center; opacity: 0.7; transition: 0.3s; }
-        .logout-btn:hover { opacity: 1; transform: scale(1.1); }
-
+        .logout-btn { background: none; border: none; color: var(--owner-red); cursor: pointer; font-size: 0.9rem; padding: 0; display: flex; align-items: center; }
         .manager-stats { display: flex; gap: 15px; margin-top: 10px; }
         .stat-box { flex: 1; background: rgba(255,255,255,0.03); padding: 10px; border-radius: 12px; text-align: center; border: 1px solid var(--border); }
         .stat-val { display: block; font-size: 1.2rem; font-weight: 900; color: var(--accent); }
         .stat-lbl { font-size: 0.5rem; opacity: 0.6; text-transform: uppercase; }
+        
+        table { width: 100%; border-collapse: collapse; font-size: 0.7rem; }
+        th { text-align: left; opacity: 0.5; padding: 5px; }
+        td { padding: 8px 5px; border-bottom: 1px solid var(--border); }
     </style>
 </head>
 <body onload="checkPersistedSession()">
@@ -78,70 +81,82 @@
 <div id="auth-gate">
     <div class="auth-box">
         <h2 id="gate-title">🔐 MIUXO HUB v12</h2>
-        <div style="display: flex; justify-content: center; margin: 15px 0;">
-            <div id="g_id_onload" data-client_id="YOUR_GOOGLE_ID" data-callback="handleGoogleLogin"></div>
-            <div class="g_id_signin" data-type="standard" data-shape="pill"></div>
+        <div id="auth-form-container">
+            <input type="text" id="username" class="key-input" placeholder="USERNAME">
+            <input type="password" id="password" class="key-input" placeholder="PASSWORD">
+            <button id="auth-submit-btn" onclick="loginWithCredentials()" style="width:100%; padding:15px; border-radius:12px; border:none; background:var(--member-green); color:white; font-weight:900; cursor:pointer;">SIGN IN</button>
+            <p id="auth-toggle-text" style="font-size: 0.7rem; margin-top: 15px; cursor: pointer; color: var(--standard-blue);" onclick="toggleAuthMode()">
+                Don't have an account? <b>REGISTER</b>
+            </p>
         </div>
-        <div style="height: 1px; background: var(--border); margin: 10px 0;"></div>
-        <input type="password" id="access-key" class="key-input" placeholder="ACCESS CODE" oninput="checkHint()">
-        <button onclick="unlockSession()" style="width:100%; padding:16px; border-radius:12px; border:none; background:var(--standard-blue); color:white; font-weight:900; cursor:pointer;">INITIALIZE HUB</button>
-        <div style="display: flex; gap: 10px; margin-top: 15px;">
-            <button onclick="openPayModal()" style="flex:1; background:none; border: 1px solid var(--vip-gold); color:var(--vip-gold); padding: 10px; border-radius: 8px; cursor:pointer; font-size:0.65rem; font-weight:bold;">BUY VIP</button>
-            <button onclick="guestEnter()" style="flex:1; background:var(--search-bg); border: 1px solid var(--border); color:var(--text); padding: 10px; border-radius: 8px; cursor:pointer; font-size:0.65rem; font-weight:bold;">GUEST</button>
-        </div>
-    </div>
-</div>
-
-<div id="upiModal">
-    <div class="upi-content">
-        <h2 style="color:var(--vip-gold);">Unlock VIP</h2>
-        <img id="upiQR" src="" style="width: 180px; background:white; padding:10px; border-radius:15px; margin: 15px 0;">
-        <p style="font-size: 0.7rem; color: #94a3b8;">ID: 8606226353@fam</p>
-        <a href="https://wa.me/918921870640?text=I%20Paid%20for%20VIP" target="_blank" style="display:block; background:#22c55e; color:white; text-decoration:none; padding:12px; border-radius:12px; font-weight:bold; margin-top: 10px;">VERIFY PAYMENT</a>
-        <button onclick="closePayModal()" style="margin-top:10px; background:transparent; border:none; color:#64748b; cursor:pointer;">Cancel</button>
+        <div style="height: 1px; background: var(--border); margin: 20px 0;"></div>
+        <button onclick="guestEnter()" style="width:100%; background:var(--search-bg); border: 1px solid var(--border); color:var(--text); padding: 10px; border-radius: 8px; cursor:pointer; font-size:0.65rem; font-weight:bold;">GUEST ENTER</button>
     </div>
 </div>
 
 <div id="main-hub">
     <div class="hub-container">
+        
         <div id="admin-panel" class="control-panel">
-            <div class="section-label" id="panel-title" style="color:var(--admin-purple); margin:0;">🛠️ MANAGER MODE ACTIVATED</div>
+            <div class="section-label" id="panel-title" style="color:var(--admin-purple); margin:0;">🛠️ MANAGER MODE</div>
             
             <div class="manager-stats">
-                <div class="stat-box"><span class="stat-val" id="stat-total">0</span><span class="stat-lbl">Total Resources</span></div>
-                <div class="stat-box"><span class="stat-val" style="color:var(--vip-gold)" id="stat-vip">0</span><span class="stat-lbl">VIP Tools</span></div>
-                <div class="stat-box"><span class="stat-val" style="color:var(--owner-red)">LIVE</span><span class="stat-lbl">Deployment Status</span></div>
+                <div class="stat-box"><span class="stat-val" id="stat-total">0</span><span class="stat-lbl">Resources</span></div>
+                <div class="stat-box"><span class="stat-val" style="color:var(--vip-gold)" id="stat-vip">0</span><span class="stat-lbl">VIP</span></div>
+                <div class="stat-box"><span class="stat-val" id="stat-users">0</span><span class="stat-lbl">Users</span></div>
             </div>
 
             <div class="utility-box" style="margin-top: 15px;">
                 <div class="util-card">
-                    <span style="font-size:0.6rem;">DEPLOY NEW RESOURCE</span>
-                    <input type="text" id="add-name" class="util-input" placeholder="Resource Name">
-                    <input type="text" id="add-url" class="util-input" placeholder="https://...">
+                    <span style="font-size:0.6rem;">USER MANAGEMENT</span>
+                    <div style="max-height: 120px; overflow-y: auto; margin-top: 5px;">
+                        <table>
+                            <thead><tr><th>USER</th><th>ROLE</th><th>ACTION</th></tr></thead>
+                            <tbody id="user-admin-list"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="util-card">
+                    <span style="font-size:0.6rem;">DEPLOY RESOURCE</span>
+                    <input type="text" id="add-name" class="util-input" placeholder="Name">
+                    <input type="text" id="add-url" class="util-input" placeholder="URL">
                     <select id="add-type" class="util-input">
                         <option value="public">Public</option>
                         <option value="member">Member</option>
                         <option value="vip">VIP</option>
-                        <option value="private">Private (Admin/Owner Only)</option>
+                        <option value="private">Private</option>
                     </select>
-                    <button class="util-btn" style="background:var(--admin-purple)" onclick="addNewTool()">PUSH TO PRODUCTION</button>
+                    <button class="util-btn" onclick="addNewTool()">PUSH TO PRODUCTION</button>
                 </div>
                 <div class="util-card">
-                    <span style="font-size:0.6rem;">HUB MAINTENANCE</span>
-                    <button class="util-btn" style="background:var(--owner-red);" onclick="terminateSession()">FORCE LOGOUT ALL</button>
-                    <button class="util-btn" style="background:#64748b;" onclick="location.reload()">REBOOT HUB</button>
+                    <span style="font-size:0.6rem;">INCOMING FEEDBACK</span>
+                    <div id="feedback-inbox" style="max-height: 100px; overflow-y: auto; font-size: 0.6rem; margin: 5px 0;"></div>
+                    <button class="util-btn" style="background:var(--owner-red); font-size:0.5rem;" onclick="clearFeedback()">CLEAR INBOX</button>
+                </div>
+                <div class="util-card">
+                    <span style="font-size:0.6rem;">SYSTEM BACKUP</span>
+                    <button class="util-btn" style="background:#0ea5e9;" onclick="exportDatabase()">EXPORT (.JSON)</button>
+                    <input type="file" id="import-file" style="display:none" onchange="importDatabase(event)">
+                    <button class="util-btn" style="background:#64748b;" onclick="document.getElementById('import-file').click()">RESTORE DATA</button>
                 </div>
             </div>
+        </div>
+
+        <div id="user-settings-panel" style="display:none;" class="util-card">
+            <div class="section-label" style="margin-top:0;">⚙️ ACCOUNT SETTINGS</div>
+            <div class="utility-box">
+                <input type="text" id="new-display-name" class="util-input" placeholder="New Display Name">
+                <input type="password" id="new-password" class="util-input" placeholder="New Password">
+            </div>
+            <button class="util-btn" onclick="updateProfile()">SAVE CHANGES</button>
+            <button onclick="toggleSettings()" style="background:none; border:none; color:var(--text); font-size:0.6rem; margin-top:10px; cursor:pointer; opacity:0.5;">CLOSE</button>
         </div>
 
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
             <div class="profile-chip">
                 <div id="profile-area" style="display:flex; align-items:center; gap:8px;"></div>
                 <div style="width: 1px; height: 15px; background: var(--border);"></div>
-                <button class="logout-btn" onclick="terminateSession()" title="Logout">
-                    <span style="font-size:0.6rem; font-weight:bold; margin-right:4px;">EXIT</span>
-                    <span style="font-size:1.1rem;">⏻</span>
-                </button>
+                <button class="logout-btn" onclick="terminateSession()">⏻</button>
             </div>
             <span id="live-clock" style="font-family: monospace; font-size: 0.9rem; opacity: 0.8;">00:00:00</span>
         </div>
@@ -149,12 +164,12 @@
         <input type="text" id="tool-search" class="search-input" placeholder="Search the unified directory..." onkeyup="refreshUI()">
         
         <div id="private-section" style="display:none;">
-            <div class="section-label" style="color:var(--admin-purple)">🔒 PRIVATE DATA (ADMIN/OWNER)</div>
+            <div class="section-label" style="color:var(--admin-purple)">🔒 PRIVATE DATA</div>
             <div class="social-grid" id="private-grid"></div>
         </div>
 
         <div id="vip-section" style="display:none;">
-            <div class="section-label" style="color:var(--vip-gold)">⭐ VIP PREMIUM RESOURCES</div>
+            <div class="section-label" style="color:var(--vip-gold)">⭐ VIP RESOURCES</div>
             <div class="social-grid" id="vip-grid"></div>
         </div>
 
@@ -165,161 +180,214 @@
 
         <div class="section-label">📂 PUBLIC DIRECTORY</div>
         <div class="social-grid" id="tool-grid"></div>
+
+        <div class="section-label">📢 RESOURCE REQUESTS</div>
+        <div class="util-card">
+            <input type="text" id="user-msg" class="util-input" placeholder="Request a tool...">
+            <button class="util-btn" onclick="sendFeedback()">SUBMIT REQUEST</button>
+        </div>
     </div>
 </div>
 
 <script>
-    const upiID = "8606226353@fam";
+    // --- DATABASE INITIALIZATION ---
     let MASTER_DATA = JSON.parse(localStorage.getItem('miuxo_master_data')) || {
-        private: [{ id: "priv1", name: "ROOT DB", url: "#", icon: "🔑", type: "private" }],
-        vip: [{ id: "v1", name: "DARK OSINT", url: "https://darkosint.in/", icon: "🔍", type: "vip" }],
-        member: [{ id: "m1", name: "AI TOOLS", url: "https://chatgpt.com/", icon: "🤖", type: "member" }],
-        public: [{ id: "p1", name: "MIUXO.IN", url: "https://miuxo.in/", icon: "🌐", type: "public" }]
+        private: [], vip: [], member: [], public: []
     };
-
+    let REGISTERED_USERS = JSON.parse(localStorage.getItem('miuxo_users')) || {
+        "admin": { pass: "admin123", role: "admin", name: "SYSTEM ADMIN" }
+    };
+    let FEEDBACK_DATA = JSON.parse(localStorage.getItem('miuxo_feedback')) || [];
     let SESSION = { role: 'public', user: null };
+    let isRegisterMode = false;
+
+    // --- AUTHENTICATION ---
+    function toggleAuthMode() {
+        isRegisterMode = !isRegisterMode;
+        const btn = document.getElementById('auth-submit-btn');
+        const text = document.getElementById('auth-toggle-text');
+        btn.innerText = isRegisterMode ? "CREATE ACCOUNT" : "SIGN IN";
+        btn.style.background = isRegisterMode ? "var(--admin-purple)" : "var(--member-green)";
+        btn.onclick = isRegisterMode ? registerUser : loginWithCredentials;
+        text.innerHTML = isRegisterMode ? "Already have an account? <b>LOGIN</b>" : "Don't have an account? <b>REGISTER</b>";
+    }
+
+    function registerUser() {
+        const u = document.getElementById('username').value.trim().toLowerCase();
+        const p = document.getElementById('password').value;
+        if(u.length < 3 || p.length < 4) return alert("Too short!");
+        if(REGISTERED_USERS[u]) return alert("Exists!");
+        REGISTERED_USERS[u] = { pass: p, role: "member", name: u.toUpperCase() };
+        localStorage.setItem('miuxo_users', JSON.stringify(REGISTERED_USERS));
+        alert("Success! Now Login.");
+        toggleAuthMode();
+    }
+
+    function loginWithCredentials() {
+        const u = document.getElementById('username').value.trim().toLowerCase();
+        const p = document.getElementById('password').value;
+        if(REGISTERED_USERS[u] && REGISTERED_USERS[u].pass === p) {
+            SESSION.role = REGISTERED_USERS[u].role;
+            SESSION.user = { name: REGISTERED_USERS[u].name, username: u };
+            sessionStorage.setItem('miuxo_session', JSON.stringify(SESSION));
+            applySessionUI();
+            enterHub();
+        } else { alert("Invalid Credentials"); }
+    }
 
     function checkPersistedSession() {
         const saved = sessionStorage.getItem('miuxo_session');
-        if(saved) {
-            SESSION = JSON.parse(saved);
-            applySessionUI();
-            enterHub();
-        }
+        if(saved) { SESSION = JSON.parse(saved); applySessionUI(); enterHub(); }
     }
 
-    function handleGoogleLogin(response) {
-        const payload = JSON.parse(atob(response.credential.split('.')[1]));
-        SESSION.role = 'member';
-        SESSION.user = { name: payload.name, picture: payload.picture };
-        sessionStorage.setItem('miuxo_session', JSON.stringify(SESSION));
-        applySessionUI();
-        enterHub();
-    }
-
-    function unlockSession() {
-        const key = document.getElementById('access-key').value;
-        const todayVIP = "MX" + new Date().getDate() + "PAY";
-
-        if(key === "0000") SESSION.role = 'owner';
-        else if(key === "8888") SESSION.role = 'admin';
-        else if(key === todayVIP) SESSION.role = 'vip';
-        else if(key === "1234") SESSION.role = 'member';
-        else if(key === "1111") SESSION.role = 'public';
-        else return alert("ACCESS DENIED: Invalid Code");
-
-        sessionStorage.setItem('miuxo_session', JSON.stringify(SESSION));
-        applySessionUI();
-        enterHub();
-    }
-
+    // --- UI ENGINE ---
     function applySessionUI() {
         const banner = document.getElementById('status-banner');
-        const profileArea = document.getElementById('profile-area');
-        
+        const profile = document.getElementById('profile-area');
         banner.className = 'miuxo-banner ' + SESSION.role;
         document.getElementById('access-label').innerText = SESSION.role.toUpperCase() + " SESSION";
         
-        if(SESSION.user && SESSION.user.picture) {
-            profileArea.innerHTML = `<img src="${SESSION.user.picture}" class="profile-pic"><span style="font-size: 0.6rem; font-weight: 900;">${SESSION.user.name.toUpperCase()}</span>`;
-        } else {
-            profileArea.innerHTML = `<span style="font-size: 0.6rem; font-weight: 900;">${SESSION.role.toUpperCase()}</span>`;
-        }
+        profile.innerHTML = `
+            <button onclick="toggleSettings()" style="background:none; border:none; cursor:pointer;">⚙️</button>
+            <span style="font-size: 0.6rem; font-weight: 900;">${SESSION.user ? SESSION.user.name : "GUEST"}</span>
+        `;
 
         const role = SESSION.role;
         document.getElementById('member-section').style.display = ['member', 'vip', 'admin', 'owner'].includes(role) ? 'block' : 'none';
         document.getElementById('vip-section').style.display = ['vip', 'admin', 'owner'].includes(role) ? 'block' : 'none';
-        
-        if(['admin', 'owner'].includes(role)) {
-            document.getElementById('admin-panel').style.display = 'block';
-            document.getElementById('private-section').style.display = 'block';
-            if(role === 'owner') {
-                document.getElementById('panel-title').innerText = "👑 OWNER DEPLOYMENT TERMINAL";
-                document.getElementById('panel-title').style.color = "var(--owner-red)";
-            }
-        }
+        document.getElementById('admin-panel').style.display = ['admin', 'owner'].includes(role) ? 'block' : 'none';
+        document.getElementById('private-section').style.display = ['admin', 'owner'].includes(role) ? 'block' : 'none';
     }
-
-    function enterHub() {
-        document.getElementById('auth-gate').style.display = 'none';
-        document.getElementById('main-hub').style.display = 'flex';
-        refreshUI();
-    }
-
-    function guestEnter() { SESSION.role = 'public'; enterHub(); }
 
     function refreshUI() {
         const query = document.getElementById('tool-search').value.toLowerCase();
-        const render = (sectionId, dataKey) => {
-            const grid = document.getElementById(sectionId);
+        const render = (id, key) => {
+            const grid = document.getElementById(id);
             if(!grid) return;
-            const filtered = MASTER_DATA[dataKey].filter(t => t.name.toLowerCase().includes(query));
-            grid.innerHTML = filtered.map(t => createCard(t)).join('');
+            grid.innerHTML = MASTER_DATA[key]
+                .filter(t => t.name.toLowerCase().includes(query))
+                .map(t => `
+                    <div class="social-card" onclick="window.open('${t.url}', '_blank')">
+                        <button class="del-tool" style="display:${['admin','owner'].includes(SESSION.role)?'block':'none'}" onclick="event.stopPropagation(); deleteTool('${t.id}', '${key}')">×</button>
+                        ${key !== 'public' ? `<span class="badge badge-${key}">${key.toUpperCase()}</span>` : ''}
+                        <div style="font-size:2rem; margin-bottom:8px;">🚀</div>
+                        <div style="font-size:0.7rem; font-weight:900;">${t.name}</div>
+                    </div>
+                `).join('');
         };
-        render('tool-grid', 'public');
-        render('member-grid', 'member');
-        render('vip-grid', 'vip');
-        render('private-grid', 'private');
-        updateManagerStats();
+        render('tool-grid', 'public'); render('member-grid', 'member'); 
+        render('vip-grid', 'vip'); render('private-grid', 'private');
+        updateAdminView();
     }
 
-    function updateManagerStats() {
+    // --- ADMIN TOOLS ---
+    function updateAdminView() {
         if(!['admin', 'owner'].includes(SESSION.role)) return;
-        const total = MASTER_DATA.public.length + MASTER_DATA.member.length + MASTER_DATA.vip.length + MASTER_DATA.private.length;
-        document.getElementById('stat-total').innerText = total;
+        document.getElementById('stat-total').innerText = Object.values(MASTER_DATA).flat().length;
         document.getElementById('stat-vip').innerText = MASTER_DATA.vip.length;
+        document.getElementById('stat-users').innerText = Object.keys(REGISTERED_USERS).length;
+
+        const list = document.getElementById('user-admin-list');
+        list.innerHTML = Object.keys(REGISTERED_USERS).map(u => `
+            <tr>
+                <td>${u}</td>
+                <td><span class="badge-${REGISTERED_USERS[u].role}">${REGISTERED_USERS[u].role}</span></td>
+                <td><button onclick="promoteUser('${u}')">↑</button><button onclick="banUser('${u}')">×</button></td>
+            </tr>
+        `).join('');
+
+        document.getElementById('feedback-inbox').innerHTML = FEEDBACK_DATA.map(f => `
+            <div style="padding:5px; border-bottom:1px solid var(--border)"><b>${f.user}:</b> ${f.text}</div>
+        `).reverse().join('');
     }
 
-    function createCard(t) {
-        const showDel = ['admin', 'owner'].includes(SESSION.role) ? 'block' : 'none';
-        return `
-            <div class="social-card" onclick="window.open('${t.url}', '_blank')">
-                <button class="del-tool" style="display:${showDel}" onclick="event.stopPropagation(); deleteTool('${t.id}', '${t.type}')">×</button>
-                ${t.type !== 'public' ? `<span class="badge badge-${t.type}">${t.type.toUpperCase()}</span>` : ''}
-                <div style="font-size:2rem; margin-bottom:8px;">${t.icon || '🚀'}</div>
-                <div style="font-size:0.7rem; font-weight:900;">${t.name}</div>
-            </div>
-        `;
+    function promoteUser(u) {
+        const r = ['member', 'vip', 'admin'];
+        let cur = r.indexOf(REGISTERED_USERS[u].role);
+        if(cur < 2) { 
+            REGISTERED_USERS[u].role = r[cur+1]; 
+            localStorage.setItem('miuxo_users', JSON.stringify(REGISTERED_USERS));
+            refreshUI();
+        }
+    }
+
+    function banUser(u) {
+        if(u === 'admin') return;
+        delete REGISTERED_USERS[u];
+        localStorage.setItem('miuxo_users', JSON.stringify(REGISTERED_USERS));
+        refreshUI();
+    }
+
+    // --- DATA MANAGEMENT ---
+    function addNewTool() {
+        const n = document.getElementById('add-name').value.toUpperCase();
+        const u = document.getElementById('add-url').value;
+        const t = document.getElementById('add-type').value;
+        if(!n || !u) return;
+        MASTER_DATA[t].push({ id: Date.now(), name: n, url: u });
+        localStorage.setItem('miuxo_master_data', JSON.stringify(MASTER_DATA));
+        refreshUI();
     }
 
     function deleteTool(id, type) {
-        if(!confirm("Are you sure you want to remove this resource from the production hub?")) return;
-        MASTER_DATA[type] = MASTER_DATA[type].filter(item => item.id !== id);
+        MASTER_DATA[type] = MASTER_DATA[type].filter(i => i.id != id);
         localStorage.setItem('miuxo_master_data', JSON.stringify(MASTER_DATA));
         refreshUI();
     }
 
-    function addNewTool() {
-        const name = document.getElementById('add-name').value.toUpperCase();
-        const url = document.getElementById('add-url').value;
-        const type = document.getElementById('add-type').value;
-        if(!name || !url) return alert("Error: Fields cannot be empty");
-        MASTER_DATA[type].push({ id: 't-'+Date.now(), name, url, icon: "🛡️", type });
-        localStorage.setItem('miuxo_master_data', JSON.stringify(MASTER_DATA));
+    function exportDatabase() {
+        const data = { MASTER_DATA, REGISTERED_USERS, FEEDBACK_DATA };
+        const blob = new Blob([JSON.stringify(data)], {type: 'application/json'});
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'miuxo_backup.json';
+        a.click();
+    }
+
+    function importDatabase(e) {
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+            const d = JSON.parse(ev.target.result);
+            localStorage.setItem('miuxo_master_data', JSON.stringify(d.MASTER_DATA));
+            localStorage.setItem('miuxo_users', JSON.stringify(d.REGISTERED_USERS));
+            localStorage.setItem('miuxo_feedback', JSON.stringify(d.FEEDBACK_DATA));
+            location.reload();
+        };
+        reader.readAsText(e.target.files[0]);
+    }
+
+    // --- UTILITIES ---
+    function sendFeedback() {
+        const m = document.getElementById('user-msg').value;
+        if(!m) return;
+        FEEDBACK_DATA.push({ user: SESSION.user ? SESSION.user.name : "GUEST", text: m });
+        localStorage.setItem('miuxo_feedback', JSON.stringify(FEEDBACK_DATA));
+        document.getElementById('user-msg').value = "";
+        alert("Sent!");
         refreshUI();
-        alert("SUCCESS: Resource deployed to " + type.toUpperCase());
     }
 
-    function terminateSession() { 
-        sessionStorage.clear(); 
-        location.reload(); 
+    function updateProfile() {
+        const n = document.getElementById('new-display-name').value;
+        const p = document.getElementById('new-password').value;
+        const uk = SESSION.user.username;
+        if(n) { REGISTERED_USERS[uk].name = n.toUpperCase(); SESSION.user.name = n.toUpperCase(); }
+        if(p) { REGISTERED_USERS[uk].pass = p; }
+        localStorage.setItem('miuxo_users', JSON.stringify(REGISTERED_USERS));
+        sessionStorage.setItem('miuxo_session', JSON.stringify(SESSION));
+        location.reload();
     }
 
+    function toggleSettings() {
+        const p = document.getElementById('user-settings-panel');
+        p.style.display = p.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function enterHub() { document.getElementById('auth-gate').style.display = 'none'; document.getElementById('main-hub').style.display = 'flex'; refreshUI(); }
+    function guestEnter() { SESSION.role = 'public'; enterHub(); }
+    function terminateSession() { sessionStorage.clear(); location.reload(); }
     function toggleTheme() { document.body.setAttribute('data-theme', document.body.getAttribute('data-theme') === 'light' ? 'dark' : 'light'); }
-    function openPayModal() {
-        const uri = `upi://pay?pa=${upiID}&pn=MIUXO&am=50&cu=INR`;
-        document.getElementById('upiQR').src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(uri)}`;
-        document.getElementById('upiModal').style.display = 'flex';
-    }
-    function closePayModal() { document.getElementById('upiModal').style.display = 'none'; }
-    function checkHint() {
-        const val = document.getElementById('access-key').value;
-        const gate = document.getElementById('gate-title');
-        if(val === "0000") gate.style.color = "var(--owner-red)";
-        else if(val === "8888") gate.style.color = "var(--admin-purple)";
-        else if(val === "1234") gate.style.color = "var(--member-green)";
-        else gate.style.color = "white";
-    }
+    function clearFeedback() { FEEDBACK_DATA = []; localStorage.setItem('miuxo_feedback', "[]"); refreshUI(); }
 
     setInterval(() => {
         const now = new Date();
