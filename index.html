@@ -19,7 +19,6 @@
         }
         body, html { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; transition: 0.4s; min-height: 100vh; overflow-x: hidden; }
         
-        /* Banners */
         .miuxo-banner { width: 100%; padding: 12px 0; text-align: center; font-weight: 800; font-size: 0.8rem; background: var(--standard-blue); color: #fff; position: relative; z-index: 100; transition: 0.3s; }
         .miuxo-banner.vip { background: linear-gradient(90deg, #b48608, #fbe134, #b48608); color: #000; }
         .miuxo-banner.member { background: var(--member-green); box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); }
@@ -28,24 +27,20 @@
 
         .theme-toggle { position: fixed; bottom: 25px; right: 25px; width: 50px; height: 50px; background: var(--standard-blue); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 1000; border: none; font-size: 1.2rem; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
 
-        /* Auth Gate */
         #auth-gate { position: fixed; inset: 0; z-index: 9999; background: var(--bg); display: flex; align-items: center; justify-content: center; }
         .auth-box { background: var(--card-bg); padding: 40px; border-radius: 30px; border: 1px solid var(--border); width: 90%; max-width: 400px; text-align: center; backdrop-filter: var(--glass); }
         .key-input { width: 100%; padding: 15px; border-radius: 12px; border: 1.5px solid var(--border); background: var(--search-bg); color: var(--text); text-align: center; margin: 15px 0; outline: none; box-sizing: border-box; font-weight: bold; }
 
-        /* Hub Layout */
         #main-hub { display: none; width: 100%; flex-direction: column; align-items: center; padding: 20px 0; }
         .hub-container { background: var(--card-bg); border: 1px solid var(--border); border-radius: 28px; padding: 30px; width: 95%; max-width: 1100px; backdrop-filter: var(--glass); }
 
-        /* Control Panels */
         .control-panel { border: 2px dashed var(--admin-purple); padding: 20px; border-radius: 20px; background: rgba(168, 85, 247, 0.05); margin-bottom: 25px; display: none; }
-        .utility-box { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        .utility-box { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; }
         .util-card { background: var(--search-bg); border: 1px solid var(--border); border-radius: 20px; padding: 18px; }
         .util-input { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid var(--border); background: rgba(0,0,0,0.2); color: var(--text); margin-top: 5px; box-sizing: border-box; }
         .util-btn { width: 100%; padding: 10px; margin-top: 10px; border-radius: 10px; border: none; background: var(--standard-blue); color: white; cursor: pointer; font-weight: 800; font-size: 0.75rem; }
 
-        /* Cards & Directory */
-        .section-label { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin: 20px 0 10px; color: var(--standard-blue); display: flex; align-items: center; gap: 8px; }
+        .section-label { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin: 25px 0 12px; color: var(--standard-blue); display: flex; align-items: center; gap: 8px; }
         .search-input { width: 100%; padding: 16px; border-radius: 16px; background: var(--search-bg); border: 1px solid var(--border); color: var(--text); margin-bottom: 20px; box-sizing: border-box; font-size: 1rem; }
         .social-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(115px, 1fr)); gap: 12px; }
         .social-card { background: var(--card-bg); border-radius: 20px; padding: 20px 5px; text-decoration: none; color: var(--text); display: flex; flex-direction: column; align-items: center; transition: 0.3s; border: 1px solid var(--border); position: relative; cursor: pointer; }
@@ -58,14 +53,17 @@
 
         #upiModal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:10002; align-items:center; justify-content:center; backdrop-filter: blur(10px); }
         .upi-content { background: #0f172a; padding: 30px; border-radius: 28px; width: 320px; text-align: center; border: 1px solid var(--border); }
-        .profile-chip { display: flex; align-items: center; gap: 10px; background: var(--search-bg); padding: 5px 12px; border-radius: 50px; border: 1px solid var(--border); }
+        .profile-chip { display: flex; align-items: center; gap: 12px; background: var(--search-bg); padding: 6px 16px; border-radius: 50px; border: 1px solid var(--border); }
         .profile-pic { width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--border); }
+        
+        .logout-btn { background: none; border: none; color: var(--owner-red); cursor: pointer; font-size: 0.9rem; padding: 0; display: flex; align-items: center; opacity: 0.7; transition: 0.3s; }
+        .logout-btn:hover { opacity: 1; transform: scale(1.1); }
     </style>
 </head>
 <body onload="checkPersistedSession()">
 
 <div id="status-banner" class="miuxo-banner">
-    ⚡ <span id="access-label">GUEST ACCESS</span> | EXPIRES IN: <span id="expire-timer">00:00:00</span>
+    ⚡ <span id="access-label">GUEST ACCESS</span> | SESSION EXPIRES: <span id="expire-timer">00:00:00</span>
 </div>
 
 <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
@@ -110,32 +108,41 @@
                         <option value="public">Public</option>
                         <option value="member">Member</option>
                         <option value="vip">VIP</option>
-                        <option value="private">Private (Admin Only)</option>
+                        <option value="private">Private (Admin/Owner Only)</option>
                     </select>
                     <button class="util-btn" style="background:var(--admin-purple)" onclick="addNewTool()">PUSH TO PRODUCTION</button>
                 </div>
                 <div class="util-card">
                     <span style="font-size:0.6rem;">HUB MAINTENANCE</span>
-                    <button class="util-btn" style="background:var(--owner-red);" onclick="terminateSession()">TERMINATE SESSION</button>
+                    <button class="util-btn" style="background:var(--owner-red);" onclick="terminateSession()">FORCE LOGOUT ALL</button>
                     <button class="util-btn" style="background:#64748b;" onclick="location.reload()">REBOOT HUB</button>
                 </div>
             </div>
         </div>
 
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-            <div id="user-display" class="profile-chip">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div class="profile-chip">
                 <div id="profile-area" style="display:flex; align-items:center; gap:8px;">
-                    <span id="role-tag" style="font-size: 0.6rem; font-weight: 900;">SESSION: GUEST</span>
-                </div>
+                    </div>
+                <div style="width: 1px; height: 15px; background: var(--border);"></div>
+                <button class="logout-btn" onclick="terminateSession()" title="Logout">
+                    <span style="font-size:0.6rem; font-weight:bold; margin-right:4px;">EXIT</span>
+                    <span style="font-size:1.1rem;">⏻</span>
+                </button>
             </div>
-            <span id="live-clock" style="font-family: monospace;">00:00:00</span>
+            <span id="live-clock" style="font-family: monospace; font-size: 0.9rem; opacity: 0.8;">00:00:00</span>
         </div>
 
         <input type="text" id="tool-search" class="search-input" placeholder="Search the unified directory..." onkeyup="refreshUI()">
         
         <div id="private-section" style="display:none;">
-            <div class="section-label" style="color:var(--admin-purple)">🔒 PRIVATE DATA (ADMIN)</div>
+            <div class="section-label" style="color:var(--admin-purple)">🔒 PRIVATE DATA (ADMIN/OWNER)</div>
             <div class="social-grid" id="private-grid"></div>
+        </div>
+
+        <div id="vip-section" style="display:none;">
+            <div class="section-label" style="color:var(--vip-gold)">⭐ VIP PREMIUM RESOURCES</div>
+            <div class="social-grid" id="vip-grid"></div>
         </div>
 
         <div id="member-section" style="display:none;">
@@ -153,7 +160,7 @@
     let MASTER_DATA = JSON.parse(localStorage.getItem('miuxo_master_data')) || {
         private: [{ id: "priv1", name: "ROOT DB", url: "#", icon: "🔑", type: "private" }],
         vip: [{ id: "v1", name: "DARK OSINT", url: "https://darkosint.in/", icon: "🔍", type: "vip" }],
-        member: [{ id: "m1", name: "CHATGPT", url: "https://chatgpt.com/", icon: "🤖", type: "member" }],
+        member: [{ id: "m1", name: "AI TOOLS", url: "https://chatgpt.com/", icon: "🤖", type: "member" }],
         public: [{ id: "p1", name: "MIUXO.IN", url: "https://miuxo.in/", icon: "🌐", type: "public" }]
     };
 
@@ -181,12 +188,12 @@
         const key = document.getElementById('access-key').value;
         const todayVIP = "MX" + new Date().getDate() + "PAY";
 
-        if(key === "8888") SESSION.role = 'admin';
-        else if(key === "0000") SESSION.role = 'owner';
-        else if(key === "1234") SESSION.role = 'member';
+        if(key === "0000") SESSION.role = 'owner';
+        else if(key === "8888") SESSION.role = 'admin';
         else if(key === todayVIP) SESSION.role = 'vip';
+        else if(key === "1234") SESSION.role = 'member';
         else if(key === "1111") SESSION.role = 'public';
-        else return alert("ACCESS DENIED");
+        else return alert("ACCESS DENIED: Invalid Code");
 
         sessionStorage.setItem('miuxo_session', JSON.stringify(SESSION));
         applySessionUI();
@@ -200,24 +207,20 @@
         banner.className = 'miuxo-banner ' + SESSION.role;
         document.getElementById('access-label').innerText = SESSION.role.toUpperCase() + " SESSION";
         
-        // Update Profile Chip
         if(SESSION.user && SESSION.user.picture) {
-            profileArea.innerHTML = `
-                <img src="${SESSION.user.picture}" class="profile-pic">
-                <span style="font-size: 0.6rem; font-weight: 900;">${SESSION.user.name.toUpperCase()}</span>
-            `;
+            profileArea.innerHTML = `<img src="${SESSION.user.picture}" class="profile-pic"><span style="font-size: 0.6rem; font-weight: 900;">${SESSION.user.name.toUpperCase()}</span>`;
         } else {
-            profileArea.innerHTML = `<span id="role-tag" style="font-size: 0.6rem; font-weight: 900;">ROLE: ${SESSION.role.toUpperCase()}</span>`;
+            profileArea.innerHTML = `<span style="font-size: 0.6rem; font-weight: 900;">${SESSION.role.toUpperCase()}</span>`;
         }
 
-        // Section Visibility Logic
-        const isHigherRole = ['member', 'vip', 'admin', 'owner'].includes(SESSION.role);
-        document.getElementById('member-section').style.display = isHigherRole ? 'block' : 'none';
-
-        if(['admin', 'owner'].includes(SESSION.role)) {
+        const role = SESSION.role;
+        document.getElementById('member-section').style.display = ['member', 'vip', 'admin', 'owner'].includes(role) ? 'block' : 'none';
+        document.getElementById('vip-section').style.display = ['vip', 'admin', 'owner'].includes(role) ? 'block' : 'none';
+        
+        if(['admin', 'owner'].includes(role)) {
             document.getElementById('admin-panel').style.display = 'block';
             document.getElementById('private-section').style.display = 'block';
-            if(SESSION.role === 'owner') {
+            if(role === 'owner') {
                 document.getElementById('panel-title').innerText = "👑 OWNER DEPLOYMENT TERMINAL";
                 document.getElementById('panel-title').style.color = "var(--owner-red)";
             }
@@ -234,29 +237,22 @@
 
     function refreshUI() {
         const query = document.getElementById('tool-search').value.toLowerCase();
-        
-        // Render Public
-        const publicTools = MASTER_DATA.public.filter(t => t.name.toLowerCase().includes(query));
-        document.getElementById('tool-grid').innerHTML = publicTools.map(t => createCard(t)).join('');
-
-        // Render Member if authorized
-        if(['member', 'vip', 'admin', 'owner'].includes(SESSION.role)) {
-            const memberTools = MASTER_DATA.member.filter(t => t.name.toLowerCase().includes(query));
-            document.getElementById('member-grid').innerHTML = memberTools.map(t => createCard(t)).join('');
-        }
-
-        // Render Private if authorized
-        if(['admin', 'owner'].includes(SESSION.role)) {
-            const privTools = MASTER_DATA.private.filter(t => t.name.toLowerCase().includes(query));
-            document.getElementById('private-grid').innerHTML = privTools.map(t => createCard(t)).join('');
-        }
+        const render = (sectionId, dataKey) => {
+            const grid = document.getElementById(sectionId);
+            if(!grid) return;
+            const filtered = MASTER_DATA[dataKey].filter(t => t.name.toLowerCase().includes(query));
+            grid.innerHTML = filtered.map(t => createCard(t)).join('');
+        };
+        render('tool-grid', 'public');
+        render('member-grid', 'member');
+        render('vip-grid', 'vip');
+        render('private-grid', 'private');
     }
 
     function createCard(t) {
-        const badgeClass = `badge-${t.type}`;
         return `
             <div class="social-card" onclick="window.open('${t.url}', '_blank')">
-                ${t.type !== 'public' ? `<span class="badge ${badgeClass}">${t.type.toUpperCase()}</span>` : ''}
+                ${t.type !== 'public' ? `<span class="badge badge-${t.type}">${t.type.toUpperCase()}</span>` : ''}
                 <div style="font-size:2rem; margin-bottom:8px;">${t.icon || '🚀'}</div>
                 <div style="font-size:0.7rem; font-weight:900;">${t.name}</div>
             </div>
@@ -267,15 +263,18 @@
         const name = document.getElementById('add-name').value.toUpperCase();
         const url = document.getElementById('add-url').value;
         const type = document.getElementById('add-type').value;
-        if(!name || !url) return alert("Missing Data");
-        
+        if(!name || !url) return alert("Error: Fields cannot be empty");
         MASTER_DATA[type].push({ id: 't-'+Date.now(), name, url, icon: "🛡️", type });
         localStorage.setItem('miuxo_master_data', JSON.stringify(MASTER_DATA));
         refreshUI();
-        alert("RESOURCE DEPLOYED");
+        alert("SUCCESS: Resource deployed to " + type.toUpperCase());
     }
 
-    function terminateSession() { sessionStorage.clear(); location.reload(); }
+    function terminateSession() { 
+        sessionStorage.clear(); 
+        location.reload(); 
+    }
+
     function toggleTheme() { document.body.setAttribute('data-theme', document.body.getAttribute('data-theme') === 'light' ? 'dark' : 'light'); }
     function openPayModal() {
         const uri = `upi://pay?pa=${upiID}&pn=MIUXO&am=50&cu=INR`;
@@ -283,12 +282,11 @@
         document.getElementById('upiModal').style.display = 'flex';
     }
     function closePayModal() { document.getElementById('upiModal').style.display = 'none'; }
-    
     function checkHint() {
         const val = document.getElementById('access-key').value;
         const gate = document.getElementById('gate-title');
-        if(val === "8888") gate.style.color = "var(--admin-purple)";
-        else if(val === "0000") gate.style.color = "var(--owner-red)";
+        if(val === "0000") gate.style.color = "var(--owner-red)";
+        else if(val === "8888") gate.style.color = "var(--admin-purple)";
         else if(val === "1234") gate.style.color = "var(--member-green)";
         else gate.style.color = "white";
     }
