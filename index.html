@@ -28,30 +28,54 @@
         body, html { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; overflow-x: hidden; min-height: 100vh; transition: background 0.5s ease; }
         #bg-canvas { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 1; }
 
+        /* Banners & Popups */
         .miuxo-banner { width: 100%; padding: 12px 0; text-align: center; font-weight: 800; font-size: 0.85rem; letter-spacing: 1px; z-index: 1001; position: relative; background: linear-gradient(90deg, #b48608, #fbe134, #b48608); color: #000; transition: 0.5s; }
         .admin-banner { background: var(--admin-red) !important; color: white !important; box-shadow: 0 0 20px var(--admin-red); }
-
-        #auth-gate { position: fixed; inset: 0; z-index: 9999; background: var(--bg); display: flex; align-items: center; justify-content: center; transition: 0.8s cubic-bezier(0.85, 0, 0.15, 1); }
-        .auth-box { background: rgba(255, 255, 255, 0.03); padding: 30px; border-radius: 30px; border: 1px solid var(--border); backdrop-filter: var(--glass); width: 95%; max-width: 380px; text-align: center; }
-
-        .key-input { width: 100%; padding: 12px; border-radius: 12px; border: 1.5px solid var(--border); background: rgba(0,0,0,0.5); color: #fff; text-align: center; font-size: 1rem; margin: 8px 0; outline: none; box-sizing: border-box; }
-        #main-hub { display: none; width: 100%; flex-direction: column; align-items: center; padding: 20px 0; z-index: 2; position: relative; }
         
+        #tos-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 10001; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px); }
+
+        /* Auth Gate */
+        #auth-gate { position: fixed; inset: 0; z-index: 9999; background: var(--bg); display: flex; align-items: center; justify-content: center; transition: 0.8s cubic-bezier(0.85, 0, 0.15, 1); }
+        .auth-box { background: rgba(255, 255, 255, 0.03); padding: 30px; border-radius: 30px; border: 1px solid var(--border); backdrop-filter: var(--glass); width: 95%; max-width: 400px; text-align: center; }
+
+        /* Inputs & Buttons */
+        .key-input { width: 100%; padding: 12px; border-radius: 12px; border: 1.5px solid var(--border); background: rgba(0,0,0,0.5); color: #fff; text-align: center; font-size: 1rem; margin: 8px 0; outline: none; box-sizing: border-box; }
+        .btn-primary { width:100%; padding:12px; border-radius:12px; border:none; background:var(--standard-blue); color:white; font-weight:900; cursor:pointer; margin-top: 5px; }
+        
+        /* Grid & Cards */
+        #main-hub { display: none; width: 100%; flex-direction: column; align-items: center; padding: 20px 0; z-index: 2; position: relative; }
         .social-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 12px; width: 100%; }
         .social-card { background: var(--card-bg); border-radius: 15px; padding: 15px 5px; text-decoration: none; color: white; display: flex; flex-direction: column; align-items: center; transition: 0.3s ease; text-align: center; border: 1px solid var(--border); position: relative; overflow: hidden; }
-        .social-card:hover { transform: translateY(-5px); border-color: var(--accent) !important; box-shadow: 0 0 15px var(--accent); }
+        
+        /* VIP Tease Effects */
+        .locked-card { filter: blur(5px); pointer-events: none; opacity: 0.6; }
+        .lock-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 10; color: var(--vip-gold); font-size: 1.5rem; cursor: pointer; }
+        .vip-badge { position: absolute; top: 5px; right: 5px; background: var(--vip-gold); color: black; font-size: 0.5rem; padding: 2px 5px; border-radius: 4px; font-weight: 900; }
+
         .status-dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; margin-right: 4px; background: var(--online-green); box-shadow: 0 0 5px var(--online-green); }
         .pulse { animation: pulse-status 2s infinite; }
         @keyframes pulse-status { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
         
         #panic-btn { display: none; position: fixed; bottom: 20px; right: 20px; background: var(--panic-red); color: white; border: none; padding: 15px 25px; border-radius: 50px; font-weight: bold; cursor: pointer; z-index: 1000; }
-        .theme-switch { background: rgba(255,255,255,0.1); border: 1px solid var(--border); color: white; padding: 5px 12px; border-radius: 20px; cursor: pointer; font-size: 0.7rem; font-weight: bold; margin-bottom: 10px; }
-        .hub-search { width: 100%; padding: 12px 20px; border-radius: 12px; border: 1px solid var(--border); background: rgba(255, 255, 255, 0.05); color: white; outline: none; margin-bottom: 20px; box-sizing: border-box; }
     </style>
 </head>
 <body data-theme="frost" data-session="none">
 
 <canvas id="bg-canvas"></canvas>
+
+<div id="tos-overlay">
+    <div class="auth-box" style="max-width: 450px; text-align: left;">
+        <h2 style="color: var(--standard-blue); text-align: center;">⚖️ MIUXO TERMS</h2>
+        <div style="height: 150px; overflow-y: auto; font-size: 0.8rem; color: #ccc; margin-bottom: 20px; border-bottom: 1px solid var(--border);">
+            <p>1. Payments of ₹50 are non-refundable.<br>2. Sharing VIP codes results in a permanent ban.<br>3. We are not responsible for third-party tool usage.<br>4. Attempting to bypass the UTR system is logged.</p>
+        </div>
+        <label style="display:flex; align-items:center; gap:10px; font-size:0.8rem;">
+            <input type="checkbox" id="tos-check"> I agree to the MIUXO Terms of Service
+        </label>
+        <button onclick="acceptTos()" id="tos-btn" class="btn-primary" style="opacity:0.5; cursor:not-allowed;" disabled>PROCEED</button>
+    </div>
+</div>
+
 <div class="miuxo-banner" id="hub-banner">✨ MIUXO UNIFIED HUB | v9.0 SECURE SESSION ✨</div>
 
 <div id="auth-gate">
@@ -60,12 +84,12 @@
         
         <div style="display:flex; justify-content:center; margin-bottom:15px;">
             <div id="g_id_onload" data-client_id="785119101330-40kgkkoekfbsqu7vo4t6leqalltrs7th.apps.googleusercontent.com" data-callback="handleGoogleLogin"></div>
-            <div class="g_id_signin" data-type="standard" data-shape="pill" data-theme="filled_blue"></div>
+            <div class="g_id_signin" data-type="standard" data-shape="pill"></div>
         </div>
 
-        <div style="margin: 10px 0; color: rgba(255,255,255,0.2); font-size: 0.7rem;">OR ENTER ACCESS CODE</div>
         <input type="password" id="access-key" class="key-input" placeholder="Access Code">
-        <button onclick="unlockSession()" style="width:100%; padding:12px; border-radius:12px; border:none; background:var(--standard-blue); color:white; font-weight:900; cursor:pointer;">INITIALIZE</button>
+        <button onclick="unlockSession()" class="btn-primary">INITIALIZE</button>
+        <button onclick="freeLogin()" style="background:transparent; border:1px solid var(--standard-blue); color:var(--standard-blue); margin-top:10px;" class="btn-primary">START GUEST SESSION</button>
 
         <hr style="border:0; border-top:1px solid var(--border); margin:20px 0;">
         
@@ -74,7 +98,8 @@
             <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=upi://pay?pa=8606226353@fam%26pn=MIUXO%26am=50%26cu=INR" style="border-radius:10px; margin-bottom:10px;">
             <input type="number" id="user-phone" class="key-input" placeholder="Phone Number">
             <input type="text" id="utr-input" class="key-input" placeholder="12-Digit UTR">
-            <button onclick="generateVipCode()" style="width:100%; padding:10px; border-radius:10px; border:none; background:var(--online-green); color:black; font-weight:bold; cursor:pointer;">VERIFY PAYMENT</button>
+            <button onclick="generateVipCode()" style="background:var(--online-green); color:black;" class="btn-primary">VERIFY PAYMENT</button>
+            <p style="font-size: 0.6rem; margin-top: 10px;"><a href="mailto:contactmiuxo@gmail.com?subject=Payment%20Issue" style="color:var(--panic-red);">Payment failed? Click here.</a></p>
         </div>
     </div>
 </div>
@@ -82,92 +107,86 @@
 <button id="panic-btn" onclick="location.reload()">EXIT SESSION</button>
 
 <div id="main-hub">
+    <div id="upgrade-promo" style="display:none; width: 95%; max-width: 1100px; background: linear-gradient(90deg, #fbbf24, #d97706); padding: 12px; border-radius: 12px; margin-bottom: 15px; color: black; font-weight: 800; justify-content: space-between; align-items: center;">
+        <span>💎 UNLOCK ALL VIP TOOLS FOR ₹50</span>
+        <button onclick="document.getElementById('auth-gate').style.transform='translateY(0%)'" style="background: black; color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer;">UPGRADE</button>
+    </div>
+
     <div style="background:var(--card-bg); border:1px solid var(--border); border-radius: 20px; padding: 25px; width: 95%; max-width: 1100px; backdrop-filter: var(--glass);">
         <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
-            <div>
-                <h3 id="greeting-text" style="margin:0;">SYSTEM READY</h3>
-                <button class="theme-switch" onclick="toggleTheme()">🌓 TOGGLE THEME</button>
-            </div>
+            <div><h3 id="greeting-text" style="margin:0;">SYSTEM READY</h3></div>
             <div style="text-align: right;">
                 <span id="live-clock" style="font-family: monospace;">00:00:00</span>
                 <div id="session-tag" style="font-weight: 800; font-size: 0.6rem; color: var(--vip-gold);">AWAITING...</div>
             </div>
         </div>
-
         <input type="text" id="tool-search" class="hub-search" placeholder="Search resources..." onkeyup="filterTools()">
         <div class="social-grid" id="tool-grid"></div>
     </div>
 </div>
 
 <script>
-    // 1. FIREBASE & DISCORD CONFIG
     const firebaseConfig = { databaseURL: "https://miuxo-a750e-default-rtdb.firebaseio.com/" };
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
     const DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1454313829206065314/-2tb5jNaf_W1m6dJLJM96YBk_b3-nK6ewVyxC7ok69nK1jd5pSfcLP-fn-IvlycbaUsu";
     const ADMIN_EMAIL = "contactmiuxo@gmail.com";
 
-    // 2. TOOLS DATA
-    const VIP_TOOLS = [ { name: "NEAPAY", url: "https://neapay.com/", icon: "🏦", border: "#fbbf24" }, { name: "WAN VIDEO", url: "https://wan.video/", icon: "🔮", border: "#ffffff" }, { name: "INVIDEO", url: "https://invideo.io/", icon: "🎥", border: "#4f46e5" }, { name: "TRADELLE", url: "https://tradelle.io/", icon: "📈", border: "#facc15" }, { name: "DARKOSINT", url: "https://darkosint.in/", icon: "🔍", border: "#991b1b" } ];
-    const NORMAL_TOOLS = [ { name: "DISCORD", url: "https://discord.com/invite/2rcKEjsVwV", icon: "💬", border: "#5865F2" }, { name: "INSTA", url: "https://www.instagram.com/aimiuxo/", icon: "📸", border: "#E1306C" }, { name: "YOUTUBE", url: "https://www.youtube.com/@aimiuxo", icon: "🎬", border: "#FF0000" } ];
+    const VIP_TOOLS = [ { name: "NEAPAY", url: "https://neapay.com/", icon: "🏦", border: "#fbbf24" }, { name: "WAN VIDEO", url: "https://wan.video/", icon: "🔮", border: "#ffffff" }, { name: "DARKOSINT", url: "https://darkosint.in/", icon: "🔍", border: "#991b1b" } ];
+    const NORMAL_TOOLS = [ { name: "DISCORD", url: "https://discord.com/invite/2rcKEjsVwV", icon: "💬", border: "#5865F2" }, { name: "INSTA", url: "https://www.instagram.com/aimiuxo/", icon: "📸", border: "#E1306C" } ];
 
     let activeList = [];
 
-    // 3. PAYMENT & SECURITY
+    // TOS Logic
+    document.getElementById('tos-check').onchange = function() {
+        document.getElementById('tos-btn').disabled = !this.checked;
+        document.getElementById('tos-btn').style.opacity = this.checked ? "1" : "0.5";
+        document.getElementById('tos-btn').style.cursor = this.checked ? "pointer" : "not-allowed";
+    };
+    function acceptTos() { 
+        localStorage.setItem('miuxo_tos', 'true'); 
+        document.getElementById('tos-overlay').style.display = 'none'; 
+    }
+
+    // Payment & VIP Logic
     async function generateVipCode() {
         const phone = document.getElementById('user-phone').value;
         const utr = document.getElementById('utr-input').value;
-        if(phone.length < 10 || utr.length < 12) return alert("Invalid Phone or UTR!");
+        if(phone.length < 10 || utr.length < 12) return alert("Invalid Input!");
 
-        // Blacklist Check
         const banned = await database.ref('blacklist/' + phone).once('value');
-        if(banned.exists()) return alert("❌ Number Banned!");
+        if(banned.exists()) return alert("Banned!");
 
-        // UTR Check
         const exists = await database.ref('transactions/' + utr).once('value');
-        if(exists.exists()) return alert("UTR already used!");
+        if(exists.exists()) return alert("UTR Used!");
 
         const code = Math.floor(1000 + Math.random() * 9000).toString();
-        
-        try {
-            await database.ref(code).set("VIP Access");
-            await database.ref('transactions/' + utr).set({ phone, code, time: new Date().toLocaleString() });
+        await database.ref(code).set("VIP Access");
+        await database.ref('transactions/' + utr).set({ phone, code, time: new Date().toLocaleString() });
 
-            // Discord Alert
-            fetch(DISCORD_WEBHOOK, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    embeds: [{ title: "💰 NEW ₹50 SALE", color: 16761035, fields: [{ name: "📞 Phone", value: phone, inline:true }, { name: "🎟️ Code", value: code, inline:true }, { name: "📄 UTR", value: utr }] }]
-                })
-            });
-
-            alert("✅ VERIFIED! Your Login Code is: " + code);
-            document.getElementById('access-key').value = code;
-        } catch(e) { alert("Error!"); }
+        fetch(DISCORD_WEBHOOK, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ embeds: [{ title: "💰 SALE: ₹50", fields: [{ name: "📞 Phone", value: phone, inline:true }, { name: "🎟️ Code", value: code, inline:true }] }] })
+        });
+        alert("Success! Code: " + code);
+        document.getElementById('access-key').value = code;
     }
 
-    // 4. AUTH LOGIC
-    function handleGoogleLogin(response) {
-        const payload = JSON.parse(atob(response.credential.split('.')[1]));
-        if(payload.email === ADMIN_EMAIL) {
-            activeList = [...VIP_TOOLS, ...NORMAL_TOOLS];
-            document.body.setAttribute('data-session', 'admin');
-            finalizeLogin("ROOT ADMIN", activeList);
-        } else {
-            activeList = NORMAL_TOOLS;
-            finalizeLogin(payload.given_name.toUpperCase(), activeList);
-        }
+    // Auth & Render
+    function freeLogin() { 
+        activeList = NORMAL_TOOLS; 
+        document.getElementById('upgrade-promo').style.display = 'flex';
+        finalizeLogin("GUEST SESSION", activeList); 
     }
 
     function unlockSession() {
         const key = document.getElementById('access-key').value;
         database.ref(key).once('value').then(snap => {
             if(snap.exists()) {
-                const role = snap.val();
-                let list = (role.includes("VIP") || role.includes("Admin")) ? [...VIP_TOOLS, ...NORMAL_TOOLS] : NORMAL_TOOLS;
-                finalizeLogin(role, list);
-            } else { alert("Invalid Code!"); }
+                activeList = [...VIP_TOOLS, ...NORMAL_TOOLS];
+                finalizeLogin("VIP SESSION", activeList);
+            } else { alert("Invalid!"); }
         });
     }
 
@@ -180,37 +199,39 @@
     }
 
     function render(list) {
-        document.getElementById('tool-grid').innerHTML = list.map(t => `
-            <a href="${t.url}" target="_blank" class="social-card" style="border-color:${t.border}">
-                <div style="font-size:1.5rem; margin-bottom:5px;">${t.icon}</div>
-                <div><span class="status-dot pulse"></span><span style="font-size:0.6rem; font-weight:800;">${t.name}</span></div>
-            </a>`).join('');
+        const isGuest = document.getElementById('session-tag').innerText.includes("GUEST");
+        const displayList = isGuest ? [...NORMAL_TOOLS, ...VIP_TOOLS] : list;
+
+        document.getElementById('tool-grid').innerHTML = displayList.map(t => {
+            const isVip = VIP_TOOLS.some(v => v.name === t.name);
+            const lock = isGuest && isVip;
+            return `
+                <div style="position:relative;">
+                    <a href="${t.url}" target="_blank" class="social-card ${lock ? 'locked-card' : ''}" style="border-color:${t.border}">
+                        ${isVip ? '<span class="vip-badge">VIP</span>' : ''}
+                        <div style="font-size:1.5rem; margin-bottom:5px;">${t.icon}</div>
+                        <div><span class="status-dot pulse"></span><span style="font-size:0.6rem; font-weight:800;">${t.name}</span></div>
+                    </a>
+                    ${lock ? '<div class="lock-overlay" onclick="document.getElementById(\'auth-gate\').style.transform=\'translateY(0%)\'">🔒</div>' : ''}
+                </div>`;
+        }).join('');
     }
 
-    function toggleTheme() {
-        const body = document.body;
-        body.setAttribute('data-theme', body.getAttribute('data-theme') === 'frost' ? 'cyber' : 'frost');
-    }
-
-    function filterTools() {
-        const q = document.getElementById('tool-search').value.toLowerCase();
-        render(activeList.filter(t => t.name.toLowerCase().includes(q)));
-    }
-
-    // 5. ANIMATION & CLOCK
+    // Animation & Initialization
     const canvas = document.getElementById('bg-canvas');
     const ctx = canvas.getContext('2d');
     let flakes = [];
-    function initSnow() {
+    window.onload = () => {
+        if(localStorage.getItem('miuxo_tos')) document.getElementById('tos-overlay').style.display = 'none';
         canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-        flakes = Array.from({length: 100}, () => ({x:Math.random()*canvas.width, y:Math.random()*canvas.height, s:Math.random()*2+1, d:Math.random()+0.3}));
-    }
+        flakes = Array.from({length: 80}, () => ({x:Math.random()*canvas.width, y:Math.random()*canvas.height, s:Math.random()*2, d:Math.random()+0.2}));
+        draw();
+    };
     function draw() {
         ctx.clearRect(0,0,canvas.width,canvas.height); ctx.fillStyle = "white";
         flakes.forEach(f => { ctx.beginPath(); ctx.arc(f.x, f.y, f.s, 0, Math.PI*2); ctx.fill(); f.y += f.d; if(f.y > canvas.height) f.y = -10; });
         requestAnimationFrame(draw);
     }
-    window.onload = () => { initSnow(); draw(); };
     setInterval(() => { document.getElementById('live-clock').innerText = new Date().toLocaleTimeString(); }, 1000);
 </script>
 </body>
