@@ -2,100 +2,136 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>MIUXO | SECURE ADMIN</title>
+    <title>MIUXO | SECURE ADMIN v9.0</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <style>
-        :root { --admin-blue: #2563eb; --bg: #020617; }
-        body { background: var(--bg); color: white; font-family: sans-serif; padding: 20px; }
+        :root { 
+            --admin-blue: #2563eb; 
+            --bg: #020617; 
+            --panic-red: #ef4444;
+            --vip-gold: #fbbf24;
+        }
+        body { background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; padding: 20px; margin: 0; }
         
-        /* Login Gate Styles */
+        /* Auth Gate */
         #admin-lock { position: fixed; inset: 0; background: var(--bg); display: flex; align-items: center; justify-content: center; z-index: 10000; }
-        .lock-box { background: rgba(255,255,255,0.05); padding: 40px; border-radius: 20px; border: 1px solid var(--admin-blue); text-align: center; }
+        .lock-box { background: rgba(255,255,255,0.05); padding: 40px; border-radius: 20px; border: 1px solid var(--admin-blue); text-align: center; backdrop-filter: blur(10px); }
         
-        /* Dashboard Styles */
-        #admin-content { display: none; }
-        .card { background: rgba(255,255,255,0.05); padding: 20px; border-radius: 15px; border: 1px solid var(--admin-blue); margin-bottom: 20px; }
-        .stats-grid { display: flex; gap: 15px; margin-bottom: 20px; }
-        .stat-box { flex: 1; background: #0f172a; padding: 15px; border-radius: 10px; border: 1px solid #22c55e; text-align: center; }
-        input { padding: 10px; border-radius: 8px; border: 1px solid var(--admin-blue); background: #000; color: #fff; margin: 5px; }
-        .btn { padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer; font-weight: bold; background: var(--admin-blue); color: white; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 12px; border-bottom: 1px solid #333; text-align: left; }
+        /* Layout */
+        #admin-content { display: none; max-width: 1200px; margin: 0 auto; }
+        .card { background: rgba(255,255,255,0.05); padding: 20px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px; }
+        
+        /* Stats */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .stat-box { background: #0f172a; padding: 20px; border-radius: 12px; border-left: 4px solid var(--admin-blue); }
+        
+        /* Controls */
+        .control-group { display: flex; gap: 10px; flex-wrap: wrap; }
+        input { padding: 12px; border-radius: 8px; border: 1px solid #334155; background: #000; color: #fff; flex: 1; min-width: 200px; }
+        .btn { padding: 12px 24px; border-radius: 8px; border: none; cursor: pointer; font-weight: bold; background: var(--admin-blue); color: white; transition: 0.3s; }
+        .btn:hover { opacity: 0.8; transform: translateY(-2px); }
+        .btn-panic { background: var(--panic-red); width: 100%; margin-top: 10px; }
+
+        /* Tables */
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th { text-align: left; color: #64748b; font-size: 0.8rem; padding: 10px; text-transform: uppercase; }
+        td { padding: 12px; border-bottom: 1px solid #1e293b; font-size: 0.9rem; }
+        
+        .live-tag { padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; margin-left: 10px; }
     </style>
 </head>
 <body>
 
     <div id="admin-lock">
         <div class="lock-box">
-            <h2 style="color: var(--admin-blue);">🛡️ MIUXO AUTH</h2>
-            <input type="password" id="admin-pass" placeholder="Enter Admin Password">
+            <h2 style="color: var(--admin-blue);">🛡️ MIUXO COMMAND</h2>
+            <input type="password" id="admin-pass" placeholder="Admin Key">
             <br><br>
-            <button class="btn" onclick="checkPass()">ACCESS DASHBOARD</button>
+            <button class="btn" onclick="checkPass()">ACCESS HUB</button>
         </div>
     </div>
 
     <div id="admin-content">
-        <h1>🚀 MIUXO COMMAND CENTER</h1>
+        <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+            <h1>🚀 COMMAND CENTER</h1>
+            <div id="system-status-ui" style="color: #22c55e; font-weight: bold;">● SYSTEM ONLINE</div>
+        </header>
         
         <div class="stats-grid">
             <div class="stat-box">
-                <small>LAST 24 HOURS</small>
-                <h2 id="revenue-24h" style="color: #22c55e;">₹0</h2>
-                <p id="sales-24h" style="font-size: 0.7rem; margin-top: -10px;">0 sales</p>
+                <small style="color: #94a3b8;">TODAY'S REVENUE</small>
+                <h2 id="revenue-24h" style="color: #22c55e; margin: 5px 0;">₹0</h2>
+                <span id="sales-24h" style="font-size: 0.8rem; color: #64748b;">0 sales</span>
             </div>
-            <div class="stat-box" style="border-color: #fbbf24;">
-                <small>ALL-TIME REVENUE</small>
-                <h2 id="total-revenue">₹0</h2>
-                <p id="total-sales" style="font-size: 0.7rem; margin-top: -10px;">0 sales</p>
+            <div class="stat-box" style="border-color: var(--vip-gold);">
+                <small style="color: #94a3b8;">TOTAL REVENUE</small>
+                <h2 id="total-revenue" style="color: var(--vip-gold); margin: 5px 0;">₹0</h2>
+                <span id="total-sales" style="font-size: 0.8rem; color: #64748b;">0 sales</span>
+            </div>
+            <div class="stat-box" style="border-color: #a855f7;">
+                <small style="color: #94a3b8;">LIVE SESSIONS</small>
+                <div style="margin-top: 5px;">
+                    <span style="color: #fff;">G: <b id="live-guests">0</b></span> | 
+                    <span style="color: #3b82f6;">M: <b id="live-members">0</b></span> | 
+                    <span style="color: var(--vip-gold);">V: <b id="live-vips">0</b></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" style="border-color: var(--panic-red);">
+            <h3 style="margin-top:0;">📡 GLOBAL BROADCAST & PANIC</h3>
+            <div class="control-group">
+                <input type="text" id="broadcast-msg" placeholder="Type message to all live users...">
+                <button class="btn" onclick="sendBroadcast()">SEND ALERT</button>
+            </div>
+            <button class="btn btn-panic" id="panic-btn-ui" onclick="togglePanic()">🚨 ACTIVATE GLOBAL MAINTENANCE (LOGOUT ALL)</button>
+        </div>
+
+        <div class="card">
+            <h3 style="margin-top:0;">➕ MANUAL OVERRIDE</h3>
+            <div class="control-group">
+                <input type="text" id="manual-input" placeholder="Enter Phone or Code">
+                <button class="btn" onclick="addManualCode('VIP')">ADD VIP</button>
+                <button class="btn" style="background: #3b82f6;" onclick="addManualCode('MEMBER')">ADD MEMBER</button>
+                <button class="btn" style="background: var(--panic-red);" onclick="banUser()">BAN PHONE</button>
             </div>
         </div>
 
         <div class="card">
-            <h3>➕ ACTIONS</h3>
-            <input type="text" id="manual-input" placeholder="Code or Phone Number">
-            <button class="btn" onclick="addManualCode()">Generate Code</button>
-            <button class="btn" style="background: #ef4444;" onclick="banUser()">Ban Phone</button>
-        </div>
-
-        <div class="card">
-            <h3>📋 TRANSACTION LOGS</h3>
-            <table id="data-table">
-                <thead><tr><th>Time</th><th>Phone</th><th>UTR</th><th>Code</th><th>Action</th></tr></thead>
+            <h3 style="margin-top:0;">📋 TRANSACTION HISTORY</h3>
+            <table>
+                <thead>
+                    <tr><th>Time</th><th>Phone</th><th>UTR</th><th>Code</th><th>Action</th></tr>
+                </thead>
                 <tbody id="logs"></tbody>
             </table>
         </div>
     </div>
 
     <script>
-        // CONFIGURATION
-        const ADMIN_PASSWORD = "MIUXO_BOSS_2025"; // Change this to your desired password!
+        const ADMIN_PASSWORD = "MIUXO_BOSS_2025"; 
         const firebaseConfig = { databaseURL: "https://miuxo-a750e-default-rtdb.firebaseio.com/" };
         
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        // LOGIN LOGIC
         function checkPass() {
-            const pass = document.getElementById('admin-pass').value;
-            if(pass === ADMIN_PASSWORD) {
+            if(document.getElementById('admin-pass').value === ADMIN_PASSWORD) {
                 document.getElementById('admin-lock').style.display = 'none';
                 document.getElementById('admin-content').style.display = 'block';
-                loadData();
-            } else {
-                alert("Incorrect Password!");
-            }
+                initDashboard();
+            } else { alert("Access Denied."); }
         }
 
-        // DATABASE LOGIC
-        function loadData() {
+        function initDashboard() {
+            // Listen for Transactions & Revenue
             database.ref('transactions').on('value', snap => {
                 const logs = document.getElementById('logs');
                 logs.innerHTML = "";
                 const data = snap.val();
-                
                 let totalCount = 0, count24h = 0;
-                const now = new Date().getTime();
+                const now = Date.now();
 
                 if(data) {
                     Object.keys(data).reverse().forEach(utr => {
@@ -107,7 +143,7 @@
                             <td>${item.time}</td>
                             <td>${item.phone}</td>
                             <td>${utr}</td>
-                            <td style="color:#fbbf24;">${item.code}</td>
+                            <td style="color:var(--vip-gold); font-weight:bold;">${item.code}</td>
                             <td><button class="btn" style="background:#ef4444; padding:5px 10px;" onclick="deleteUser('${utr}', '${item.code}')">Del</button></td>
                         </tr>`;
                     });
@@ -117,11 +153,71 @@
                 document.getElementById('total-sales').innerText = totalCount + " sales";
                 document.getElementById('sales-24h').innerText = count24h + " sales";
             });
+
+            // Listen for Live Sessions
+            database.ref('live_sessions').on('value', s => {
+                const d = s.val() || {};
+                document.getElementById('live-guests').innerText = d.guest || 0;
+                document.getElementById('live-members').innerText = d.member || 0;
+                document.getElementById('live-vips').innerText = d.vip || 0;
+            });
+
+            // Listen for System Status (Panic Mode)
+            database.ref('system_status').on('value', s => {
+                const status = s.val() || { panic: false };
+                const btn = document.getElementById('panic-btn-ui');
+                const indicator = document.getElementById('system-status-ui');
+                
+                if(status.panic) {
+                    btn.innerText = "🔓 DISABLE MAINTENANCE (END PANIC)";
+                    btn.style.background = "#22c55e";
+                    indicator.innerText = "● MAINTENANCE ACTIVE";
+                    indicator.style.color = "var(--panic-red)";
+                } else {
+                    btn.innerText = "🚨 ACTIVATE GLOBAL MAINTENANCE (LOGOUT ALL)";
+                    btn.style.background = "var(--panic-red)";
+                    indicator.innerText = "● SYSTEM ONLINE";
+                    indicator.style.color = "#22c55e";
+                }
+            });
         }
 
-        function addManualCode() { database.ref(document.getElementById('manual-input').value).set("VIP Access"); alert("Code Added!"); }
-        function banUser() { database.ref('blacklist/'+document.getElementById('manual-input').value).set({bannedAt: new Date().toLocaleString()}); alert("User Banned!"); }
-        function deleteUser(u, c) { if(confirm("Delete?")) { database.ref('transactions/'+u).remove(); database.ref(c).remove(); } }
+        // --- ACTIONS ---
+
+        function sendBroadcast() {
+            const msg = document.getElementById('broadcast-msg').value;
+            if(!msg) return;
+            database.ref('broadcast').set({ message: msg, timestamp: Date.now() });
+            document.getElementById('broadcast-msg').value = "";
+            alert("Broadcast pushed to all live hubs!");
+        }
+
+        function togglePanic() {
+            database.ref('system_status/panic').once('value').then(s => {
+                const currentState = s.val() || false;
+                database.ref('system_status').set({ panic: !currentState, timestamp: Date.now() });
+            });
+        }
+
+        function addManualCode(role) {
+            const val = document.getElementById('manual-input').value;
+            if(!val) return;
+            database.ref(val).set(role);
+            alert(`${role} Code Added!`);
+        }
+
+        function banUser() {
+            const phone = document.getElementById('manual-input').value;
+            database.ref('blacklist/' + phone).set({ bannedAt: new Date().toLocaleString() });
+            alert("Phone Banned!");
+        }
+
+        function deleteUser(u, c) {
+            if(confirm("Permanently delete this transaction and revoke the code?")) {
+                database.ref('transactions/' + u).remove();
+                database.ref(c).remove();
+            }
+        }
     </script>
 </body>
 </html>
