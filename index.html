@@ -10,49 +10,55 @@
             --bg: #020617; --standard-blue: #2563eb; --glass: blur(25px);
             --card-bg: rgba(15, 23, 42, 0.8); --border: rgba(255, 255, 255, 0.1);
             --text: #f8fafc; --accent: #2563eb; --search-bg: rgba(255, 255, 255, 0.05);
-            --vip-gold: #fbbf24;
+            --vip-gold: #fbbf24; --member-green: #10b981;
         }
         [data-theme="light"] {
             --bg: #f1f5f9; --card-bg: rgba(255, 255, 255, 0.9);
             --border: rgba(0, 0, 0, 0.1); --text: #0f172a; --search-bg: rgba(0, 0, 0, 0.05);
         }
-        body, html { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; transition: 0.4s; min-height: 100vh; }
+        body, html { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; transition: 0.4s; min-height: 100vh; overflow-x: hidden; }
         
-        /* Banner & Timers */
+        /* Banner */
         .miuxo-banner { width: 100%; padding: 12px 0; text-align: center; font-weight: 800; font-size: 0.8rem; background: linear-gradient(90deg, #b48608, #fbe134, #b48608); color: #000; position: relative; z-index: 100; }
         .countdown-timer { font-family: monospace; background: rgba(0,0,0,0.2); padding: 2px 8px; border-radius: 5px; margin-left: 5px; }
+
         .theme-toggle { position: fixed; bottom: 25px; right: 25px; width: 50px; height: 50px; background: var(--standard-blue); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 1000; border: none; font-size: 1.2rem; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
 
         /* Auth Gate */
         #auth-gate { position: fixed; inset: 0; z-index: 9999; background: var(--bg); display: flex; align-items: center; justify-content: center; }
-        .auth-box { background: var(--card-bg); padding: 40px; border-radius: 30px; border: 1px solid var(--border); width: 90%; max-width: 380px; text-align: center; backdrop-filter: var(--glass); }
-        .key-input { width: 100%; padding: 15px; border-radius: 12px; border: 1.5px solid var(--border); background: var(--search-bg); color: var(--text); text-align: center; margin: 15px 0; outline: none; box-sizing: border-box; }
+        .auth-box { background: var(--card-bg); padding: 40px; border-radius: 30px; border: 1px solid var(--border); width: 90%; max-width: 400px; text-align: center; backdrop-filter: var(--glass); }
+        .key-input { width: 100%; padding: 15px; border-radius: 12px; border: 1.5px solid var(--border); background: var(--search-bg); color: var(--text); text-align: center; margin: 15px 0; outline: none; box-sizing: border-box; font-weight: bold; }
 
-        /* Hub Interface */
+        /* Hub Layout */
         #main-hub { display: none; width: 100%; flex-direction: column; align-items: center; padding: 20px 0; }
         .hub-container { background: var(--card-bg); border: 1px solid var(--border); border-radius: 28px; padding: 30px; width: 95%; max-width: 1100px; backdrop-filter: var(--glass); }
 
-        /* Utility Suite (3 Columns) */
+        /* Utilities */
         .utility-box { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; margin-bottom: 25px; }
-        .util-card { background: var(--search-bg); border: 1px solid var(--border); border-radius: 20px; padding: 18px; display: flex; flex-direction: column; justify-content: space-between; }
-        .util-input { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid var(--border); background: rgba(0,0,0,0.2); color: var(--text); margin-top: 10px; box-sizing: border-box; font-size: 0.85rem; }
-        .util-btn { width: 100%; padding: 10px; margin-top: 10px; border-radius: 10px; border: none; background: var(--standard-blue); color: white; cursor: pointer; font-weight: 800; font-size: 0.75rem; transition: 0.2s; }
-        .util-btn:hover { opacity: 0.8; }
+        .util-card { background: var(--search-bg); border: 1px solid var(--border); border-radius: 20px; padding: 18px; }
+        .util-input { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid var(--border); background: rgba(0,0,0,0.2); color: var(--text); margin-top: 10px; box-sizing: border-box; }
+        .util-btn { width: 100%; padding: 10px; margin-top: 10px; border-radius: 10px; border: none; background: var(--standard-blue); color: white; cursor: pointer; font-weight: 800; font-size: 0.75rem; }
 
-        /* Directory & Cards */
+        /* Cards & Directory */
         .section-label { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin: 20px 0 10px; color: var(--standard-blue); display: flex; align-items: center; gap: 8px; }
         .search-input { width: 100%; padding: 16px; border-radius: 16px; background: var(--search-bg); border: 1px solid var(--border); color: var(--text); margin-bottom: 20px; box-sizing: border-box; font-size: 1rem; }
         .social-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(115px, 1fr)); gap: 12px; }
         .social-card { background: var(--card-bg); border-radius: 20px; padding: 20px 5px; text-decoration: none; color: var(--text); display: flex; flex-direction: column; align-items: center; transition: 0.3s; border: 1px solid var(--border); position: relative; cursor: pointer; }
-        .social-card:hover { transform: translateY(-5px); border-color: var(--accent) !important; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .social-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.4); }
 
-        .star-btn { position: absolute; top: 10px; left: 10px; background: none; border: none; cursor: pointer; font-size: 1.1rem; filter: grayscale(1); transition: 0.2s; z-index: 5; }
-        .star-btn.active { filter: grayscale(0); transform: scale(1.2); }
-        .copy-btn { position: absolute; top: 10px; right: 10px; background: var(--search-bg); border: none; color: var(--text); font-size: 0.6rem; padding: 5px; border-radius: 5px; z-index: 5; }
+        /* Badge Styles */
+        .badge { font-size: 0.5rem; padding: 2px 6px; border-radius: 4px; position: absolute; top: -8px; right: 10px; font-weight: 900; }
+        .badge-vip { background: var(--vip-gold); color: #000; }
+        .badge-member { background: var(--member-green); color: #fff; }
 
-        /* Payment Modal */
+        .star-btn { position: absolute; top: 10px; left: 10px; background: none; border: none; cursor: pointer; font-size: 1.1rem; filter: grayscale(1); z-index: 5; }
+        .star-btn.active { filter: grayscale(0); }
+        
         #upiModal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:10002; align-items:center; justify-content:center; backdrop-filter: blur(10px); }
         .upi-content { background: #0f172a; padding: 30px; border-radius: 28px; width: 320px; text-align: center; border: 1px solid var(--border); }
+        
+        .profile-chip { display: flex; align-items: center; gap: 10px; background: var(--search-bg); padding: 5px 12px; border-radius: 50px; border: 1px solid var(--border); }
+        .profile-img { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; }
     </style>
 </head>
 <body>
@@ -61,24 +67,36 @@
 
 <div id="auth-gate">
     <div class="auth-box">
-        <h2 id="gate-title">🔐 SYSTEM ACCESS</h2>
-        <div style="display: flex; justify-content: center; margin-bottom: 15px;">
-            <div id="g_id_onload" data-client_id="YOUR_GOOGLE_ID" data-callback="handleGoogleLogin"></div>
+        <h2 id="gate-title">🔐 MIUXO HUB v12</h2>
+        <p style="font-size: 0.7rem; color: #64748b; margin-top: -10px;">Login with Google for Member Access</p>
+        
+        <div style="display: flex; justify-content: center; margin: 15px 0;">
+            <div id="g_id_onload" 
+                 data-client_id="YOUR_GOOGLE_ID" 
+                 data-callback="handleGoogleLogin">
+            </div>
             <div class="g_id_signin" data-type="standard" data-shape="pill"></div>
         </div>
-        <input type="password" id="access-key" class="key-input" placeholder="ACCESS CODE" oninput="checkHint()">
+
+        <div style="height: 1px; background: var(--border); margin: 20px 0;"></div>
+
+        <input type="password" id="access-key" class="key-input" placeholder="ENTER ACCESS CODE" oninput="checkHint()">
+        
         <button onclick="unlockSession()" style="width:100%; padding:16px; border-radius:12px; border:none; background:var(--standard-blue); color:white; font-weight:900; cursor:pointer;">INITIALIZE HUB</button>
-        <button onclick="openPayModal()" style="margin-top:15px; background:none; border:none; color:var(--vip-gold); cursor:pointer; font-size:0.8rem; font-weight:bold;">GET VIP ACCESS (₹50)</button>
+        
+        <div style="display: flex; gap: 10px; margin-top: 15px;">
+            <button onclick="openPayModal()" style="flex:1; background:none; border: 1px solid var(--vip-gold); color:var(--vip-gold); padding: 10px; border-radius: 8px; cursor:pointer; font-size:0.65rem; font-weight:bold;">GET VIP (₹50)</button>
+            <button onclick="guestEnter()" style="flex:1; background:var(--search-bg); border: 1px solid var(--border); color:var(--text); padding: 10px; border-radius: 8px; cursor:pointer; font-size:0.65rem; font-weight:bold;">GUEST ENTRY</button>
+        </div>
     </div>
 </div>
 
 <div id="upiModal">
     <div class="upi-content">
         <h2 style="color:var(--vip-gold); margin:0;">Unlock VIP</h2>
-        <p style="font-size: 2rem; font-weight: 800; margin: 10px 0;">₹50</p>
-        <img id="upiQR" src="" style="width: 180px; background:white; padding:10px; border-radius:15px;">
-        <p style="font-size: 0.7rem; color: #94a3b8; margin: 15px 0;">ID: 8606226353@fam</p>
-        <a id="waLink" href="https://wa.me/918921870640?text=I%20Paid%20for%20VIP" target="_blank" style="display:block; background:#22c55e; color:white; text-decoration:none; padding:12px; border-radius:12px; font-weight:bold;">VERIFY ON WHATSAPP</a>
+        <img id="upiQR" src="" style="width: 180px; background:white; padding:10px; border-radius:15px; margin: 15px 0;">
+        <p style="font-size: 0.7rem; color: #94a3b8; margin: 5px 0;">ID: 8606226353@fam</p>
+        <a href="https://wa.me/918921870640?text=I%20Paid%20for%20VIP" target="_blank" style="display:block; background:#22c55e; color:white; text-decoration:none; padding:12px; border-radius:12px; font-weight:bold; margin-top: 10px;">VERIFY ON WHATSAPP</a>
         <button onclick="closePayModal()" style="margin-top:10px; background:transparent; border:none; color:#64748b; cursor:pointer;">Close</button>
     </div>
 </div>
@@ -86,149 +104,189 @@
 <div id="main-hub">
     <div class="hub-container">
         
+        <div id="admin-controls" style="display:none; margin-bottom: 25px; padding: 20px; border: 1px dashed var(--vip-gold); border-radius: 20px;">
+            <div class="section-label" style="margin:0">🛠️ System Control Panel</div>
+            <div class="utility-box" style="margin-top: 15px;">
+                <div class="util-card">
+                    <input type="text" id="add-name" class="util-input" placeholder="Tool Name">
+                    <input type="text" id="add-url" class="util-input" placeholder="https://...">
+                    <input type="text" id="add-icon" class="util-input" placeholder="Emoji Icon">
+                    <select id="add-type" class="util-input">
+                        <option value="public">Public</option>
+                        <option value="member">Member Only</option>
+                        <option value="vip">VIP Only</option>
+                    </select>
+                    <button class="util-btn" style="background:var(--vip-gold); color:#000" onclick="addNewTool()">DEPLOY TOOL</button>
+                </div>
+            </div>
+        </div>
+
         <div class="utility-box">
             <div class="util-card">
                 <div class="section-label" style="margin:0">📲 QR Generator</div>
                 <input type="text" id="qr-input" class="util-input" placeholder="Paste URL..." onkeyup="genQR()">
                 <div id="qr-output" style="margin-top:10px; text-align:center; height:50px; font-size:0.6rem; opacity:0.5;">Enter URL</div>
             </div>
-            
-            <div class="util-card">
-                <div class="section-label" style="margin:0">🔗 Bulk Opener</div>
-                <textarea id="bulk-links" class="util-input" rows="2" style="resize:none;" placeholder="Link 1&#10;Link 2"></textarea>
-                <button class="util-btn" onclick="bulkOpen()">OPEN ALL</button>
-            </div>
-
             <div class="util-card">
                 <div class="section-label" style="margin:0">🛡️ Pass-Check</div>
                 <input type="password" id="pass-input" class="util-input" placeholder="Test password..." onkeyup="checkPass()">
-                <div id="strength-label" style="font-size:0.6rem; margin-top:8px;">Strength: ---</div>
-                <div id="strength-bar" style="height:4px; width:0%; border-radius:10px; margin-top:5px; transition:0.3s; background:#333;"></div>
+                <div id="strength-bar" style="height:4px; width:0%; border-radius:10px; margin-top:10px; transition:0.3s; background:#333;"></div>
             </div>
         </div>
 
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-            <h3 id="session-tag" style="font-size: 0.8rem; letter-spacing: 1px; color: var(--standard-blue);">INITIALIZING...</h3>
-            <span id="live-clock" style="font-family: monospace;">00:00:00</span>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <div id="user-profile-display" class="profile-chip">
+                <span id="session-rank" style="font-size: 0.6rem; font-weight: 900; color: var(--standard-blue);">SESSION: GUEST</span>
+            </div>
+            <span id="live-clock" style="font-family: monospace; font-size: 0.8rem;">00:00:00</span>
         </div>
 
-        <input type="text" id="tool-search" class="search-input" placeholder="Search tools..." onkeyup="refreshUI()">
+        <input type="text" id="tool-search" class="search-input" placeholder="Search the directory..." onkeyup="refreshUI()">
         
         <div id="recents-section" style="display:none;">
             <div class="section-label">🕒 Recently Used</div>
             <div class="social-grid" id="recent-grid"></div>
         </div>
 
-        <div class="section-label">📂 Main Directory</div>
+        <div class="section-label">📂 Available Directory</div>
         <div class="social-grid" id="tool-grid"></div>
     </div>
 </div>
 
 <script>
     const upiID = "8606226353@fam";
-    const DATA = {
+    
+    // Initial Data Structure
+    let MASTER_DATA = JSON.parse(localStorage.getItem('miuxo_master_data')) || {
         vip: [ 
-            { id: "v1", name: "NEAPAY", url: "https://neapay.com/", icon: "🏦", border: "#1a365d" }, 
-            { id: "v2", name: "DARKOSINT", url: "https://darkosint.in/", icon: "🔍", border: "#991b1b" } 
+            { id: "v1", name: "DARK OSINT", url: "https://darkosint.in/", icon: "🔍", type: "vip" },
+            { id: "v2", name: "NEAPAY", url: "https://neapay.com/", icon: "🏦", type: "vip" }
+        ],
+        member: [
+            { id: "m1", name: "CHATGPT", url: "https://chatgpt.com/", icon: "🤖", type: "member" },
+            { id: "m2", name: "GEMINI AI", url: "https://gemini.google.com/", icon: "✨", type: "member" }
         ],
         public: [
-            { id: "p1", name: "MIUXO.IN", url: "https://miuxo.in/", icon: "🌐", border: "#2563eb" },
-            { id: "p2", name: "CHATGPT", url: "https://chatgpt.com/", icon: "🤖", border: "#10a37f" },
-            { id: "p3", name: "GEMINI", url: "https://gemini.google.com/", icon: "✨", border: "#8E75FF" },
-            { id: "p4", name: "GITHUB", url: "https://github.com/", icon: "🐙", border: "#ffffff" },
-            { id: "p5", name: "DISCORD", url: "https://discord.com/invite/2rcKEjsVwV", icon: "💬", border: "#5865F2" }
+            { id: "p1", name: "MIUXO.IN", url: "https://miuxo.in/", icon: "🌐", type: "public" },
+            { id: "p2", name: "GITHUB", url: "https://github.com/", icon: "🐙", type: "public" },
+            { id: "p3", name: "DISCORD", url: "https://discord.com/", icon: "💬", type: "public" }
         ]
     };
 
-    let CURRENT_TOOLS = [];
+    let SESSION = { role: 'public', user: null };
     let favorites = JSON.parse(localStorage.getItem('miuxo_favs')) || [];
     let recents = JSON.parse(localStorage.getItem('miuxo_recents')) || [];
 
     function toggleTheme() { document.body.setAttribute('data-theme', document.body.getAttribute('data-theme') === 'light' ? 'dark' : 'light'); }
 
-    function openPayModal() {
-        const upiUri = `upi://pay?pa=${upiID}&pn=MIUXO&am=50&cu=INR`;
-        document.getElementById('upiQR').src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(upiUri)}`;
-        document.getElementById('upiModal').style.display = 'flex';
+    // --- Authentication Engine ---
+    
+    function handleGoogleLogin(response) {
+        const payload = JSON.parse(atob(response.credential.split('.')[1]));
+        SESSION.role = 'member';
+        SESSION.user = payload;
+        
+        document.getElementById('user-profile-display').innerHTML = `
+            <img src="${payload.picture}" class="profile-img">
+            <span style="font-size: 0.7rem; font-weight: bold;">${payload.given_name.toUpperCase()}</span>
+            <span style="font-size: 0.5rem; background: var(--member-green); padding: 2px 6px; border-radius: 4px;">MEMBER</span>
+        `;
+        enterHub();
     }
-    function closePayModal() { document.getElementById('upiModal').style.display = 'none'; }
 
     function unlockSession() {
         const key = document.getElementById('access-key').value;
-        const tag = document.getElementById('session-tag');
         const todayVIP = "MX" + new Date().getDate() + "PAY";
 
-        if(key === "0000") { CURRENT_TOOLS = [...DATA.vip, ...DATA.public]; tag.innerText = "ROOT ADMIN"; }
-        else if(key === todayVIP) { CURRENT_TOOLS = DATA.vip; tag.innerText = "VIP SESSION"; }
-        else if(key === "1111") { CURRENT_TOOLS = DATA.public; tag.innerText = "GUEST ACCESS"; }
-        else { alert("INVALID CODE"); return; }
-        
+        if(key === "0000") {
+            SESSION.role = 'admin';
+            document.getElementById('session-rank').innerText = "SYSTEM ADMIN";
+            document.getElementById('admin-controls').style.display = 'block';
+        } else if(key === todayVIP) {
+            SESSION.role = 'vip';
+            document.getElementById('session-rank').innerText = "VIP ACCESS";
+            document.getElementById('session-rank').style.color = "var(--vip-gold)";
+        } else if(key === "1111") {
+            guestEnter();
+            return;
+        } else {
+            alert("INVALID ACCESS CODE");
+            return;
+        }
+        enterHub();
+    }
+
+    function guestEnter() {
+        SESSION.role = 'public';
+        enterHub();
+    }
+
+    function enterHub() {
         document.getElementById('auth-gate').style.display = 'none';
         document.getElementById('main-hub').style.display = 'flex';
+        document.getElementById('access-type-label').innerText = SESSION.role.toUpperCase() + " SESSION";
         refreshUI();
     }
 
-    function checkHint() {
-        const val = document.getElementById('access-key').value;
-        const gate = document.getElementById('gate-title');
-        gate.style.color = (val === "0000") ? "#ff003c" : (val.startsWith("MX")) ? "#fbbf24" : "white";
+    // --- Directory Management ---
+
+    function getVisibleTools() {
+        let tools = [...MASTER_DATA.public];
+        if(SESSION.role === 'member' || SESSION.role === 'admin') tools = [...tools, ...MASTER_DATA.member];
+        if(SESSION.role === 'vip' || SESSION.role === 'admin') tools = [...tools, ...MASTER_DATA.vip];
+        return tools;
     }
 
-    // --- Utilities ---
-    function bulkOpen() {
-        const text = document.getElementById('bulk-links').value;
-        const links = text.split('\n');
-        links.forEach(l => {
-            let url = l.trim();
-            if(url) {
-                if(!url.startsWith('http')) url = 'https://' + url;
-                window.open(url, '_blank');
-            }
-        });
-    }
-
-    function genQR() {
-        const val = document.getElementById('qr-input').value;
-        document.getElementById('qr-output').innerHTML = val ? `<img src="https://api.qrserver.com/v1/create-qr-code/?size=50x50&data=${val}" style="border:3px solid white; border-radius:5px;">` : "Enter URL";
-    }
-
-    function checkPass() {
-        const pass = document.getElementById('pass-input').value;
-        const bar = document.getElementById('strength-bar');
-        let s = 0; if(pass.length > 6) s++; if(/[A-Z]/.test(pass)) s++; if(/[0-9]/.test(pass)) s++;
-        const colors = ['#ff4d4d', '#ffa500', '#22c55e'];
-        bar.style.width = (s * 33.3) + "%"; bar.style.background = colors[s-1] || '#333';
-        document.getElementById('strength-label').innerText = "Strength: " + (['WEAK','GOOD','STRONG'][s-1] || '---');
-    }
-
-    // --- Hub Engine ---
     function refreshUI() {
         const query = document.getElementById('tool-search').value.toLowerCase();
-        const filtered = CURRENT_TOOLS.filter(t => t.name.toLowerCase().includes(query))
-            .sort((a, b) => (favorites.includes(a.id) ? -1 : 1) || a.name.localeCompare(b.name));
+        const tools = getVisibleTools();
+        
+        const filtered = tools.filter(t => t.name.toLowerCase().includes(query))
+            .sort((a, b) => (favorites.includes(a.id) ? -1 : 1));
         
         document.getElementById('tool-grid').innerHTML = filtered.map(t => createCard(t)).join('');
-        const recentTools = recents.map(id => CURRENT_TOOLS.find(t => t.id === id)).filter(Boolean);
+        
+        const recentTools = recents.map(id => tools.find(t => t.id === id)).filter(Boolean);
         document.getElementById('recents-section').style.display = (recentTools.length && !query) ? 'block' : 'none';
         document.getElementById('recent-grid').innerHTML = recentTools.map(t => createCard(t)).join('');
     }
 
     function createCard(t) {
+        const borderCol = t.type === 'vip' ? 'var(--vip-gold)' : (t.type === 'member' ? 'var(--member-green)' : 'var(--border)');
+        const badge = t.type !== 'public' ? `<span class="badge badge-${t.type}">${t.type.toUpperCase()}</span>` : '';
+        
         return `
-            <div class="social-card" style="border-color:${t.border}" onclick="handleToolClick('${t.id}')">
+            <div class="social-card" style="border-color:${borderCol}" onclick="handleToolClick('${t.id}', '${t.url}')">
+                ${badge}
                 <button class="star-btn ${favorites.includes(t.id) ? 'active' : ''}" onclick="toggleFav('${t.id}', event)">⭐</button>
                 <button class="copy-btn" onclick="event.stopPropagation(); copyToClipboard('${t.url}', this)">🔗</button>
-                <a href="${t.url}" target="_blank" style="text-decoration:none; color:inherit; text-align:center;">
-                    <div style="font-size:2rem; margin-bottom:8px;">${t.icon}</div>
-                    <div style="font-size:0.7rem; font-weight:900;">${t.name}</div>
-                </a>
+                <div style="font-size:2rem; margin-bottom:8px;">${t.icon}</div>
+                <div style="font-size:0.7rem; font-weight:900;">${t.name}</div>
             </div>
         `;
     }
 
-    function handleToolClick(id) {
+    function addNewTool() {
+        const name = document.getElementById('add-name').value.toUpperCase();
+        const url = document.getElementById('add-url').value;
+        const icon = document.getElementById('add-icon').value || "🚀";
+        const type = document.getElementById('add-type').value;
+
+        if(!name || !url) return alert("Fill Name and URL");
+
+        const newTool = { id: 'nt-' + Date.now(), name, url, icon, type };
+        MASTER_DATA[type].push(newTool);
+        localStorage.setItem('miuxo_master_data', JSON.stringify(MASTER_DATA));
+        refreshUI();
+        alert("TOOL DEPLOYED TO " + type.toUpperCase());
+    }
+
+    // --- Helper Functions ---
+
+    function handleToolClick(id, url) {
         recents = [id, ...recents.filter(f => f !== id)].slice(0, 3);
         localStorage.setItem('miuxo_recents', JSON.stringify(recents));
+        window.open(url, '_blank');
         refreshUI();
     }
 
@@ -245,10 +303,35 @@
         });
     }
 
+    function checkHint() {
+        const val = document.getElementById('access-key').value;
+        const gate = document.getElementById('gate-title');
+        gate.style.color = (val === "0000") ? "red" : (val.startsWith("MX") ? "var(--vip-gold)" : "white");
+    }
+
+    function genQR() {
+        const val = document.getElementById('qr-input').value;
+        document.getElementById('qr-output').innerHTML = val ? `<img src="https://api.qrserver.com/v1/create-qr-code/?size=50x50&data=${val}" style="border:2px solid white; border-radius:5px;">` : "Enter URL";
+    }
+
+    function checkPass() {
+        const pass = document.getElementById('pass-input').value;
+        let s = Math.min(pass.length / 4, 3);
+        document.getElementById('strength-bar').style.width = (s * 33.3) + "%";
+        document.getElementById('strength-bar').style.background = s < 1.5 ? '#ef4444' : (s < 2.5 ? '#f59e0b' : '#10b981');
+    }
+
+    function openPayModal() {
+        const upiUri = `upi://pay?pa=${upiID}&pn=MIUXO&am=50&cu=INR`;
+        document.getElementById('upiQR').src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(upiUri)}`;
+        document.getElementById('upiModal').style.display = 'flex';
+    }
+    function closePayModal() { document.getElementById('upiModal').style.display = 'none'; }
+
+    // Live Timers
     setInterval(() => {
         const now = new Date();
-        const midnight = new Date().setHours(24,0,0,0);
-        const d = midnight - now;
+        const d = new Date().setHours(24,0,0,0) - now;
         const h = Math.floor(d/3600000).toString().padStart(2,'0');
         const m = Math.floor((d%3600000)/60000).toString().padStart(2,'0');
         const s = Math.floor((d%60000)/1000).toString().padStart(2,'0');
