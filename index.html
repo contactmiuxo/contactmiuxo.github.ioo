@@ -22,44 +22,35 @@
             --accent: #2563eb;
         }
 
-        [data-theme="cyber"] { --bg: #050505; --accent: #bc13fe; --border: rgba(188, 19, 254, 0.3); --standard-blue: #bc13fe; }
-        [data-session="admin"] { --bg: #0a0000; --accent: var(--admin-red); --border: rgba(255, 0, 60, 0.4); }
-
         body, html { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; overflow-x: hidden; min-height: 100vh; transition: background 0.5s ease; }
         #bg-canvas { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 1; }
 
-        /* Banners & Popups */
-        .miuxo-banner { width: 100%; padding: 12px 0; text-align: center; font-weight: 800; font-size: 0.85rem; letter-spacing: 1px; z-index: 1001; position: relative; background: linear-gradient(90deg, #b48608, #fbe134, #b48608); color: #000; transition: 0.5s; }
-        .admin-banner { background: var(--admin-red) !important; color: white !important; box-shadow: 0 0 20px var(--admin-red); }
-        
+        .miuxo-banner { width: 100%; padding: 12px 0; text-align: center; font-weight: 800; font-size: 0.85rem; letter-spacing: 1px; z-index: 1001; position: relative; background: linear-gradient(90deg, #b48608, #fbe134, #b48608); color: #000; }
         #tos-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 10001; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px); }
 
-        /* Auth Gate */
         #auth-gate { position: fixed; inset: 0; z-index: 9999; background: var(--bg); display: flex; align-items: center; justify-content: center; transition: 0.8s cubic-bezier(0.85, 0, 0.15, 1); }
         .auth-box { background: rgba(255, 255, 255, 0.03); padding: 30px; border-radius: 30px; border: 1px solid var(--border); backdrop-filter: var(--glass); width: 95%; max-width: 400px; text-align: center; }
 
-        /* Inputs & Buttons */
-        .key-input { width: 100%; padding: 12px; border-radius: 12px; border: 1.5px solid var(--border); background: rgba(0,0,0,0.5); color: #fff; text-align: center; font-size: 1rem; margin: 8px 0; outline: none; box-sizing: border-box; }
+        .key-input { width: 100%; padding: 12px; border-radius: 12px; border: 1.5px solid var(--border); background: rgba(0,0,0,0.5); color: #fff; text-align: center; margin: 8px 0; outline: none; box-sizing: border-box; }
         .btn-primary { width:100%; padding:12px; border-radius:12px; border:none; background:var(--standard-blue); color:white; font-weight:900; cursor:pointer; margin-top: 5px; }
         
-        /* Grid & Cards */
         #main-hub { display: none; width: 100%; flex-direction: column; align-items: center; padding: 20px 0; z-index: 2; position: relative; }
-        .social-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 12px; width: 100%; }
+        .social-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 12px; width: 100%; margin-top: 20px; }
         .social-card { background: var(--card-bg); border-radius: 15px; padding: 15px 5px; text-decoration: none; color: white; display: flex; flex-direction: column; align-items: center; transition: 0.3s ease; text-align: center; border: 1px solid var(--border); position: relative; overflow: hidden; }
         
-        /* VIP Tease Effects */
         .locked-card { filter: blur(5px); pointer-events: none; opacity: 0.6; }
         .lock-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 10; color: var(--vip-gold); font-size: 1.5rem; cursor: pointer; }
         .vip-badge { position: absolute; top: 5px; right: 5px; background: var(--vip-gold); color: black; font-size: 0.5rem; padding: 2px 5px; border-radius: 4px; font-weight: 900; }
 
         .status-dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; margin-right: 4px; background: var(--online-green); box-shadow: 0 0 5px var(--online-green); }
         .pulse { animation: pulse-status 2s infinite; }
-        @keyframes pulse-status { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+        @keyframes pulse-status { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
         
         #panic-btn { display: none; position: fixed; bottom: 20px; right: 20px; background: var(--panic-red); color: white; border: none; padding: 15px 25px; border-radius: 50px; font-weight: bold; cursor: pointer; z-index: 1000; }
+        .hub-search { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid var(--border); background: rgba(0,0,0,0.3); color: white; }
     </style>
 </head>
-<body data-theme="frost" data-session="none">
+<body>
 
 <canvas id="bg-canvas"></canvas>
 
@@ -83,12 +74,15 @@
         <h2 id="gate-title">🔐 HUB ACCESS</h2>
         
         <div style="display:flex; justify-content:center; margin-bottom:15px;">
-            <div id="g_id_onload" data-client_id="785119101330-40kgkkoekfbsqu7vo4t6leqalltrs7th.apps.googleusercontent.com" data-callback="handleGoogleLogin"></div>
+            <div id="g_id_onload" 
+                 data-client_id="785119101330-40kgkkoekfbsqu7vo4t6leqalltrs7th.apps.googleusercontent.com" 
+                 data-callback="handleGoogleLogin">
+            </div>
             <div class="g_id_signin" data-type="standard" data-shape="pill"></div>
         </div>
 
         <input type="password" id="access-key" class="key-input" placeholder="Access Code">
-        <button onclick="unlockSession()" class="btn-primary">INITIALIZE</button>
+        <button onclick="unlockSession()" class="btn-primary">INITIALIZE VIP</button>
         <button onclick="freeLogin()" style="background:transparent; border:1px solid var(--standard-blue); color:var(--standard-blue); margin-top:10px;" class="btn-primary">START GUEST SESSION</button>
 
         <hr style="border:0; border-top:1px solid var(--border); margin:20px 0;">
@@ -99,7 +93,6 @@
             <input type="number" id="user-phone" class="key-input" placeholder="Phone Number">
             <input type="text" id="utr-input" class="key-input" placeholder="12-Digit UTR">
             <button onclick="generateVipCode()" style="background:var(--online-green); color:black;" class="btn-primary">VERIFY PAYMENT</button>
-            <p style="font-size: 0.6rem; margin-top: 10px;"><a href="mailto:contactmiuxo@gmail.com?subject=Payment%20Issue" style="color:var(--panic-red);">Payment failed? Click here.</a></p>
         </div>
     </div>
 </div>
@@ -126,67 +119,58 @@
 </div>
 
 <script>
+    // Firebase Config
     const firebaseConfig = { databaseURL: "https://miuxo-a750e-default-rtdb.firebaseio.com/" };
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
+    
     const DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1454313829206065314/-2tb5jNaf_W1m6dJLJM96YBk_b3-nK6ewVyxC7ok69nK1jd5pSfcLP-fn-IvlycbaUsu";
-    const ADMIN_EMAIL = "contactmiuxo@gmail.com";
 
-    const VIP_TOOLS = [ { name: "NEAPAY", url: "https://neapay.com/", icon: "🏦", border: "#fbbf24" }, { name: "WAN VIDEO", url: "https://wan.video/", icon: "🔮", border: "#ffffff" }, { name: "DARKOSINT", url: "https://darkosint.in/", icon: "🔍", border: "#991b1b" } ];
-    const NORMAL_TOOLS = [ { name: "DISCORD", url: "https://discord.com/invite/2rcKEjsVwV", icon: "💬", border: "#5865F2" }, { name: "INSTA", url: "https://www.instagram.com/aimiuxo/", icon: "📸", border: "#E1306C" } ];
+    const VIP_TOOLS = [ 
+        { name: "NEAPAY", url: "https://neapay.com/", icon: "🏦", border: "#fbbf24" }, 
+        { name: "WAN VIDEO", url: "https://wan.video/", icon: "🔮", border: "#ffffff" }, 
+        { name: "DARKOSINT", url: "https://darkosint.in/", icon: "🔍", border: "#991b1b" } 
+    ];
+    const NORMAL_TOOLS = [ 
+        { name: "DISCORD", url: "https://discord.com/invite/2rcKEjsVwV", icon: "💬", border: "#5865F2" }, 
+        { name: "INSTA", url: "https://www.instagram.com/aimiuxo/", icon: "📸", border: "#E1306C" } 
+    ];
 
-    let activeList = [];
+    let currentTools = [];
 
     // TOS Logic
     document.getElementById('tos-check').onchange = function() {
-        document.getElementById('tos-btn').disabled = !this.checked;
-        document.getElementById('tos-btn').style.opacity = this.checked ? "1" : "0.5";
-        document.getElementById('tos-btn').style.cursor = this.checked ? "pointer" : "not-allowed";
+        const btn = document.getElementById('tos-btn');
+        btn.disabled = !this.checked;
+        btn.style.opacity = this.checked ? "1" : "0.5";
+        btn.style.cursor = this.checked ? "pointer" : "not-allowed";
     };
     function acceptTos() { 
         localStorage.setItem('miuxo_tos', 'true'); 
         document.getElementById('tos-overlay').style.display = 'none'; 
     }
 
-    // Payment & VIP Logic
-    async function generateVipCode() {
-        const phone = document.getElementById('user-phone').value;
-        const utr = document.getElementById('utr-input').value;
-        if(phone.length < 10 || utr.length < 12) return alert("Invalid Input!");
-
-        const banned = await database.ref('blacklist/' + phone).once('value');
-        if(banned.exists()) return alert("Banned!");
-
-        const exists = await database.ref('transactions/' + utr).once('value');
-        if(exists.exists()) return alert("UTR Used!");
-
-        const code = Math.floor(1000 + Math.random() * 9000).toString();
-        await database.ref(code).set("VIP Access");
-        await database.ref('transactions/' + utr).set({ phone, code, time: new Date().toLocaleString() });
-
-        fetch(DISCORD_WEBHOOK, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ embeds: [{ title: "💰 SALE: ₹50", fields: [{ name: "📞 Phone", value: phone, inline:true }, { name: "🎟️ Code", value: code, inline:true }] }] })
-        });
-        alert("Success! Code: " + code);
-        document.getElementById('access-key').value = code;
+    // Google Login Handler
+    function handleGoogleLogin(response) {
+        const payload = JSON.parse(atob(response.credential.split('.')[1]));
+        document.getElementById('greeting-text').innerText = `WELCOME, ${payload.name.toUpperCase()}`;
+        freeLogin(); // Auto-login to free session after Google Auth
     }
 
     // Auth & Render
     function freeLogin() { 
-        activeList = NORMAL_TOOLS; 
+        currentTools = NORMAL_TOOLS; 
         document.getElementById('upgrade-promo').style.display = 'flex';
-        finalizeLogin("GUEST SESSION", activeList); 
+        finalizeLogin("GUEST SESSION", currentTools); 
     }
 
     function unlockSession() {
         const key = document.getElementById('access-key').value;
         database.ref(key).once('value').then(snap => {
             if(snap.exists()) {
-                activeList = [...VIP_TOOLS, ...NORMAL_TOOLS];
-                finalizeLogin("VIP SESSION", activeList);
-            } else { alert("Invalid!"); }
+                currentTools = [...VIP_TOOLS, ...NORMAL_TOOLS];
+                finalizeLogin("VIP SESSION", currentTools);
+            } else { alert("Invalid Access Code!"); }
         });
     }
 
@@ -206,7 +190,7 @@
             const isVip = VIP_TOOLS.some(v => v.name === t.name);
             const lock = isGuest && isVip;
             return `
-                <div style="position:relative;">
+                <div class="tool-item" style="position:relative;">
                     <a href="${t.url}" target="_blank" class="social-card ${lock ? 'locked-card' : ''}" style="border-color:${t.border}">
                         ${isVip ? '<span class="vip-badge">VIP</span>' : ''}
                         <div style="font-size:1.5rem; margin-bottom:5px;">${t.icon}</div>
@@ -217,7 +201,35 @@
         }).join('');
     }
 
-    // Animation & Initialization
+    function filterTools() {
+        const query = document.getElementById('tool-search').value.toLowerCase();
+        const items = document.querySelectorAll('.tool-item');
+        items.forEach(item => {
+            const name = item.innerText.toLowerCase();
+            item.style.display = name.includes(query) ? "block" : "none";
+        });
+    }
+
+    // Payment Logic
+    async function generateVipCode() {
+        const phone = document.getElementById('user-phone').value;
+        const utr = document.getElementById('utr-input').value;
+        if(phone.length < 10 || utr.length < 12) return alert("Please enter valid Phone and 12-digit UTR!");
+
+        const code = Math.floor(1000 + Math.random() * 9000).toString();
+        await database.ref(code).set("VIP Access");
+        await database.ref('transactions/' + utr).set({ phone, code, time: new Date().toLocaleString() });
+
+        fetch(DISCORD_WEBHOOK, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ embeds: [{ title: "💰 NEW SALE: ₹50", fields: [{ name: "📞 Phone", value: phone, inline:true }, { name: "🎟️ Generated Code", value: code, inline:true }] }] })
+        });
+        alert("Payment Sent for Verification! Your Code: " + code);
+        document.getElementById('access-key').value = code;
+    }
+
+    // Background Animation
     const canvas = document.getElementById('bg-canvas');
     const ctx = canvas.getContext('2d');
     let flakes = [];
