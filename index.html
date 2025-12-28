@@ -340,7 +340,7 @@
         document.getElementById('modal-plan-title').innerText = plan + " UPGRADE";
         document.getElementById('modal-amount').innerText = price;
         // ENTER YOUR UPI ID HERE
-        const upiId = "8606226352@fam"; 
+        const upiId = "8606226353@fam"; 
         document.getElementById('qr-code').src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi://pay?pa=${upiId}%26pn=MIUXO%26am=${price}%26cu=INR`;
         document.getElementById('payment-modal').style.display = 'flex';
         showToast(`Preparing ${plan} Gateway`, "info");
