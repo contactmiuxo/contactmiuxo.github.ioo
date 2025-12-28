@@ -70,7 +70,15 @@
         th { text-align: left; opacity: 0.5; padding: 8px; border-bottom: 1px solid var(--border); }
         td { padding: 10px 8px; border-bottom: 1px solid var(--border); }
 
-        /* Google container */
+        /* Toast & Modal Systems */
+        #toast-container { position: fixed; bottom: 20px; left: 20px; z-index: 10001; display: flex; flex-direction: column; gap: 10px; }
+        .miuxo-toast { background: var(--card-bg); backdrop-filter: var(--glass); border: 1px solid var(--border); color: var(--text); padding: 12px 20px; border-radius: 12px; font-size: 0.8rem; font-weight: 600; display: flex; align-items: center; gap: 12px; min-width: 250px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); animation: toastSlideIn 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards; position: relative; overflow: hidden; }
+        @keyframes toastSlideIn { from { transform: translateX(-100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .miuxo-toast.success { border-left: 4px solid var(--member-green); }
+        .miuxo-toast.error { border-left: 4px solid var(--owner-red); }
+        .toast-progress { position: absolute; bottom: 0; left: 0; height: 3px; background: var(--accent); width: 100%; animation: toastProgress 3s linear forwards; }
+        @keyframes toastProgress { from { width: 100%; } to { width: 0%; } }
+
         .google-auth-container { margin-bottom: 20px; display: flex; justify-content: center; width: 100%; }
         .auth-divider { display: flex; align-items: center; text-align: center; color: var(--text); opacity: 0.4; font-size: 0.65rem; margin: 20px 0; font-weight: 800; }
         .auth-divider::before, .auth-divider::after { content: ''; flex: 1; border-bottom: 1px solid var(--border); }
@@ -89,7 +97,6 @@
 <div id="auth-gate">
     <div class="auth-box">
         <h2 id="gate-title">🔐 MIUXO HUB v12</h2>
-        
         <div class="google-auth-container">
             <div id="g_id_onload"
                 data-client_id="785119101330-40kgkkoekfbsqu7vo4t6leqalltrs7th.apps.googleusercontent.com"
@@ -143,7 +150,7 @@
                 <div class="util-card">
                     <span style="font-size:0.65rem; font-weight:800; opacity:0.6;">ADD NEW RESOURCE</span>
                     <input type="text" id="add-name" class="util-input" placeholder="Display Name">
-                    <input type="text" id="add-url" class="util-input" placeholder="Target URL (https://...)">
+                    <input type="text" id="add-url" class="util-input" placeholder="Target URL">
                     <select id="add-type" class="util-input">
                         <option value="public">Public</option>
                         <option value="member">Member Only</option>
@@ -154,14 +161,14 @@
                 </div>
 
                 <div class="util-card">
-                    <span style="font-size:0.65rem; font-weight:800; opacity:0.6;">RESOURCE REQUESTS</span>
+                    <span style="font-size:0.65rem; font-weight:800; opacity:0.6;">REQUESTS & PAYMENTS</span>
                     <div id="feedback-inbox" style="max-height: 110px; overflow-y: auto; font-size: 0.65rem; margin: 8px 0;"></div>
                     <button class="util-btn" style="background:var(--owner-red); font-size:0.6rem;" onclick="clearFeedback()">PURGE INBOX</button>
                 </div>
 
                 <div class="util-card">
                     <span style="font-size:0.65rem; font-weight:800; opacity:0.6;">CORE MAINTENANCE</span>
-                    <button class="util-btn" style="background:#0ea5e9;" onclick="exportDatabase()">EXPORT BACKUP (.JSON)</button>
+                    <button class="util-btn" style="background:#0ea5e9;" onclick="exportDatabase()">EXPORT BACKUP</button>
                     <input type="file" id="import-file" style="display:none" onchange="importDatabase(event)">
                     <button class="util-btn" style="background:#64748b;" onclick="document.getElementById('import-file').click()">RESTORE DATA</button>
                 </div>
@@ -207,6 +214,24 @@
         <div class="section-label">📂 PUBLIC CLEARANCE</div>
         <div class="social-grid" id="tool-grid"></div>
 
+        <div id="upgrade-plans" style="margin-top: 40px;">
+            <div class="section-label" style="color:var(--vip-gold)">⚡ EVOLVE YOUR ACCESS</div>
+            <div class="utility-box">
+                <div class="util-card" style="border: 1px solid var(--member-green); text-align: center;">
+                    <h3 style="margin: 0; color: var(--member-green);">MEMBER</h3>
+                    <p style="font-size: 0.6rem; opacity: 0.7;">Full Access to Member Tools</p>
+                    <div style="font-size: 1.2rem; font-weight: 900; margin: 10px 0;">₹49 <span style="font-size: 0.6rem; opacity: 0.5;">/LIFETIME</span></div>
+                    <button class="util-btn" onclick="openPayment('MEMBER', 49)" style="background: var(--member-green);">SELECT PLAN</button>
+                </div>
+                <div class="util-card" style="border: 1px solid var(--vip-gold); text-align: center;">
+                    <h3 style="margin: 0; color: var(--vip-gold);">VIP TIER</h3>
+                    <p style="font-size: 0.6rem; opacity: 0.7;">Private Data & Priority Pushes</p>
+                    <div style="font-size: 1.2rem; font-weight: 900; margin: 10px 0;">₹99 <span style="font-size: 0.6rem; opacity: 0.5;">/LIFETIME</span></div>
+                    <button class="util-btn" onclick="openPayment('VIP', 99)" style="background: var(--vip-gold); color: #000;">SELECT PLAN</button>
+                </div>
+            </div>
+        </div>
+
         <div class="section-label" style="margin-top:40px;">📢 COMMS CHANNEL</div>
         <div class="util-card">
             <input type="text" id="user-msg" class="util-input" placeholder="Message the Admin or request a resource...">
@@ -217,17 +242,40 @@
     </div>
 </div>
 
+<div id="payment-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); backdrop-filter:blur(10px); z-index:10002; align-items:center; justify-content:center;">
+    <div class="auth-box" style="border-color: var(--vip-gold); position: relative;">
+        <button onclick="closePayment()" style="position:absolute; top:15px; right:15px; background:none; border:none; color:var(--text); font-size:1.5rem; cursor:pointer;">&times;</button>
+        <h2 id="modal-plan-title" style="color:var(--vip-gold); margin-bottom:5px;">VIP UPGRADE</h2>
+        <p style="font-size:0.7rem; opacity:0.6; margin-bottom:20px;">Scan QR to pay and request activation</p>
+        <img id="qr-code" src="" style="border-radius:15px; border:5px solid white; margin-bottom:20px; width:180px;">
+        <div style="font-size:0.8rem; font-weight:bold; margin-bottom:10px;">AMOUNT: ₹<span id="modal-amount">99</span></div>
+        <button class="util-btn" onclick="requestVerification()" style="background:var(--standard-blue);">I HAVE PAID - VERIFY ME</button>
+    </div>
+</div>
+
+<div id="toast-container"></div>
+
 <script>
     // --- DATABASE ENGINE ---
-    let MASTER_DATA = JSON.parse(localStorage.getItem('miuxo_master_data')) || {
-        private: [], vip: [], member: [], public: []
-    };
-    let REGISTERED_USERS = JSON.parse(localStorage.getItem('miuxo_users')) || {
-        "admin": { pass: "admin123", role: "admin", name: "SYSTEM ADMIN" }
-    };
+    let MASTER_DATA = JSON.parse(localStorage.getItem('miuxo_master_data')) || { private: [], vip: [], member: [], public: [] };
+    let REGISTERED_USERS = JSON.parse(localStorage.getItem('miuxo_users')) || { "admin": { pass: "admin123", role: "admin", name: "SYSTEM ADMIN" } };
     let FEEDBACK_DATA = JSON.parse(localStorage.getItem('miuxo_feedback')) || [];
     let SESSION = { role: 'public', user: null };
     let isRegisterMode = false;
+    let currentSelectedPlan = "";
+
+    // --- TOAST NOTIFICATIONS ---
+    function showToast(message, type = 'info') {
+        const container = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        toast.className = `miuxo-toast ${type}`;
+        toast.innerHTML = `<span>${type === 'success' ? '✅' : 'ℹ️'}</span><span>${message}</span><div class="toast-progress"></div>`;
+        container.appendChild(toast);
+        setTimeout(() => { 
+            toast.style.animation = "toastSlideIn 0.4s reverse forwards";
+            setTimeout(() => toast.remove(), 400); 
+        }, 3000);
+    }
 
     // --- GOOGLE AUTH ---
     function handleGoogleResponse(response) {
@@ -239,15 +287,11 @@
 
         const userData = JSON.parse(jsonPayload);
         SESSION.role = 'member'; 
-        SESSION.user = { 
-            name: userData.name, 
-            username: userData.email,
-            avatar: userData.picture 
-        };
-        
+        SESSION.user = { name: userData.name, username: userData.email, avatar: userData.picture };
         sessionStorage.setItem('miuxo_session', JSON.stringify(SESSION));
         applySessionUI();
         enterHub();
+        showToast(`Welcome back, Agent ${userData.given_name}`, "success");
     }
 
     // --- LOGIN & REGISTRATION ---
@@ -264,12 +308,11 @@
     function registerUser() {
         const u = document.getElementById('username').value.trim().toLowerCase();
         const p = document.getElementById('password').value;
-        if(u.length < 3 || p.length < 4) return alert("Credentials too short!");
-        if(REGISTERED_USERS[u]) return alert("Operator ID already exists!");
-        
+        if(u.length < 3 || p.length < 4) return showToast("Credentials too short!", "error");
+        if(REGISTERED_USERS[u]) return showToast("Operator ID exists!", "error");
         REGISTERED_USERS[u] = { pass: p, role: "member", name: u.toUpperCase() };
         localStorage.setItem('miuxo_users', JSON.stringify(REGISTERED_USERS));
-        alert("Account Registered. Please Login.");
+        showToast("Account Initialized. Access Granted.", "success");
         toggleAuthMode();
     }
 
@@ -282,36 +325,54 @@
             sessionStorage.setItem('miuxo_session', JSON.stringify(SESSION));
             applySessionUI();
             enterHub();
-        } else { alert("ACCESS DENIED: Invalid Credentials"); }
+            showToast("System Access Granted", "success");
+        } else { showToast("ACCESS DENIED: Invalid Key", "error"); }
     }
 
     function checkPersistedSession() {
         const saved = sessionStorage.getItem('miuxo_session');
         if(saved) { SESSION = JSON.parse(saved); applySessionUI(); enterHub(); }
-        else { document.getElementById('access-label').innerText = "GUEST CLEARANCE"; }
     }
 
-    // --- UI RENDERING ---
+    // --- PAYMENT SYSTEM ---
+    function openPayment(plan, price) {
+        currentSelectedPlan = plan;
+        document.getElementById('modal-plan-title').innerText = plan + " UPGRADE";
+        document.getElementById('modal-amount').innerText = price;
+        // ENTER YOUR UPI ID HERE
+        const upiId = "8606226352@fam"; 
+        document.getElementById('qr-code').src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi://pay?pa=${upiId}%26pn=MIUXO%26am=${price}%26cu=INR`;
+        document.getElementById('payment-modal').style.display = 'flex';
+        showToast(`Preparing ${plan} Gateway`, "info");
+    }
+
+    function closePayment() { document.getElementById('payment-modal').style.display = 'none'; }
+
+    function requestVerification() {
+        const msg = document.getElementById('user-msg');
+        msg.value = `[PAYMENT_REQ] User: ${SESSION.user?.name || 'GUEST'} | Plan: ${currentSelectedPlan} | Verify my account.`;
+        closePayment();
+        showToast("Verification drafted. Click Transmit.", "info");
+        msg.scrollIntoView({behavior: "smooth"});
+        msg.style.borderColor = "var(--vip-gold)";
+    }
+
+    // --- UI ENGINE ---
     function applySessionUI() {
         const banner = document.getElementById('status-banner');
         const profile = document.getElementById('profile-area');
         banner.className = 'miuxo-banner ' + SESSION.role;
         document.getElementById('access-label').innerText = SESSION.role + " CLEARANCE LEVEL ACTIVE";
         
-        let avatarHtml = SESSION.user?.avatar 
-            ? `<img src="${SESSION.user.avatar}" style="width:24px; height:24px; border-radius:50%; border:1px solid var(--accent)">` 
-            : `👤`;
-
-        profile.innerHTML = `
-            <button onclick="toggleSettings()" style="background:none; border:none; cursor:pointer; display:flex; align-items:center;">${avatarHtml}</button>
-            <span style="font-size: 0.75rem; font-weight: 900; letter-spacing:1px;">${SESSION.user ? SESSION.user.name : "ANONYMOUS"}</span>
-        `;
+        let avatarHtml = SESSION.user?.avatar ? `<img src="${SESSION.user.avatar}" style="width:24px; height:24px; border-radius:50%; border:1px solid var(--accent)">` : `👤`;
+        profile.innerHTML = `<button onclick="toggleSettings()" style="background:none; border:none; cursor:pointer; display:flex; align-items:center;">${avatarHtml}</button><span style="font-size: 0.75rem; font-weight: 900; letter-spacing:1px;">${SESSION.user ? SESSION.user.name : "ANONYMOUS"}</span>`;
 
         const role = SESSION.role;
         document.getElementById('member-section').style.display = ['member', 'vip', 'admin', 'owner'].includes(role) ? 'block' : 'none';
         document.getElementById('vip-section').style.display = ['vip', 'admin', 'owner'].includes(role) ? 'block' : 'none';
         document.getElementById('admin-panel').style.display = ['admin', 'owner'].includes(role) ? 'block' : 'none';
         document.getElementById('private-section').style.display = ['admin', 'owner'].includes(role) ? 'block' : 'none';
+        document.getElementById('upgrade-plans').style.display = role === 'public' || role === 'member' ? 'block' : 'none';
     }
 
     function refreshUI() {
@@ -319,48 +380,31 @@
         const render = (id, key) => {
             const grid = document.getElementById(id);
             if(!grid) return;
-            grid.innerHTML = MASTER_DATA[key]
-                .filter(t => t.name.toLowerCase().includes(query))
-                .map(t => `
-                    <div class="social-card" onclick="window.open('${t.url}', '_blank')">
-                        <button class="del-tool" style="display:${['admin','owner'].includes(SESSION.role)?'block':'none'}" onclick="event.stopPropagation(); deleteTool('${t.id}', '${key}')">×</button>
-                        ${key !== 'public' ? `<span class="badge badge-${key}">${key.toUpperCase()}</span>` : ''}
-                        <div style="font-size:2.2rem; margin-bottom:12px;">🛠️</div>
-                        <div style="font-size:0.75rem; font-weight:900; text-align:center;">${t.name}</div>
-                    </div>
-                `).join('');
+            grid.innerHTML = MASTER_DATA[key].filter(t => t.name.toLowerCase().includes(query)).map(t => `
+                <div class="social-card" onclick="window.open('${t.url}', '_blank')">
+                    <button class="del-tool" style="display:${['admin','owner'].includes(SESSION.role)?'block':'none'}" onclick="event.stopPropagation(); deleteTool('${t.id}', '${key}')">×</button>
+                    ${key !== 'public' ? `<span class="badge badge-${key}">${key.toUpperCase()}</span>` : ''}
+                    <div style="font-size:2.2rem; margin-bottom:12px;">🛠️</div>
+                    <div style="font-size:0.75rem; font-weight:900; text-align:center;">${t.name}</div>
+                </div>`).join('');
         };
-        render('tool-grid', 'public'); 
-        render('member-grid', 'member'); 
-        render('vip-grid', 'vip'); 
-        render('private-grid', 'private');
+        render('tool-grid', 'public'); render('member-grid', 'member'); render('vip-grid', 'vip'); render('private-grid', 'private');
         updateAdminView();
     }
 
-    // --- ADMIN ENGINE ---
     function updateAdminView() {
         if(!['admin', 'owner'].includes(SESSION.role)) return;
         document.getElementById('stat-total').innerText = Object.values(MASTER_DATA).flat().length;
         document.getElementById('stat-vip').innerText = MASTER_DATA.vip.length;
         document.getElementById('stat-users').innerText = Object.keys(REGISTERED_USERS).length;
-
         const list = document.getElementById('user-admin-list');
         list.innerHTML = Object.keys(REGISTERED_USERS).map(u => `
-            <tr>
-                <td style="font-weight:bold">${u}</td>
-                <td><span class="badge badge-${REGISTERED_USERS[u].role}">${REGISTERED_USERS[u].role}</span></td>
-                <td>
-                    <button onclick="promoteUser('${u}')" style="background:var(--member-green); border:none; color:white; border-radius:4px; padding:2px 5px; cursor:pointer">↑</button>
-                    <button onclick="banUser('${u}')" style="background:var(--owner-red); border:none; color:white; border-radius:4px; padding:2px 5px; cursor:pointer">×</button>
-                </td>
-            </tr>
-        `).join('');
-
+            <tr><td style="font-weight:bold">${u}</td><td><span class="badge badge-${REGISTERED_USERS[u].role}">${REGISTERED_USERS[u].role}</span></td>
+            <td><button onclick="promoteUser('${u}')" style="background:var(--member-green); border:none; color:white; border-radius:4px; padding:2px 5px; cursor:pointer">↑</button>
+            <button onclick="banUser('${u}')" style="background:var(--owner-red); border:none; color:white; border-radius:4px; padding:2px 5px; cursor:pointer">×</button></td></tr>`).join('');
         document.getElementById('feedback-inbox').innerHTML = FEEDBACK_DATA.map(f => `
             <div style="padding:8px; border-bottom:1px solid var(--border); background:rgba(255,255,255,0.02); margin-bottom:5px; border-radius:8px;">
-                <b style="color:var(--accent)">${f.user}:</b> ${f.text}
-            </div>
-        `).reverse().join('');
+            <b style="color:var(--accent)">${f.user}:</b> ${f.text}</div>`).reverse().join('');
     }
 
     function promoteUser(u) {
@@ -370,35 +414,48 @@
         if(curIndex < 2) { 
             REGISTERED_USERS[u].role = r[curIndex + 1]; 
             localStorage.setItem('miuxo_users', JSON.stringify(REGISTERED_USERS));
+            showToast(`Operator ${u} Promoted`, "success");
             refreshUI();
         }
     }
 
     function banUser(u) {
         if(u === 'admin') return;
-        if(confirm(`Ban operator ${u} and revoke all access?`)) {
+        if(confirm(`Revoke all access for ${u}?`)) {
             delete REGISTERED_USERS[u];
             localStorage.setItem('miuxo_users', JSON.stringify(REGISTERED_USERS));
+            showToast("Operator Terminated", "error");
             refreshUI();
         }
     }
 
-    // --- DATA & BACKUP ---
     function addNewTool() {
         const n = document.getElementById('add-name').value.toUpperCase();
         const u = document.getElementById('add-url').value;
         const t = document.getElementById('add-type').value;
-        if(!n || !u) return alert("Fields cannot be empty!");
+        if(!n || !u) return showToast("Fields Empty", "error");
         MASTER_DATA[t].push({ id: Date.now(), name: n, url: u });
         localStorage.setItem('miuxo_master_data', JSON.stringify(MASTER_DATA));
-        document.getElementById('add-name').value = "";
-        document.getElementById('add-url').value = "";
+        document.getElementById('add-name').value = ""; document.getElementById('add-url').value = "";
+        showToast("Resource Pushed to Grid", "success");
         refreshUI();
     }
 
     function deleteTool(id, type) {
         MASTER_DATA[type] = MASTER_DATA[type].filter(i => i.id != id);
         localStorage.setItem('miuxo_master_data', JSON.stringify(MASTER_DATA));
+        showToast("Resource Purged", "error");
+        refreshUI();
+    }
+
+    function sendFeedback() {
+        const m = document.getElementById('user-msg').value;
+        if(!m) return;
+        FEEDBACK_DATA.push({ user: SESSION.user ? SESSION.user.name : "GUEST", text: m });
+        localStorage.setItem('miuxo_feedback', JSON.stringify(FEEDBACK_DATA));
+        document.getElementById('user-msg').value = "";
+        document.getElementById('user-msg').style.borderColor = "var(--border)";
+        showToast("Transmission Received", "success");
         refreshUI();
     }
 
@@ -407,8 +464,9 @@
         const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
-        a.download = `miuxo_backup_${new Date().toISOString().slice(0,10)}.json`;
+        a.download = `miuxo_backup.json`;
         a.click();
+        showToast("Database Exported", "success");
     }
 
     function importDatabase(e) {
@@ -418,38 +476,24 @@
                 const d = JSON.parse(ev.target.result);
                 if(d.MASTER_DATA) localStorage.setItem('miuxo_master_data', JSON.stringify(d.MASTER_DATA));
                 if(d.REGISTERED_USERS) localStorage.setItem('miuxo_users', JSON.stringify(d.REGISTERED_USERS));
-                if(d.FEEDBACK_DATA) localStorage.setItem('miuxo_feedback', JSON.stringify(d.FEEDBACK_DATA));
-                alert("Restoration Complete.");
-                location.reload();
-            } catch(err) { alert("Invalid Backup File"); }
+                showToast("Data Restored", "success");
+                setTimeout(() => location.reload(), 1000);
+            } catch(err) { showToast("Invalid File", "error"); }
         };
         reader.readAsText(e.target.files[0]);
-    }
-
-    // --- UTILITIES ---
-    function sendFeedback() {
-        const m = document.getElementById('user-msg').value;
-        if(!m) return;
-        FEEDBACK_DATA.push({ user: SESSION.user ? SESSION.user.name : "GUEST", text: m });
-        localStorage.setItem('miuxo_feedback', JSON.stringify(FEEDBACK_DATA));
-        document.getElementById('user-msg').value = "";
-        alert("Transmission Success.");
-        refreshUI();
     }
 
     function updateProfile() {
         const n = document.getElementById('new-display-name').value;
         const p = document.getElementById('new-password').value;
         const uk = SESSION.user.username;
-        if(!uk) return alert("Operation restricted for OAuth accounts.");
-        
+        if(!uk) return showToast("Restrictive Session", "error");
         if(n) { REGISTERED_USERS[uk].name = n.toUpperCase(); SESSION.user.name = n.toUpperCase(); }
         if(p) { REGISTERED_USERS[uk].pass = p; }
-        
         localStorage.setItem('miuxo_users', JSON.stringify(REGISTERED_USERS));
         sessionStorage.setItem('miuxo_session', JSON.stringify(SESSION));
-        alert("Settings Saved.");
-        location.reload();
+        showToast("Operator Data Committed", "success");
+        setTimeout(() => location.reload(), 800);
     }
 
     function toggleSettings() {
@@ -463,10 +507,10 @@
         refreshUI(); 
     }
 
-    function guestEnter() { SESSION.role = 'public'; applySessionUI(); enterHub(); }
+    function guestEnter() { SESSION.role = 'public'; applySessionUI(); enterHub(); showToast("Logged in as Guest", "info"); }
     function terminateSession() { sessionStorage.clear(); location.reload(); }
     function toggleTheme() { document.body.setAttribute('data-theme', document.body.getAttribute('data-theme') === 'light' ? 'dark' : 'light'); }
-    function clearFeedback() { FEEDBACK_DATA = []; localStorage.setItem('miuxo_feedback', "[]"); refreshUI(); }
+    function clearFeedback() { FEEDBACK_DATA = []; localStorage.setItem('miuxo_feedback', "[]"); refreshUI(); showToast("Inbox Purged", "success"); }
 
     setInterval(() => {
         const now = new Date();
