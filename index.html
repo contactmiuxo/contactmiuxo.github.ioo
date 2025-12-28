@@ -20,10 +20,10 @@
         body, html { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; transition: 0.4s; min-height: 100vh; overflow-x: hidden; }
         
         /* UI Components */
-        .miuxo-banner { width: 100%; padding: 12px 0; text-align: center; font-weight: 800; font-size: 0.8rem; background: var(--standard-blue); color: #fff; position: relative; z-index: 100; transition: 0.3s; }
+        .miuxo-banner { width: 100%; padding: 12px 0; text-align: center; font-weight: 800; font-size: 0.8rem; background: var(--standard-blue); color: #fff; position: sticky; top: 0; z-index: 100; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px; }
         .miuxo-banner.vip { background: linear-gradient(90deg, #b48608, #fbe134, #b48608); color: #000; }
-        .miuxo-banner.member { background: var(--member-green); box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); }
-        .miuxo-banner.owner { background: var(--owner-red); box-shadow: 0 5px 15px rgba(239, 68, 68, 0.4); }
+        .miuxo-banner.member { background: var(--member-green); }
+        .miuxo-banner.owner { background: var(--owner-red); }
         .miuxo-banner.admin { background: var(--admin-purple); border-bottom: 2px solid #fff; }
 
         .theme-toggle { position: fixed; bottom: 25px; right: 25px; width: 50px; height: 50px; background: var(--standard-blue); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 1000; border: none; font-size: 1.2rem; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
@@ -35,50 +35,54 @@
 
         /* Main Layout */
         #main-hub { display: none; width: 100%; flex-direction: column; align-items: center; padding: 20px 0; }
-        .hub-container { background: var(--card-bg); border: 1px solid var(--border); border-radius: 28px; padding: 30px; width: 95%; max-width: 1100px; backdrop-filter: var(--glass); }
+        .hub-container { background: var(--card-bg); border: 1px solid var(--border); border-radius: 28px; padding: 30px; width: 95%; max-width: 1100px; backdrop-filter: var(--glass); margin-top: 20px; }
 
         .control-panel { border: 2px dashed var(--admin-purple); padding: 20px; border-radius: 20px; background: rgba(168, 85, 247, 0.05); margin-bottom: 25px; display: none; }
-        .utility-box { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; }
+        .utility-box { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px; }
         .util-card { background: var(--search-bg); border: 1px solid var(--border); border-radius: 20px; padding: 18px; margin-bottom: 10px; }
         .util-input { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid var(--border); background: rgba(0,0,0,0.2); color: var(--text); margin-top: 5px; box-sizing: border-box; }
-        .util-btn { width: 100%; padding: 10px; margin-top: 10px; border-radius: 10px; border: none; background: var(--standard-blue); color: white; cursor: pointer; font-weight: 800; font-size: 0.75rem; }
+        .util-btn { width: 100%; padding: 12px; margin-top: 10px; border-radius: 10px; border: none; background: var(--standard-blue); color: white; cursor: pointer; font-weight: 800; font-size: 0.75rem; text-transform: uppercase; }
 
         .section-label { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin: 25px 0 12px; color: var(--standard-blue); display: flex; align-items: center; gap: 8px; }
-        .search-input { width: 100%; padding: 16px; border-radius: 16px; background: var(--search-bg); border: 1px solid var(--border); color: var(--text); margin-bottom: 20px; box-sizing: border-box; font-size: 1rem; }
-        
-        /* Grids */
-        .social-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(115px, 1fr)); gap: 12px; }
-        .social-card { background: var(--card-bg); border-radius: 20px; padding: 20px 5px; text-decoration: none; color: var(--text); display: flex; flex-direction: column; align-items: center; transition: 0.3s; border: 1px solid var(--border); position: relative; cursor: pointer; }
-        .social-card:hover { transform: translateY(-5px); border-color: var(--accent); }
+        .search-input { width: 100%; padding: 16px; border-radius: 16px; background: var(--search-bg); border: 1px solid var(--border); color: var(--text); margin-bottom: 20px; box-sizing: border-box; font-size: 1rem; outline: none; }
+        .search-input:focus { border-color: var(--standard-blue); }
 
-        .del-tool { position: absolute; top: 5px; left: 5px; background: var(--owner-red); color: white; border: none; border-radius: 50%; width: 18px; height: 18px; font-size: 10px; cursor: pointer; display: none; z-index: 5; }
-        .badge { font-size: 0.5rem; padding: 2px 6px; border-radius: 4px; position: absolute; top: -8px; right: 10px; font-weight: 900; }
+        /* Grids */
+        .social-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 15px; }
+        .social-card { background: var(--card-bg); border-radius: 20px; padding: 25px 10px; text-decoration: none; color: var(--text); display: flex; flex-direction: column; align-items: center; transition: 0.3s; border: 1px solid var(--border); position: relative; cursor: pointer; overflow: hidden; }
+        .social-card:hover { transform: translateY(-5px); border-color: var(--accent); background: var(--search-bg); }
+
+        .del-tool { position: absolute; top: 8px; left: 8px; background: var(--owner-red); color: white; border: none; border-radius: 50%; width: 22px; height: 22px; font-size: 12px; cursor: pointer; display: none; z-index: 5; font-weight: bold; }
+        .badge { font-size: 0.55rem; padding: 3px 8px; border-radius: 6px; position: absolute; top: 10px; right: 10px; font-weight: 900; letter-spacing: 1px; }
         .badge-vip { background: var(--vip-gold); color: #000; }
         .badge-member { background: var(--member-green); color: #fff; }
-        .badge-admin { background: var(--admin-purple); color: #fff; }
+        .badge-private { background: var(--admin-purple); color: #fff; }
 
-        /* Custom Styles */
-        #upiModal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:10002; align-items:center; justify-content:center; backdrop-filter: blur(10px); }
-        .profile-chip { display: flex; align-items: center; gap: 12px; background: var(--search-bg); padding: 6px 16px; border-radius: 50px; border: 1px solid var(--border); }
-        .logout-btn { background: none; border: none; color: var(--owner-red); cursor: pointer; font-size: 0.9rem; padding: 0; display: flex; align-items: center; }
-        .manager-stats { display: flex; gap: 15px; margin-top: 10px; }
-        .stat-box { flex: 1; background: rgba(255,255,255,0.03); padding: 10px; border-radius: 12px; text-align: center; border: 1px solid var(--border); }
-        .stat-val { display: block; font-size: 1.2rem; font-weight: 900; color: var(--accent); }
-        .stat-lbl { font-size: 0.5rem; opacity: 0.6; text-transform: uppercase; }
+        .profile-chip { display: flex; align-items: center; gap: 12px; background: var(--search-bg); padding: 8px 18px; border-radius: 50px; border: 1px solid var(--border); }
+        .logout-btn { background: none; border: none; color: var(--owner-red); cursor: pointer; font-size: 1.1rem; padding: 0; font-weight: bold; }
         
-        table { width: 100%; border-collapse: collapse; font-size: 0.7rem; }
-        th { text-align: left; opacity: 0.5; padding: 5px; }
-        td { padding: 8px 5px; border-bottom: 1px solid var(--border); }
+        .manager-stats { display: flex; gap: 10px; margin-top: 10px; }
+        .stat-box { flex: 1; background: rgba(255,255,255,0.03); padding: 12px; border-radius: 15px; text-align: center; border: 1px solid var(--border); }
+        .stat-val { display: block; font-size: 1.3rem; font-weight: 900; color: var(--accent); }
+        .stat-lbl { font-size: 0.55rem; opacity: 0.6; text-transform: uppercase; }
+        
+        table { width: 100%; border-collapse: collapse; font-size: 0.75rem; margin-top: 10px; }
+        th { text-align: left; opacity: 0.5; padding: 8px; border-bottom: 1px solid var(--border); }
+        td { padding: 10px 8px; border-bottom: 1px solid var(--border); }
 
-        /* Google Button Container */
-        .google-auth-container { margin-bottom: 20px; display: flex; justify-content: center; }
-        .auth-divider { display: flex; align-items: center; text-align: center; color: var(--text); opacity: 0.4; font-size: 0.6rem; margin: 15px 0; }
+        /* Google container */
+        .google-auth-container { margin-bottom: 20px; display: flex; justify-content: center; width: 100%; }
+        .auth-divider { display: flex; align-items: center; text-align: center; color: var(--text); opacity: 0.4; font-size: 0.65rem; margin: 20px 0; font-weight: 800; }
         .auth-divider::before, .auth-divider::after { content: ''; flex: 1; border-bottom: 1px solid var(--border); }
-        .auth-divider:not(:empty)::before { margin-right: 10px; }
-        .auth-divider:not(:empty)::after { margin-left: 10px; }
+        .auth-divider:not(:empty)::before { margin-right: 15px; }
+        .auth-divider:not(:empty)::after { margin-left: 15px; }
     </style>
 </head>
 <body onload="checkPersistedSession()">
+
+<div id="status-banner" class="miuxo-banner">
+    <span id="access-label">Establishing Secure Connection...</span>
+</div>
 
 <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
 
@@ -94,28 +98,22 @@
                 data-callback="handleGoogleResponse"
                 data-auto_prompt="false">
             </div>
-            <div class="g_id_signin"
-                data-type="standard"
-                data-shape="rectangular"
-                data-theme="filled_blue"
-                data-text="signin_with"
-                data-size="large"
-                data-logo_alignment="left">
-            </div>
+            <div class="g_id_signin" data-type="standard" data-shape="rectangular" data-theme="filled_blue" data-text="signin_with" data-size="large" data-logo_alignment="left"></div>
         </div>
 
-        <div class="auth-divider">OR USE CREDENTIALS</div>
+        <div class="auth-divider">SECURE LOCAL ACCESS</div>
 
         <div id="auth-form-container">
             <input type="text" id="username" class="key-input" placeholder="USERNAME">
             <input type="password" id="password" class="key-input" placeholder="PASSWORD">
-            <button id="auth-submit-btn" onclick="loginWithCredentials()" style="width:100%; padding:15px; border-radius:12px; border:none; background:var(--member-green); color:white; font-weight:900; cursor:pointer;">SIGN IN</button>
-            <p id="auth-toggle-text" style="font-size: 0.7rem; margin-top: 15px; cursor: pointer; color: var(--standard-blue);" onclick="toggleAuthMode()">
-                Don't have an account? <b>REGISTER</b>
+            <button id="auth-submit-btn" onclick="loginWithCredentials()" style="width:100%; padding:15px; border-radius:12px; border:none; background:var(--member-green); color:white; font-weight:900; cursor:pointer; margin-top:10px;">SIGN IN</button>
+            <p id="auth-toggle-text" style="font-size: 0.75rem; margin-top: 18px; cursor: pointer; color: var(--standard-blue);" onclick="toggleAuthMode()">
+                New operator? <b>REGISTER SYSTEM ACCESS</b>
             </p>
         </div>
+        
         <div style="height: 1px; background: var(--border); margin: 20px 0;"></div>
-        <button onclick="guestEnter()" style="width:100%; background:var(--search-bg); border: 1px solid var(--border); color:var(--text); padding: 10px; border-radius: 8px; cursor:pointer; font-size:0.65rem; font-weight:bold;">GUEST ENTER</button>
+        <button onclick="guestEnter()" style="width:100%; background:var(--search-bg); border: 1px solid var(--border); color:var(--text); padding: 12px; border-radius: 10px; cursor:pointer; font-size:0.7rem; font-weight:bold; letter-spacing: 1px;">ANONYMOUS VIEW</button>
     </div>
 </div>
 
@@ -123,44 +121,47 @@
     <div class="hub-container">
         
         <div id="admin-panel" class="control-panel">
-            <div class="section-label" id="panel-title" style="color:var(--admin-purple); margin:0;">🛠️ MANAGER MODE</div>
+            <div class="section-label" id="panel-title" style="color:var(--admin-purple); margin:0;">🛠️ COMMAND CENTER</div>
             
             <div class="manager-stats">
                 <div class="stat-box"><span class="stat-val" id="stat-total">0</span><span class="stat-lbl">Resources</span></div>
-                <div class="stat-box"><span class="stat-val" style="color:var(--vip-gold)" id="stat-vip">0</span><span class="stat-lbl">VIP</span></div>
-                <div class="stat-box"><span class="stat-val" id="stat-users">0</span><span class="stat-lbl">Users</span></div>
+                <div class="stat-box"><span class="stat-val" style="color:var(--vip-gold)" id="stat-vip">0</span><span class="stat-lbl">VIP Tier</span></div>
+                <div class="stat-box"><span class="stat-val" id="stat-users">0</span><span class="stat-lbl">Active Users</span></div>
             </div>
 
-            <div class="utility-box" style="margin-top: 15px;">
+            <div class="utility-box" style="margin-top: 20px;">
                 <div class="util-card">
-                    <span style="font-size:0.6rem;">USER MANAGEMENT</span>
-                    <div style="max-height: 120px; overflow-y: auto; margin-top: 5px;">
+                    <span style="font-size:0.65rem; font-weight:800; opacity:0.6;">USER DATABASE</span>
+                    <div style="max-height: 150px; overflow-y: auto;">
                         <table>
-                            <thead><tr><th>USER</th><th>ROLE</th><th>ACTION</th></tr></thead>
+                            <thead><tr><th>USER</th><th>RANK</th><th>OP</th></tr></thead>
                             <tbody id="user-admin-list"></tbody>
                         </table>
                     </div>
                 </div>
+                
                 <div class="util-card">
-                    <span style="font-size:0.6rem;">DEPLOY RESOURCE</span>
-                    <input type="text" id="add-name" class="util-input" placeholder="Name">
-                    <input type="text" id="add-url" class="util-input" placeholder="URL">
+                    <span style="font-size:0.65rem; font-weight:800; opacity:0.6;">ADD NEW RESOURCE</span>
+                    <input type="text" id="add-name" class="util-input" placeholder="Display Name">
+                    <input type="text" id="add-url" class="util-input" placeholder="Target URL (https://...)">
                     <select id="add-type" class="util-input">
                         <option value="public">Public</option>
-                        <option value="member">Member</option>
-                        <option value="vip">VIP</option>
-                        <option value="private">Private</option>
+                        <option value="member">Member Only</option>
+                        <option value="vip">VIP Tier</option>
+                        <option value="private">Private (Admin)</option>
                     </select>
                     <button class="util-btn" onclick="addNewTool()">PUSH TO PRODUCTION</button>
                 </div>
+
                 <div class="util-card">
-                    <span style="font-size:0.6rem;">INCOMING FEEDBACK</span>
-                    <div id="feedback-inbox" style="max-height: 100px; overflow-y: auto; font-size: 0.6rem; margin: 5px 0;"></div>
-                    <button class="util-btn" style="background:var(--owner-red); font-size:0.5rem;" onclick="clearFeedback()">CLEAR INBOX</button>
+                    <span style="font-size:0.65rem; font-weight:800; opacity:0.6;">RESOURCE REQUESTS</span>
+                    <div id="feedback-inbox" style="max-height: 110px; overflow-y: auto; font-size: 0.65rem; margin: 8px 0;"></div>
+                    <button class="util-btn" style="background:var(--owner-red); font-size:0.6rem;" onclick="clearFeedback()">PURGE INBOX</button>
                 </div>
+
                 <div class="util-card">
-                    <span style="font-size:0.6rem;">SYSTEM BACKUP</span>
-                    <button class="util-btn" style="background:#0ea5e9;" onclick="exportDatabase()">EXPORT (.JSON)</button>
+                    <span style="font-size:0.65rem; font-weight:800; opacity:0.6;">CORE MAINTENANCE</span>
+                    <button class="util-btn" style="background:#0ea5e9;" onclick="exportDatabase()">EXPORT BACKUP (.JSON)</button>
                     <input type="file" id="import-file" style="display:none" onchange="importDatabase(event)">
                     <button class="util-btn" style="background:#64748b;" onclick="document.getElementById('import-file').click()">RESTORE DATA</button>
                 </div>
@@ -168,33 +169,33 @@
         </div>
 
         <div id="user-settings-panel" style="display:none;" class="util-card">
-            <div class="section-label" style="margin-top:0;">⚙️ ACCOUNT SETTINGS</div>
+            <div class="section-label" style="margin-top:0;">⚙️ OPERATOR SETTINGS</div>
             <div class="utility-box">
-                <input type="text" id="new-display-name" class="util-input" placeholder="New Display Name">
-                <input type="password" id="new-password" class="util-input" placeholder="New Password">
+                <input type="text" id="new-display-name" class="util-input" placeholder="Change Display Name">
+                <input type="password" id="new-password" class="util-input" placeholder="Change Password">
             </div>
-            <button class="util-btn" onclick="updateProfile()">SAVE CHANGES</button>
-            <button onclick="toggleSettings()" style="background:none; border:none; color:var(--text); font-size:0.6rem; margin-top:10px; cursor:pointer; opacity:0.5;">CLOSE</button>
+            <button class="util-btn" onclick="updateProfile()">COMMIT CHANGES</button>
+            <button onclick="toggleSettings()" style="background:none; border:none; color:var(--text); font-size:0.6rem; margin-top:10px; cursor:pointer; opacity:0.5; width:100%;">DISMISS</button>
         </div>
 
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
             <div class="profile-chip">
                 <div id="profile-area" style="display:flex; align-items:center; gap:8px;"></div>
-                <div style="width: 1px; height: 15px; background: var(--border);"></div>
+                <div style="width: 1px; height: 18px; background: var(--border);"></div>
                 <button class="logout-btn" onclick="terminateSession()">⏻</button>
             </div>
-            <span id="live-clock" style="font-family: monospace; font-size: 0.9rem; opacity: 0.8;">00:00:00</span>
+            <span id="live-clock" style="font-family: monospace; font-size: 1rem; font-weight:bold; letter-spacing:1px;">00:00:00</span>
         </div>
 
-        <input type="text" id="tool-search" class="search-input" placeholder="Search the unified directory..." onkeyup="refreshUI()">
+        <input type="text" id="tool-search" class="search-input" placeholder="Scan resources by name..." onkeyup="refreshUI()">
         
         <div id="private-section" style="display:none;">
-            <div class="section-label" style="color:var(--admin-purple)">🔒 PRIVATE DATA</div>
+            <div class="section-label" style="color:var(--admin-purple)">🔒 PRIVATE ENCRYPTED DATA</div>
             <div class="social-grid" id="private-grid"></div>
         </div>
 
         <div id="vip-section" style="display:none;">
-            <div class="section-label" style="color:var(--vip-gold)">⭐ VIP RESOURCES</div>
+            <div class="section-label" style="color:var(--vip-gold)">⭐ VIP ACCESS ONLY</div>
             <div class="social-grid" id="vip-grid"></div>
         </div>
 
@@ -203,19 +204,21 @@
             <div class="social-grid" id="member-grid"></div>
         </div>
 
-        <div class="section-label">📂 PUBLIC DIRECTORY</div>
+        <div class="section-label">📂 PUBLIC CLEARANCE</div>
         <div class="social-grid" id="tool-grid"></div>
 
-        <div class="section-label">📢 RESOURCE REQUESTS</div>
+        <div class="section-label" style="margin-top:40px;">📢 COMMS CHANNEL</div>
         <div class="util-card">
-            <input type="text" id="user-msg" class="util-input" placeholder="Request a tool...">
-            <button class="util-btn" onclick="sendFeedback()">SUBMIT REQUEST</button>
+            <input type="text" id="user-msg" class="util-input" placeholder="Message the Admin or request a resource...">
+            <button class="util-btn" onclick="sendFeedback()">TRANSMIT MESSAGE</button>
         </div>
+        
+        <p style="text-align:center; font-size:0.6rem; opacity:0.3; margin-top:30px;">MIUXO UNIFIED HUB • VERSION 12.0 STABLE • SECURED BY LOCALSTORAGE DB</p>
     </div>
 </div>
 
 <script>
-    // --- DATABASE INITIALIZATION ---
+    // --- DATABASE ENGINE ---
     let MASTER_DATA = JSON.parse(localStorage.getItem('miuxo_master_data')) || {
         private: [], vip: [], member: [], public: []
     };
@@ -226,9 +229,8 @@
     let SESSION = { role: 'public', user: null };
     let isRegisterMode = false;
 
-    // --- GOOGLE AUTH HANDLER ---
+    // --- GOOGLE AUTH ---
     function handleGoogleResponse(response) {
-        // Decode JWT Payload
         const base64Url = response.credential.split('.')[1];
         const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
         const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
@@ -236,9 +238,7 @@
         }).join(''));
 
         const userData = JSON.parse(jsonPayload);
-
-        // Map to Session
-        SESSION.role = 'member'; // Default Google users to Member
+        SESSION.role = 'member'; 
         SESSION.user = { 
             name: userData.name, 
             username: userData.email,
@@ -250,25 +250,26 @@
         enterHub();
     }
 
-    // --- AUTHENTICATION ---
+    // --- LOGIN & REGISTRATION ---
     function toggleAuthMode() {
         isRegisterMode = !isRegisterMode;
         const btn = document.getElementById('auth-submit-btn');
         const text = document.getElementById('auth-toggle-text');
-        btn.innerText = isRegisterMode ? "CREATE ACCOUNT" : "SIGN IN";
+        btn.innerText = isRegisterMode ? "INITIALIZE ACCOUNT" : "SIGN IN";
         btn.style.background = isRegisterMode ? "var(--admin-purple)" : "var(--member-green)";
         btn.onclick = isRegisterMode ? registerUser : loginWithCredentials;
-        text.innerHTML = isRegisterMode ? "Already have an account? <b>LOGIN</b>" : "Don't have an account? <b>REGISTER</b>";
+        text.innerHTML = isRegisterMode ? "Already have a key? <b>OPERATOR LOGIN</b>" : "New operator? <b>REGISTER SYSTEM ACCESS</b>";
     }
 
     function registerUser() {
         const u = document.getElementById('username').value.trim().toLowerCase();
         const p = document.getElementById('password').value;
-        if(u.length < 3 || p.length < 4) return alert("Too short!");
-        if(REGISTERED_USERS[u]) return alert("Exists!");
+        if(u.length < 3 || p.length < 4) return alert("Credentials too short!");
+        if(REGISTERED_USERS[u]) return alert("Operator ID already exists!");
+        
         REGISTERED_USERS[u] = { pass: p, role: "member", name: u.toUpperCase() };
         localStorage.setItem('miuxo_users', JSON.stringify(REGISTERED_USERS));
-        alert("Success! Now Login.");
+        alert("Account Registered. Please Login.");
         toggleAuthMode();
     }
 
@@ -281,28 +282,29 @@
             sessionStorage.setItem('miuxo_session', JSON.stringify(SESSION));
             applySessionUI();
             enterHub();
-        } else { alert("Invalid Credentials"); }
+        } else { alert("ACCESS DENIED: Invalid Credentials"); }
     }
 
     function checkPersistedSession() {
         const saved = sessionStorage.getItem('miuxo_session');
         if(saved) { SESSION = JSON.parse(saved); applySessionUI(); enterHub(); }
+        else { document.getElementById('access-label').innerText = "GUEST CLEARANCE"; }
     }
 
-    // --- UI ENGINE ---
+    // --- UI RENDERING ---
     function applySessionUI() {
         const banner = document.getElementById('status-banner');
         const profile = document.getElementById('profile-area');
         banner.className = 'miuxo-banner ' + SESSION.role;
-        document.getElementById('access-label').innerText = SESSION.role.toUpperCase() + " SESSION";
+        document.getElementById('access-label').innerText = SESSION.role + " CLEARANCE LEVEL ACTIVE";
         
         let avatarHtml = SESSION.user?.avatar 
-            ? `<img src="${SESSION.user.avatar}" style="width:20px; height:20px; border-radius:50%;">` 
-            : `⚙️`;
+            ? `<img src="${SESSION.user.avatar}" style="width:24px; height:24px; border-radius:50%; border:1px solid var(--accent)">` 
+            : `👤`;
 
         profile.innerHTML = `
             <button onclick="toggleSettings()" style="background:none; border:none; cursor:pointer; display:flex; align-items:center;">${avatarHtml}</button>
-            <span style="font-size: 0.6rem; font-weight: 900;">${SESSION.user ? SESSION.user.name : "GUEST"}</span>
+            <span style="font-size: 0.75rem; font-weight: 900; letter-spacing:1px;">${SESSION.user ? SESSION.user.name : "ANONYMOUS"}</span>
         `;
 
         const role = SESSION.role;
@@ -323,17 +325,19 @@
                     <div class="social-card" onclick="window.open('${t.url}', '_blank')">
                         <button class="del-tool" style="display:${['admin','owner'].includes(SESSION.role)?'block':'none'}" onclick="event.stopPropagation(); deleteTool('${t.id}', '${key}')">×</button>
                         ${key !== 'public' ? `<span class="badge badge-${key}">${key.toUpperCase()}</span>` : ''}
-                        <div style="font-size:2rem; margin-bottom:8px;">🚀</div>
-                        <div style="font-size:0.7rem; font-weight:900;">${t.name}</div>
+                        <div style="font-size:2.2rem; margin-bottom:12px;">🛠️</div>
+                        <div style="font-size:0.75rem; font-weight:900; text-align:center;">${t.name}</div>
                     </div>
                 `).join('');
         };
-        render('tool-grid', 'public'); render('member-grid', 'member'); 
-        render('vip-grid', 'vip'); render('private-grid', 'private');
+        render('tool-grid', 'public'); 
+        render('member-grid', 'member'); 
+        render('vip-grid', 'vip'); 
+        render('private-grid', 'private');
         updateAdminView();
     }
 
-    // --- ADMIN TOOLS ---
+    // --- ADMIN ENGINE ---
     function updateAdminView() {
         if(!['admin', 'owner'].includes(SESSION.role)) return;
         document.getElementById('stat-total').innerText = Object.values(MASTER_DATA).flat().length;
@@ -343,22 +347,28 @@
         const list = document.getElementById('user-admin-list');
         list.innerHTML = Object.keys(REGISTERED_USERS).map(u => `
             <tr>
-                <td>${u}</td>
-                <td><span class="badge-${REGISTERED_USERS[u].role}">${REGISTERED_USERS[u].role}</span></td>
-                <td><button onclick="promoteUser('${u}')">↑</button><button onclick="banUser('${u}')">×</button></td>
+                <td style="font-weight:bold">${u}</td>
+                <td><span class="badge badge-${REGISTERED_USERS[u].role}">${REGISTERED_USERS[u].role}</span></td>
+                <td>
+                    <button onclick="promoteUser('${u}')" style="background:var(--member-green); border:none; color:white; border-radius:4px; padding:2px 5px; cursor:pointer">↑</button>
+                    <button onclick="banUser('${u}')" style="background:var(--owner-red); border:none; color:white; border-radius:4px; padding:2px 5px; cursor:pointer">×</button>
+                </td>
             </tr>
         `).join('');
 
         document.getElementById('feedback-inbox').innerHTML = FEEDBACK_DATA.map(f => `
-            <div style="padding:5px; border-bottom:1px solid var(--border)"><b>${f.user}:</b> ${f.text}</div>
+            <div style="padding:8px; border-bottom:1px solid var(--border); background:rgba(255,255,255,0.02); margin-bottom:5px; border-radius:8px;">
+                <b style="color:var(--accent)">${f.user}:</b> ${f.text}
+            </div>
         `).reverse().join('');
     }
 
     function promoteUser(u) {
+        if (u === 'admin') return;
         const r = ['member', 'vip', 'admin'];
-        let cur = r.indexOf(REGISTERED_USERS[u].role);
-        if(cur < 2) { 
-            REGISTERED_USERS[u].role = r[cur+1]; 
+        let curIndex = r.indexOf(REGISTERED_USERS[u].role);
+        if(curIndex < 2) { 
+            REGISTERED_USERS[u].role = r[curIndex + 1]; 
             localStorage.setItem('miuxo_users', JSON.stringify(REGISTERED_USERS));
             refreshUI();
         }
@@ -366,19 +376,23 @@
 
     function banUser(u) {
         if(u === 'admin') return;
-        delete REGISTERED_USERS[u];
-        localStorage.setItem('miuxo_users', JSON.stringify(REGISTERED_USERS));
-        refreshUI();
+        if(confirm(`Ban operator ${u} and revoke all access?`)) {
+            delete REGISTERED_USERS[u];
+            localStorage.setItem('miuxo_users', JSON.stringify(REGISTERED_USERS));
+            refreshUI();
+        }
     }
 
-    // --- DATA MANAGEMENT ---
+    // --- DATA & BACKUP ---
     function addNewTool() {
         const n = document.getElementById('add-name').value.toUpperCase();
         const u = document.getElementById('add-url').value;
         const t = document.getElementById('add-type').value;
-        if(!n || !u) return;
+        if(!n || !u) return alert("Fields cannot be empty!");
         MASTER_DATA[t].push({ id: Date.now(), name: n, url: u });
         localStorage.setItem('miuxo_master_data', JSON.stringify(MASTER_DATA));
+        document.getElementById('add-name').value = "";
+        document.getElementById('add-url').value = "";
         refreshUI();
     }
 
@@ -390,21 +404,24 @@
 
     function exportDatabase() {
         const data = { MASTER_DATA, REGISTERED_USERS, FEEDBACK_DATA };
-        const blob = new Blob([JSON.stringify(data)], {type: 'application/json'});
+        const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
-        a.download = 'miuxo_backup.json';
+        a.download = `miuxo_backup_${new Date().toISOString().slice(0,10)}.json`;
         a.click();
     }
 
     function importDatabase(e) {
         const reader = new FileReader();
         reader.onload = (ev) => {
-            const d = JSON.parse(ev.target.result);
-            localStorage.setItem('miuxo_master_data', JSON.stringify(d.MASTER_DATA));
-            localStorage.setItem('miuxo_users', JSON.stringify(d.REGISTERED_USERS));
-            localStorage.setItem('miuxo_feedback', JSON.stringify(d.FEEDBACK_DATA));
-            location.reload();
+            try {
+                const d = JSON.parse(ev.target.result);
+                if(d.MASTER_DATA) localStorage.setItem('miuxo_master_data', JSON.stringify(d.MASTER_DATA));
+                if(d.REGISTERED_USERS) localStorage.setItem('miuxo_users', JSON.stringify(d.REGISTERED_USERS));
+                if(d.FEEDBACK_DATA) localStorage.setItem('miuxo_feedback', JSON.stringify(d.FEEDBACK_DATA));
+                alert("Restoration Complete.");
+                location.reload();
+            } catch(err) { alert("Invalid Backup File"); }
         };
         reader.readAsText(e.target.files[0]);
     }
@@ -416,19 +433,22 @@
         FEEDBACK_DATA.push({ user: SESSION.user ? SESSION.user.name : "GUEST", text: m });
         localStorage.setItem('miuxo_feedback', JSON.stringify(FEEDBACK_DATA));
         document.getElementById('user-msg').value = "";
-        alert("Sent!");
+        alert("Transmission Success.");
         refreshUI();
     }
 
     function updateProfile() {
-        if(!SESSION.user.username) return alert("Not available for Google accounts");
         const n = document.getElementById('new-display-name').value;
         const p = document.getElementById('new-password').value;
         const uk = SESSION.user.username;
+        if(!uk) return alert("Operation restricted for OAuth accounts.");
+        
         if(n) { REGISTERED_USERS[uk].name = n.toUpperCase(); SESSION.user.name = n.toUpperCase(); }
         if(p) { REGISTERED_USERS[uk].pass = p; }
+        
         localStorage.setItem('miuxo_users', JSON.stringify(REGISTERED_USERS));
         sessionStorage.setItem('miuxo_session', JSON.stringify(SESSION));
+        alert("Settings Saved.");
         location.reload();
     }
 
@@ -437,8 +457,13 @@
         p.style.display = p.style.display === 'none' ? 'block' : 'none';
     }
 
-    function enterHub() { document.getElementById('auth-gate').style.display = 'none'; document.getElementById('main-hub').style.display = 'flex'; refreshUI(); }
-    function guestEnter() { SESSION.role = 'public'; enterHub(); }
+    function enterHub() { 
+        document.getElementById('auth-gate').style.display = 'none'; 
+        document.getElementById('main-hub').style.display = 'flex'; 
+        refreshUI(); 
+    }
+
+    function guestEnter() { SESSION.role = 'public'; applySessionUI(); enterHub(); }
     function terminateSession() { sessionStorage.clear(); location.reload(); }
     function toggleTheme() { document.body.setAttribute('data-theme', document.body.getAttribute('data-theme') === 'light' ? 'dark' : 'light'); }
     function clearFeedback() { FEEDBACK_DATA = []; localStorage.setItem('miuxo_feedback', "[]"); refreshUI(); }
@@ -446,11 +471,6 @@
     setInterval(() => {
         const now = new Date();
         document.getElementById('live-clock').innerText = now.toLocaleTimeString();
-        const d = new Date().setHours(24,0,0,0) - now;
-        const h = Math.floor(d/3600000).toString().padStart(2,'0');
-        const m = Math.floor((d%3600000)/60000).toString().padStart(2,'0');
-        const s = Math.floor((d%60000)/1000).toString().padStart(2,'0');
-        document.getElementById('expire-timer').innerText = `${h}:${m}:${s}`;
     }, 1000);
 </script>
 </body>
